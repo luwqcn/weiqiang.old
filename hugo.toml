@@ -374,7 +374,7 @@ uglyURLs = false
     [params.comments.twikoo]
       envId = "https://wejan.netlify.app"
       lang = "zh-CN"
-      # cdn = "https://cdn.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.min.js"
+      cdn = "https://cdn.jsdelivr.net/npm/twikoo@2.0.12/dist/twikoo.min.js"
 
     # 下面几组是备选引擎，切换 provider 时把对应值填上即可。
     [params.comments.artalk]

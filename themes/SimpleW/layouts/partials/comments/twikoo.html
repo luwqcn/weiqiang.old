@@ -21,7 +21,7 @@
 {{- if not $envId -}}
 <p class="comments-disabled">请在 config 中配置 <code>params.comments.twikoo.envId</code> 后再启用 Twikoo。</p>
 {{- else -}}
-{{- $cdn := $t.cdn | default "https://cdn.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.min.js" -}}
+{{- $cdn := $t.cdn | default "https://cdn.jsdelivr.net/npm/twikoo@2.0.12/dist/twikoo.min.js" -}}
 {{- $path := .RelPermalink -}}
 {{- if eq ($t.path | default "") "legacy" }}{{ $path = printf "%s.html" (strings.TrimSuffix "/" .RelPermalink) }}{{ end -}}
 <div id="twikoo"></div>
