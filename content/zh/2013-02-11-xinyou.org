@@ -1,3 +1,4 @@
+#+SLUG: xinyou
 #+STARTUP: showeverything
 #+TITLE: 知我者谓我心忧
 #+AUTHOR: 落为匠

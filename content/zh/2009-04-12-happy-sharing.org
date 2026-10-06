@@ -1,3 +1,4 @@
+#+SLUG: happy-sharing
 #+TITLE: 分享的快乐–网络时代
 #+DATE: 2009-04-12
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: networking-is-not-working
 #+STARTUP: showall
 #+TITLE: 社交无用？新时代的社交宝典
 #+DATE: 2016-04-22

@@ -1,3 +1,4 @@
+#+SLUG: bumingsannian
 #+STARTUP: showeverything
 #+TITLE: 不鸣三年
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: cafe-beer
 #+STARTUP: showeverything
 #+TITLE: 咖啡和啤酒
 #+AUTHOR: 落为匠

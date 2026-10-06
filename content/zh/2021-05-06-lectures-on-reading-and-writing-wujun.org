@@ -1,3 +1,4 @@
+#+SLUG: lectures-on-reading-and-writing-wujun
 #+TITLE: 《阅读与写作讲义》笔记
 #+AUTHOR: 落为匠
 #+DATE: 2021-05-06

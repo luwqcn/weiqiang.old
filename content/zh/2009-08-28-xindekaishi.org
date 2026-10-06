@@ -1,3 +1,4 @@
+#+SLUG: xindekaishi
 #+STARTUP: showeverything
 #+TITLE: 新的开始，是否意味着又一次结束
 #+AUTHOR: 落为匠

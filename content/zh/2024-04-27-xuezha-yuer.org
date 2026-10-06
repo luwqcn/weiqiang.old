@@ -1,3 +1,4 @@
+#+SLUG: xuezha-yuer
 #+STARTUP: showeverything
 #+LANGUAGE: zh-CN
 #+OPTIONS: num:t toc:nil pagenav:nil author:nil

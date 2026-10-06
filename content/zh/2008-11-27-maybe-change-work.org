@@ -1,3 +1,4 @@
+#+SLUG: maybe-change-work
 #+TITLE: 据说要被调岗了
 #+DATE: 2008-11-27
 #+AUTHOR: 落为匠

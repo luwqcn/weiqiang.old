@@ -1,3 +1,4 @@
+#+SLUG: simple-life
 #+STARTUP: showeverything
 #+TITLE: 简单生活之二
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: sites-with-orgmode
 #+STARTUP: showall
 #+OPTIONS: num:3
 #+TITLE: 使用 Emacs 和 Org Mode 生成的网站

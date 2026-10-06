@@ -1,3 +1,4 @@
+#+SLUG: xiaochengdongri
 #+STARTUP: showeverything
 #+TITLE: 小城冬日
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: rural-revitalization-without-young-people
 #+STARTUP: showeverything
 #+TITLE: 没有年轻人的美丽乡村
 #+AUTHOR: 落为匠

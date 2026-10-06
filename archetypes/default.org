@@ -1,0 +1,10 @@
+#+SLUG: {{ replaceRE `^\d{4}-\d{2}-\d{2}-` "" .File.ContentBaseName }}
+#+TITLE: {{ replaceRE `^\d{4}-\d{2}-\d{2}-` "" .File.ContentBaseName | replace "-" " " | title }}
+#+DATE: {{ .Date.Format "2006-01-02 15:04:05" }}
+#+DRAFT: true
+
+新建 .org 内容时的原型（`hugo new zh/2026-07-05-xxx.org`）。
+
+第一行的 SLUG 会把文件名前面的日期摘掉，配合 [permalinks] 得到
+/zh/2026/xxx/ 这样的地址 —— 不写 slug 的话 Hugo 会拿中文标题当地址。
+DRAFT 记得写完文章后删掉或改成 false，否则正式构建里看不到这篇。

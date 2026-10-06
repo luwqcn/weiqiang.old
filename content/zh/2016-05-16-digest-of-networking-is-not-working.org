@@ -1,3 +1,4 @@
+#+SLUG: digest-of-networking-is-not-working
 #+STARTUP: showall
 #+TITLE: 《社交无用》书摘
 #+DATE: 2016-05-16

@@ -1,3 +1,4 @@
+#+SLUG: dongri-xiangjian
 #+STARTUP: showeverything
 #+TITLE: 冬日的乡间
 #+AUTHOR: 落为匠

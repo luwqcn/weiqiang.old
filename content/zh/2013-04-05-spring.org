@@ -1,3 +1,4 @@
+#+SLUG: spring
 #+STARTUP: showeverything
 #+TITLE: 春
 #+AUTHOR: 落为匠

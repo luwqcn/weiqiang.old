@@ -26,6 +26,9 @@ summaryLength = 60
 # 同样的结果，少一处配置就少一处要维护的地方。若个别栏目想换路径，再单独加
 # [permalinks] 覆盖即可（注意别在 pattern 里写 .html）。
 #
+# 例外：/zh/ 网志、/zj/ 支教这两个按日期命名的栏目，走下面 [permalinks] 的
+# 「栏目/年份/slug/」，地址里不再挂那串日期。
+#
 # 从 /zh/xxx.html 迁过来时，站外反链会 404 —— 需要在服务器（nginx / Cloudflare
 # 等）配 rewrite 把 .html 请求 301 到去掉后缀的路径，或保留旧路径做重定向页。
 # ---------------------------------------------------------------------------
@@ -72,6 +75,18 @@ uglyURLs = false
 # ---------------------------------------------------------------------------
 [permalinks]
   keywords = "/tags/:slug/"
+  # 网志类栏目：栏目 / 年份 / slug
+  #   2026-07-05-rensheng-yiyi.org  →  /zh/2026/rensheng-yiyi/
+  # 年份取文章的 #+DATE:，slug 取文件名去掉「YYYY-MM-DD-」那一段。
+  #
+  # ⚠️ :slug 的坑：文章没写 slug 时，Hugo 会拿 **中文标题** 顶上，地址会变成
+  #    /zh/2026/人生无意义/。所以凡是走 permalinks 的栏目，每篇都必须有
+  #    #+SLUG:（Org）/ slug:（Markdown）—— scripts/gen-slugs.py 就是干这个的，
+  #    新文章用 hugo new 建会自动带上（见 archetypes/default.org）。
+  #    不想挂年份的栏目（/xy/ /bc/ /yue/）不用管，它们不在下面这张表里，
+  #    仍按默认规则取文件名。
+  zh = "/zh/:year/:slug/"
+  zj = "/zj/:year/:slug/"
 
 # ---------------------------------------------------------------------------
 # Markdown 渲染 —— 这两项必须写在站点配置里
@@ -145,7 +160,7 @@ uglyURLs = false
 
   # light = 完全沿用原站观感（默认）
   # auto  = 跟随系统深浅色，并在导航栏出现切换按钮
-  colorScheme = "light"
+  colorScheme = "auto"
 
   # 站点标志：assets/images/logo.svg 会被内联，随主题色变化
   [params.brand]
@@ -183,6 +198,18 @@ uglyURLs = false
   #   nav         是否出现在顶部导航
   #   footer      是否出现在页脚导航
   #   home        是否出现在主页栏目卡片
+  #
+  # 下面这几个是「文章页组件」的按栏目开关，只写要改的，不写就沿用默认：
+  #   comments    文章末尾的评论框（默认：栏目里的文章开，独立页面关）
+  #   related     「相关文章」（默认：栏目里的文章开）
+  #   prevNext    「上一篇 / 下一篇」（默认：栏目里的文章开）
+  #   hideList    该栏目页不列文章列表，只当说明/导览页用
+  #   toc         该栏目页挂右侧浮动目录
+  #
+  # 优先级：单篇 front matter > 这里的按栏目设置 > [params.post] 全局设置。
+  # key 写目录名（"xy"）管整个栏目，写路径（"xy/dian"）只管那一层，
+  # 后者更具体，会覆盖父栏目。
+  # 注意：_index 用 Org 写的话，自定义开关读不到，只能写在这里。
   # -------------------------------------------------------------------------
   [[params.sections]]
     key = "zh"
@@ -232,6 +259,11 @@ uglyURLs = false
     hideList = true
     # 正文里的话题标题多，给它单独挂一个右侧目录（默认只有单页才有）
     toc = true
+    # 习艺是「资料堆」而不是日记：读完一篇不太会想看上一篇/下一篇，
+    # 相关文章也多半是同栏目的摘录，意义不大，只留评论。
+    # 想恢复就把这两行删掉或改成 true。
+    related = false
+    prevNext = false
 
   # 第 6 个栏目：只为演示「加一个分类」有多容易 ——
   # 写一个 content/zj/ 目录 + 在导航里加下面 8 行，就这么简单。
@@ -393,11 +425,21 @@ uglyURLs = false
     meta = ["date", "wordCount", "readingTime"]
     # 文章末尾的「上一篇 / 下一篇」导航，不需要就设成 false
     # 站点根目录下的独立页面（关于 / 收藏 / SiteLog）永远不会显示
+    # 按栏目关：[[params.sections]] 那条写 prevNext = false
     showPrevNext = true
     # 「相关文章」最多显示几篇；设为 0 可关闭，默认 5
+    # 整块关掉：related = false；按栏目关写 [[params.sections]] 的 related
     relatedCount = 5
+    # related = false       # 全站都不显示「相关文章」
     # 中文阅读速度（字/分钟），用于估算「阅读时间」，默认 400
     wordsPerMinute = 400
+    # 正文标题怎么区分层级：
+    #   false（默认）→ 形状分层：h2 左侧砖红竖条、h3 实心菱形、h4 空心圆，
+    #                  越往下越轻。贴这个纸感主题，增删章节也不用重排号。
+    #   true          → Org 那套数字编号 1 / 1.1 / 1.1.1，右侧目录同步带号。
+    # 单篇想单独改，在 front matter 里写 headingNumbers = true / false。
+    # 两种模式都会跳过「脚注 / 注释」这类容器标题。
+    headingNumbers = false
 
   [params.toc]
     enabled = true

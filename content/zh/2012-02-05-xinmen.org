@@ -1,3 +1,4 @@
+#+SLUG: xinmen
 #+STARTUP: showeverything
 #+TITLE: 心门
 #+AUTHOR: 落为匠

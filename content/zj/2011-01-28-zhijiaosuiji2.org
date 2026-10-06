@@ -1,3 +1,4 @@
+#+SLUG: zhijiaosuiji2
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 支教碎记二

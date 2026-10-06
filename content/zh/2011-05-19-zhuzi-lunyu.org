@@ -1,3 +1,4 @@
+#+SLUG: zhuzi-lunyu
 #+TITLE: 朱子注论语两段
 #+DATE: 2011-05-19
 #+AUTHOR: 落为匠

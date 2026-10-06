@@ -1,3 +1,4 @@
+#+SLUG: idle
 #+STARTUP: showeverything
 #+TITLE: 状态：发呆
 #+AUTHOR: 落为匠

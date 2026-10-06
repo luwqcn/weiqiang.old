@@ -1,3 +1,4 @@
+#+SLUG: september
 #+TITLE: 九月
 #+DATE: 2011-08-31
 #+AUTHOR: 落为匠

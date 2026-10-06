@@ -1,3 +1,4 @@
+#+SLUG: cixinanchu
 #+STARTUP: showeverything
 #+TITLE: 此心安处是吾乡
 #+AUTHOR: 落为匠

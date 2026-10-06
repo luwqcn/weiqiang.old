@@ -93,11 +93,17 @@ html {
         margin-left: 0;
     }
 
+    /* 导航项本来就不多（首页/网志/关于/订阅/导航↓），窄屏完全塞得进
+       brand 那一行，别再整块挤到第二行 —— 原来这里写了 width:100%，
+       等于强行独占一行。留着 min-width:0，真放不下时由 nav-links
+       自己的 flex-wrap 折成两行，而不是把整块甩下去。 */
     .menu .nav-links {
-        justify-content: flex-start;
-        gap: 0 15px;
-        width: 100%;
-        margin-top: 10px;
+        justify-content: flex-end;
+        gap: 4px 12px;
+        width: auto;
+        margin-top: 0;
+        margin-left: auto;
+        min-width: 0;
     }
 
     .menu > .brand {
@@ -164,6 +170,17 @@ html {
         font-size: 1.7rem;
     }
 }
+
+/* 极窄屏（小屏手机，或将来导航项变多）确实挤不下了，才让导航整块
+   换到第二行。绝大多数手机（≥380px）一律与 brand 同一行。 */
+@media screen and (max-width: 380px) {
+    .menu .nav-links {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 8px;
+    }
+}
+
 
 @media screen and (max-width: 400px) {
     .menu > .brand .brand-text {

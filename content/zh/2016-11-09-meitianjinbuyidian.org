@@ -1,3 +1,4 @@
+#+SLUG: meitianjinbuyidian
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 每天做一点点，三个月后你将对自己刮目相看

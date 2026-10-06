@@ -1,3 +1,4 @@
+#+SLUG: yiqufengqiuhuang
 #+STARTUP: showeverything
 #+TITLE: 听一曲凤求凰
 #+AUTHOR: 落为匠

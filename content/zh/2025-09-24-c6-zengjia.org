@@ -1,3 +1,4 @@
+#+SLUG: c6-zengjia
 #+STARTUP: showeverything
 #+OPTIONS: num:3 toc:nil
 #+TITLE: 增驾 C6 二三事

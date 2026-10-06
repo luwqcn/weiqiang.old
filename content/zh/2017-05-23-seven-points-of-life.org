@@ -1,3 +1,4 @@
+#+SLUG: seven-points-of-life
 #+TITLE: 人生七点
 #+DATE: 2017-05-23
 #+AUTHOR: 落为匠

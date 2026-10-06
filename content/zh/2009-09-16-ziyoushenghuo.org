@@ -1,3 +1,4 @@
+#+SLUG: ziyoushenghuo
 #+STARTUP: showeverything
 #+TITLE: 寻找自由生活的可能路径
 #+AUTHOR: 落为匠

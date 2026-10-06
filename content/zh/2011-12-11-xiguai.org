@@ -1,3 +1,4 @@
+#+SLUG: xiguai
 #+STARTUP: showeverything
 #+TITLE: 习惯
 #+AUTHOR: 落为匠

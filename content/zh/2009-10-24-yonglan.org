@@ -1,3 +1,4 @@
+#+SLUG: yonglan
 #+STARTUP: showeverything
 #+TITLE: 请原谅我的慵懒
 #+AUTHOR: 落为匠

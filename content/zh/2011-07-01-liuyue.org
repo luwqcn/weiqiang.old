@@ -1,3 +1,4 @@
+#+SLUG: liuyue
 #+STARTUP: showeverything
 #+TITLE: 六月匆匆过
 #+AUTHOR: 落为匠

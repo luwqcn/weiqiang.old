@@ -1,3 +1,4 @@
+#+SLUG: change-work
 #+TITLE: 换岗
 #+DATE: 2009-02-03
 #+AUTHOR: 落为匠

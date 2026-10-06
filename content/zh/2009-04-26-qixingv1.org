@@ -1,3 +1,4 @@
+#+SLUG: qixingv1
 #+STARTUP: showeverything
 #+TITLE: 骑行v1
 #+AUTHOR: 落为匠

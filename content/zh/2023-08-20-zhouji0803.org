@@ -1,3 +1,4 @@
+#+SLUG: zhouji0803
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 周记｜2023年8月第三周

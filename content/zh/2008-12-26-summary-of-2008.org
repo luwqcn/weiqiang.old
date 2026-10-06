@@ -1,3 +1,4 @@
+#+SLUG: summary-of-2008
 #+TITLE: 2008年小结
 #+DATE: 2008-12-26
 #+AUTHOR: 落为匠

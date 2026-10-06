@@ -1,3 +1,4 @@
+#+SLUG: grateful-to-people-i-met
 #+STARTUP: showall
 #+OPTIONS: h:4 toc:nil
 #+TITLE: 感激这八年来所遇到的人和事

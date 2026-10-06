@@ -1,3 +1,4 @@
+#+SLUG: zhanzhuangfankui
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 站桩（站睡）反应简单记录

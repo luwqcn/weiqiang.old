@@ -1,3 +1,4 @@
+#+SLUG: dc
 #+STARTUP: showeverything
 #+TITLE: 单反当DC用
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: xiangxiasuiji
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 乡下生活随记

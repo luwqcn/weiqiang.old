@@ -1,3 +1,4 @@
+#+SLUG: zhounian
 #+STARTUP: showeverything
 #+TITLE: 周年略记
 #+AUTHOR: 落为匠

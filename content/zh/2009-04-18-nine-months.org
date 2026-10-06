@@ -1,3 +1,4 @@
+#+SLUG: nine-months
 #+TITLE: 整九月记
 #+DATE: 2009-04-18
 #+AUTHOR: 落为匠

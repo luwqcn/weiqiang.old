@@ -1,3 +1,4 @@
+#+SLUG: shidai-rensheng
 #+STARTUP: showeverything
 #+TITLE: 时代与人生
 #+AUTHOR: 落为匠

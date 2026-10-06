@@ -1,3 +1,4 @@
+#+SLUG: luocizibai
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 三十多岁裸辞后的自白

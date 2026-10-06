@@ -1,3 +1,4 @@
+#+SLUG: my-father-peasant
 #+TITLE: 我的父亲是农民
 #+AUTHOR: 落为匠
 #+DATE: 2020-06-21

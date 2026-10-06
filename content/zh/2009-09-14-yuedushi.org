@@ -1,3 +1,4 @@
+#+SLUG: yuedushi
 #+STARTUP: showeverything
 #+TITLE: 个人阅读史
 #+AUTHOR: 落为匠

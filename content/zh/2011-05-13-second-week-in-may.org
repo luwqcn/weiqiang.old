@@ -1,3 +1,4 @@
+#+SLUG: second-week-in-may
 #+TITLE: 五月第二周
 #+DATE: 2011-05-13
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: no-news
 #+TITLE: 今日无事
 #+DATE: 2008-12-24
 #+AUTHOR: 落为匠

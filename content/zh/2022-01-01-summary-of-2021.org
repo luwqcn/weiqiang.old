@@ -1,3 +1,4 @@
+#+SLUG: summary-of-2021
 #+STARTUP: showeverything
 #+TITLE: 2021年总结，2022年展望
 #+AUTHOR: 落为匠

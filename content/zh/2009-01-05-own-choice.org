@@ -1,3 +1,4 @@
+#+SLUG: own-choice
 #+TITLE: 恶果自食而已
 #+DATE: 2009-01-05
 #+AUTHOR: 落为匠

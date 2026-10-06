@@ -1,3 +1,4 @@
+#+SLUG: classmates
 #+TITLE: 同学会
 #+DATE: 2009-01-29
 #+AUTHOR: 落为匠

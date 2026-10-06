@@ -1,3 +1,4 @@
+#+SLUG: chenmo
 #+STARTUP: showeverything
 #+TITLE: 沉默
 #+AUTHOR: 落为匠

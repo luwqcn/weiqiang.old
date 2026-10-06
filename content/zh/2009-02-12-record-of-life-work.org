@@ -1,3 +1,4 @@
+#+SLUG: record-of-life-work
 #+TITLE: 工作、生活小记
 #+DATE: 2009-02-12
 #+AUTHOR: 落为匠

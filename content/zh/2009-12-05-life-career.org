@@ -1,3 +1,4 @@
+#+SLUG: life-career
 #+STARTUP: showall
 #+OPTIONS: h:4 toc:nil
 #+TITLE: 生涯规划及其他

@@ -1,3 +1,4 @@
+#+SLUG: jiexialai
 #+TITLE: 接下来
 #+DATE: 2009-02-23
 #+AUTHOR: 落为匠

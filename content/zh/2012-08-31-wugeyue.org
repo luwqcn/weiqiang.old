@@ -1,3 +1,4 @@
+#+SLUG: wugeyue
 #+STARTUP: showeverything
 #+TITLE: 五个月
 #+AUTHOR: 落为匠

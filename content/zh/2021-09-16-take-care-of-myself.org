@@ -1,3 +1,4 @@
+#+SLUG: take-care-of-myself
 #+STARTUP: showeverthing
 #+TITLE: 先管好自己
 #+AUTHOR: 落为匠

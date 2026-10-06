@@ -1,3 +1,4 @@
+#+SLUG: loongson-3b6000m-xzj
 #+STARTUP: showeverything
 #+LANGUAGE: zh-CN
 #+OPTIONS: num:t toc:nil pagenav:nil author:nil

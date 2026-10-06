@@ -1,3 +1,4 @@
+#+SLUG: summary-of-zhijiao
 #+TITLE: 支教小结
 #+DATE: 2011-01-19
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: startagain
 #+STARTUP: showeverything
 #+TITLE: 又一次回到原点
 #+AUTHOR: 落为匠

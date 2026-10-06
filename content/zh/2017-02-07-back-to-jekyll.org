@@ -1,3 +1,4 @@
+#+SLUG: back-to-jekyll
 #+TITLE: 纯粹书写，回归Jekyll！
 #+DATE: 2017-02-07
 #+AUTHOR: 落为匠

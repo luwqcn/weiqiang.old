@@ -1,3 +1,4 @@
+#+SLUG: destiny
 #+TITLE: 命否
 #+DATE: 2008-12-12
 #+AUTHOR: 落为匠

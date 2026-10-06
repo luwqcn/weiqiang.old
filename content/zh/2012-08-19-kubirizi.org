@@ -1,3 +1,4 @@
+#+SLUG: kubirizi
 #+STARTUP: showeverything
 #+TITLE: 苦逼日子
 #+AUTHOR: 落为匠

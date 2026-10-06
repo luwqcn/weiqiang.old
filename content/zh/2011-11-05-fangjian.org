@@ -1,3 +1,4 @@
+#+SLUG: fangjian
 #+STARTUP: showeverything
 #+TITLE: 看得见风景的房间
 #+AUTHOR: 落为匠

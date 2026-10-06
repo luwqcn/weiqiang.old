@@ -1,3 +1,4 @@
+#+SLUG: shanghan-study-plan
 #+TITLE: 伤寒论学习计划
 #+DATE: 2021-12-12
 #+AUTHOR: 落为匠

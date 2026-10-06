@@ -1,3 +1,4 @@
+#+SLUG: yuandansuiji
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 元旦随记

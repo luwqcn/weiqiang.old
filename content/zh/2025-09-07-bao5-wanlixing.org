@@ -1,3 +1,4 @@
+#+SLUG: bao5-wanlixing
 #+STARTUP: showeverything
 #+OPTIONS: num:t toc:nil
 #+TITLE: 豹行万里，豹5一万公里简记

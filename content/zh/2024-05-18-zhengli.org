@@ -1,3 +1,4 @@
+#+SLUG: zhengli
 #+STARTUP: showeverything
 #+LANGUAGE: zh-CN
 #+OPTIONS: num:t toc:nil pagenav:nil author:nil

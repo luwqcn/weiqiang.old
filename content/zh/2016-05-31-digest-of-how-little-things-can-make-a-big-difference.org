@@ -1,3 +1,4 @@
+#+SLUG: digest-of-how-little-things-can-make-a-big-difference
 #+STARTUP: showall
 #+TITLE: 《引爆点：如何引发流行》书摘
 #+DATE: 2016-05-31

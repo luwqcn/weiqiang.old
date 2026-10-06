@@ -1,3 +1,4 @@
+#+SLUG: zhoumonongfu-01
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 周末农夫录2022-01

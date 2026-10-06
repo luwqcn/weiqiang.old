@@ -1,3 +1,4 @@
+#+SLUG: boring-life
 #+TITLE: 灵性匮乏的生活
 #+DATE: 2008-11-29
 #+AUTHOR: 落为匠

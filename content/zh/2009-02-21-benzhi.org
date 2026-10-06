@@ -1,3 +1,4 @@
+#+SLUG: benzhi
 #+TITLE: 本职
 #+DATE: 2009-02-21
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: lookforward
 #+STARTUP: showeverything
 #+TITLE: 向前看
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: nanjinggui
 #+STARTUP: showeverything
 #+TITLE: 南京归
 #+AUTHOR: 落为匠

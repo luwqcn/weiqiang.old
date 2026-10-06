@@ -1,0 +1,26 @@
+{{- /*
+  func/heading-nonumber.html — 给不该带编号 / 分层标记的标题打上 .no-number。
+
+  用法：{{ $content = partial "func/heading-nonumber.html" $content }}
+
+  为什么要有它：页面末尾那些「Footnotes / 脚注 / 注释」是内容容器，不是正文
+  章节，给它编个「7」很怪 —— 读者会以为还有第 7 节。评论、相关文章、上一篇
+  下一篇的标题本身就在 .post-body 之外，不用管；只有 Org 把 Footnotes 塞在
+  正文里（<h2 id="headline-N">Footnotes</h2>），必须单独挑出来。
+
+  两条正则分别对应「标题带属性」和「光秃秃的 <h2>」两种情况，因为 RE2 没有
+  反向引用，只能拆开写。已经打过标记（正文里出现过 no-number）就跳过，
+  免得重复加 class。
+
+  注意：这里只匹配纯粹的 h2~h6 开标签；如果哪天给标题加了别的 class，
+  第一条会再加一个 class 属性（HTML 只认第一个），所以「已处理就跳过」
+  这道保险不能去掉。
+
+  返回值过了 safeHTML：replaceRE 出来的是普通字符串，直接打印会被转义。
+*/ -}}
+{{- $c := . -}}
+{{- if not (in $c "no-number") -}}
+  {{- $c = replaceRE `(?i)<h([2-6])(\s[^>]*)>(\s*)(Footnotes?|脚注|注释|参考文献)` `<h$1 class="no-number"$2>$3$4` $c -}}
+  {{- $c = replaceRE `(?i)<h([2-6])>(\s*)(Footnotes?|脚注|注释|参考文献)` `<h$1 class="no-number">$2$3` $c -}}
+{{- end -}}
+{{- return ($c | safeHTML) -}}

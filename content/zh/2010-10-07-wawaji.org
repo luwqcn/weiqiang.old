@@ -1,3 +1,4 @@
+#+SLUG: wawaji
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 娃娃记

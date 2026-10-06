@@ -1,3 +1,4 @@
+#+SLUG: like-history
 #+STARTUP: showeverything
 #+TITLE: 喜欢历史
 #+AUTHOR: 落为匠

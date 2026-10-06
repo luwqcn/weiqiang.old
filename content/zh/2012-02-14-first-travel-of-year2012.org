@@ -1,3 +1,4 @@
+#+SLUG: first-travel-of-year2012
 #+STARTUP: showall
 #+OPTIONS: h:4 toc:nil
 #+TITLE: 壬辰年第一行

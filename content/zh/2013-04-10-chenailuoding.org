@@ -1,3 +1,4 @@
+#+SLUG: chenailuoding
 #+STARTUP: showeverything
 #+TITLE: 尘埃落定
 #+AUTHOR: 落为匠

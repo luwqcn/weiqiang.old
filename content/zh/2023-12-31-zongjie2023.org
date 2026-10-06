@@ -1,3 +1,4 @@
+#+SLUG: zongjie2023
 #+STARTUP: showall
 #+OPTIONS: num:3 toc:nil
 #+LANGUAGE: zh-CN

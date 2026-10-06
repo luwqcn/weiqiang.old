@@ -1,3 +1,4 @@
+#+SLUG: qiurixiangjian
 #+STARTUP: showeverything
 #+TITLE: 乡间・秋
 #+AUTHOR: 落为匠

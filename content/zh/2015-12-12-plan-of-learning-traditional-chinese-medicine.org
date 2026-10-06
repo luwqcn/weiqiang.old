@@ -1,3 +1,4 @@
+#+SLUG: plan-of-learning-traditional-chinese-medicine
 #+STARTUP: showall
 #+TITLE: 中醫自修計劃
 #+DATE: 2015-12-12

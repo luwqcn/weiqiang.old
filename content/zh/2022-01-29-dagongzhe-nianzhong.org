@@ -1,3 +1,4 @@
+#+SLUG: dagongzhe-nianzhong
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 打工者的年终

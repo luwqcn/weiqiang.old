@@ -1,3 +1,4 @@
+#+SLUG: qiujia-lvxing
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 2025年秋假旅行记录

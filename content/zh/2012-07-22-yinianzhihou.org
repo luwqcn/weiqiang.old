@@ -1,3 +1,4 @@
+#+SLUG: yinianzhihou
 #+STARTUP: showeverything
 #+TITLE: 一年之后
 #+AUTHOR: 落为匠

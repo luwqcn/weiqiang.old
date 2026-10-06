@@ -1,3 +1,4 @@
+#+SLUG: dengdai
 #+STARTUP: showeverything
 #+TITLE: 等待
 #+AUTHOR: 落为匠

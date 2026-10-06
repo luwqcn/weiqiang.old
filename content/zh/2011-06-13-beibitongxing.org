@@ -1,3 +1,4 @@
+#+SLUG: beibitongxing
 #+STARTUP: showeverything
 #+TITLE: 卑鄙是卑鄙者的通行证
 #+AUTHOR: 落为匠

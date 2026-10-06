@@ -1,3 +1,4 @@
+#+SLUG: start-blog
 #+TITLE: 单调开篇
 #+DATE: 2008-11-18 08:18:00
 #+AUTHOR: 落为匠

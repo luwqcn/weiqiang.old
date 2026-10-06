@@ -1,3 +1,4 @@
+#+SLUG: weekend
 #+STARTUP: showeverything
 #+TITLE: 周末
 #+AUTHOR: 落为匠

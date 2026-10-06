@@ -148,3 +148,166 @@ h6:hover > .heading-anchor,
 .section-card .sc-desc + .sc-desc {
     margin-top: 0.3em;
 }
+
+/* --------------------------------------------------------------------------
+   7. 正文标题的层级区分
+   -------------------------------------------------------------------------- */
+
+/* 默认：形状分层，不是数字分层。
+
+   「1 / 1.1 / 1.1.1」是最省事的层级表达，但它是技术手册的语汇：增删一节
+   整篇要重排号，读的时候视线还会先被数字拽走。这个主题的底子是 Emacs/Org
+   那套克制的纸感排版（无边框、无阴影、留白大），所以用形状分层更合拍 ——
+   h2 一根砖红竖条，h3 一个实心菱形，h4 一个空心圆，越往下越小、越空，
+   h5/h6 只靠字号和颜色退让。扫读时层级一眼可辨，又不打断阅读节奏。
+
+   想换回 Org 的数字编号：[params.post] headingNumbers = true（单篇也可以
+   在 front matter 里写）。模板会给 .post-body / .section-content 加上
+   .num-headings，下面第二组规则整体接管。
+
+   两种模式都跳过 .no-number —— 脚注 / 注释这类「容器标题」不是正文章节，
+   给它编个号会让人以为后面还有一节。 */
+
+:is(.post-body, .section-content):not(.num-headings) h2:not(.no-number) {
+    position: relative;
+    padding-left: 1.4rem;
+    margin-top: 2.2rem;
+    margin-bottom: 1rem;
+}
+
+:is(.post-body, .section-content):not(.num-headings) h3:not(.no-number) {
+    margin-top: 1.6rem;
+}
+
+:is(.post-body, .section-content):not(.num-headings) h4:not(.no-number) {
+    margin-top: 1.2rem;
+}
+
+/* 竖条按「第一行文字」的高度定位，不用 top/bottom 撑满：
+   标题换行时不会拉成一根长条。 */
+:is(.post-body, .section-content):not(.num-headings) h2:not(.no-number)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    width: 5px;
+    height: 1.05em;
+    border-radius: 3px;
+    background: var(--accent);
+}
+
+:is(.post-body, .section-content):not(.num-headings) h3:not(.no-number)::before {
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-right: 0.5em;
+    vertical-align: 0.1em;
+    background: var(--accent);
+    opacity: 0.65;
+    transform: rotate(45deg);
+}
+
+:is(.post-body, .section-content):not(.num-headings) h4:not(.no-number)::before {
+    content: "";
+    display: inline-block;
+    width: 0.36em;
+    height: 0.36em;
+    margin-right: 0.5em;
+    vertical-align: 0.14em;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+:is(.post-body, .section-content):not(.num-headings) :is(h5, h6):not(.no-number) {
+    color: var(--bq-color);
+}
+
+/* 正文第一个标题不留上边距 —— Org 会在标题外面套一层 outline 容器，
+   所以「自己是长子」和「爹是长子」两种情形都要照顾到，
+   否则目录顶端会和正文第一行错开。
+   间距由 #entrymeta 的下边距给；下面这条兜底的是「没有元信息行、
+   正文紧跟大标题」的页面，那种情况下没人给间距，标题会贴到 h1 上。 */
+:is(.post-body, .section-content) > h2:first-child,
+:is(.post-body, .section-content) > :first-child > h2:first-child {
+    margin-top: 0;
+}
+
+.post-main > header + :is(.post-body, .section-content) > h2:first-child,
+.post-main > header + :is(.post-body, .section-content) > :first-child > h2:first-child {
+    margin-top: 1.2rem;
+}
+
+/* ---- 数字编号模式 --------------------------------------------------------
+   counter 的作用域是「元素自身 + 它的后续兄弟（含后代）」，所以 h2 上 reset
+   下一级、h3 上 reset 再下一级，就能得到 1 / 1.1 / 1.1.1 —— 哪怕 Org 把
+   各级标题嵌在不同的 div 里，只要 DOM 顺序对，编号就对。 */
+
+:is(.post-body, .section-content).num-headings {
+    counter-reset: sw-h2;
+}
+
+:is(.post-body, .section-content).num-headings h2 {
+    counter-reset: sw-h3;
+}
+
+:is(.post-body, .section-content).num-headings h3 {
+    counter-reset: sw-h4;
+}
+
+:is(.post-body, .section-content).num-headings h4 {
+    counter-reset: sw-h5;
+}
+
+:is(.post-body, .section-content).num-headings h5 {
+    counter-reset: sw-h6;
+}
+
+:is(.post-body, .section-content).num-headings :is(h2, h3, h4, h5, h6):not(.no-number)::before {
+    margin-right: 0.6rem;
+    color: var(--accent);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+:is(.post-body, .section-content).num-headings h2:not(.no-number)::before {
+    counter-increment: sw-h2;
+    content: counter(sw-h2);
+}
+
+:is(.post-body, .section-content).num-headings h3:not(.no-number)::before {
+    counter-increment: sw-h3;
+    content: counter(sw-h2) "." counter(sw-h3);
+}
+
+:is(.post-body, .section-content).num-headings h4:not(.no-number)::before {
+    counter-increment: sw-h4;
+    content: counter(sw-h2) "." counter(sw-h3) "." counter(sw-h4);
+}
+
+:is(.post-body, .section-content).num-headings h5:not(.no-number)::before {
+    counter-increment: sw-h5;
+    content: counter(sw-h2) "." counter(sw-h3) "." counter(sw-h4) "." counter(sw-h5);
+}
+
+:is(.post-body, .section-content).num-headings h6:not(.no-number)::before {
+    counter-increment: sw-h6;
+    content: counter(sw-h2) "." counter(sw-h3) "." counter(sw-h4) "." counter(sw-h5) "." counter(sw-h6);
+}
+
+/* 数字模式下右侧目录也带上编号，免得正文和目录对不上号。
+   counters() 会把嵌套各层的计数一次性拼出来，正好对上 ul 的层级。 */
+.num-headings .post-toc .toc ul {
+    counter-reset: toc-item;
+}
+
+.num-headings .post-toc .toc li {
+    counter-increment: toc-item;
+}
+
+.num-headings .post-toc .toc li > a::before {
+    content: counters(toc-item, ".") "\2009";
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}

@@ -1,3 +1,4 @@
+#+SLUG: blogging-with-orgmode
 #+STARTUP: showall
 #+OPTIONS: num:3
 #+TITLE: 使用 Org Mode 写博客
@@ -40,7 +41,7 @@ Emacs 被称为神之编辑器，Org Mode 是其内建的功能强大的管理�
 - Dayigu's Basket: [[http://dayigu.github.io/WhyUseOrgModeToWriteBlog.html][为什么用 org-mode 写 blog？]]  （已无法访问<2021-02-27 Sat>）
 - pank.eu: [[https://pank.eu/blog/blog-setup.html][Blogging with ORG]] *主要参考此篇* 。
 
-从网络中收集了部分使用 Emacs 和 Org Mode 构建的网站（博客），详见 [[/zh/2019-08-14-sites-with-orgmode/][使用 Emacs 和 Org Mode 生成的网站]]。
+从网络中收集了部分使用 Emacs 和 Org Mode 构建的网站（博客），详见 [[/zh/2019/sites-with-orgmode/][使用 Emacs 和 Org Mode 生成的网站]]。
 
 ** Deployment 部署
 

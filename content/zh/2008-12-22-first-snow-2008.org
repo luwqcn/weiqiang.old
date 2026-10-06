@@ -1,3 +1,4 @@
+#+SLUG: first-snow-2008
 #+TITLE: 第一场雪，第五次降息
 #+DATE: 2008-12-22
 #+AUTHOR: 落为匠

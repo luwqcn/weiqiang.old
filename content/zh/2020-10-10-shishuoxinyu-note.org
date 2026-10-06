@@ -1,3 +1,4 @@
+#+SLUG: shishuoxinyu-note
 #+TITLE: 世说新语笔记
 #+AUTHOR: 落为匠
 #+DATE: 2020-10-10

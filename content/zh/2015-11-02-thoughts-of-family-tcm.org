@@ -1,3 +1,4 @@
+#+SLUG: thoughts-of-family-tcm
 #+STARTUP: showall
 #+TITLE: 家庭中医课课后感想
 #+DATE: 2015-11-02

@@ -1,3 +1,4 @@
+#+SLUG: ningyuan-suiji
 #+TITLE: 宁远碎记
 #+DATE: 2010-07-22
 #+AUTHOR: 落为匠

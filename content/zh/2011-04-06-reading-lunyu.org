@@ -1,3 +1,4 @@
+#+SLUG: reading-lunyu
 #+TITLE: 读论语
 #+DATE: 2011-04-06
 #+AUTHOR: 落为匠

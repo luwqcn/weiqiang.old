@@ -1,3 +1,4 @@
+#+SLUG: suoshui
 #+STARTUP: showeverything
 #+TITLE: 琐碎
 #+AUTHOR: 落为匠

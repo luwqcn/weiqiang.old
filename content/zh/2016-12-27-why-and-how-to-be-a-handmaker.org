@@ -1,3 +1,4 @@
+#+SLUG: why-and-how-to-be-a-handmaker
 #+TITLE: 做个安静的手艺人
 #+DATE: 2016-12-27
 #+AUTHOR: 落为匠

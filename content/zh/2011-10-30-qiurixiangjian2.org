@@ -1,3 +1,4 @@
+#+SLUG: qiurixiangjian2
 #+STARTUP: showeverything
 #+TITLE: 乡间·秋（二）
 #+AUTHOR: 落为匠

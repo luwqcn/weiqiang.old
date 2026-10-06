@@ -33,6 +33,10 @@
 #entrymeta {
     color: var(--desc-color);
     font-size: 1.6rem;
+    /* 元信息行与正文之间留出呼吸。正文首个元素的上边距被清成 0（为了让
+       目录顶端对齐正文），所以这段间距只能由这里提供 —— 否则正文一开头
+       就是标题的页面（如 /about/ 的「自述」）会直接贴在日期下面。 */
+    margin-bottom: 1.8rem;
 }
 
 #entrymeta .sep {

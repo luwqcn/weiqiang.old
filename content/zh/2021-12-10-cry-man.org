@@ -1,3 +1,4 @@
+#+SLUG: cry-man
 #+TITLE: 男儿有泪不轻弹，只是藏在了胸中
 #+DATE: 2021-12-10
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: shazhudao
 #+STARTUP: showeverything
 #+TITLE: 杀猪刀
 #+AUTHOR: 落为匠

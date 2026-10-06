@@ -1,3 +1,4 @@
+#+SLUG: life-road-toward-to-happiness
 #+STARTUP: showall
 #+TITLE: 通往人生的幸福之路
 #+DATE: 2016-04-28

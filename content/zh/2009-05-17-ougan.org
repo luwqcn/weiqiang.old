@@ -1,3 +1,4 @@
+#+SLUG: ougan
 #+STARTUP: showeverything
 #+TITLE: 偶感
 #+AUTHOR: 落为匠

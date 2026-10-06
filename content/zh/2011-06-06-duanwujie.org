@@ -1,3 +1,4 @@
+#+SLUG: duanwujie
 #+OPTIONS: num:nil toc:nil
 #+STARTUP: showeverything
 #+TITLE: 端午节芒种日

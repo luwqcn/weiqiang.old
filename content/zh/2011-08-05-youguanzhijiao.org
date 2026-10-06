@@ -1,3 +1,4 @@
+#+SLUG: youguanzhijiao
 #+STARTUP: showeverything
 #+TITLE: 有关支教
 #+AUTHOR: 落为匠

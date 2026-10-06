@@ -1,3 +1,4 @@
+#+SLUG: jingdezhen-day0
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 景德镇游学第一天

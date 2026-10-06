@@ -1,3 +1,4 @@
+#+SLUG: qiao
 #+STARTUP: showeverything
 #+TITLE: 桥
 #+AUTHOR: 落为匠

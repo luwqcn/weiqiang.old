@@ -145,7 +145,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    align-items: center;
+    /* 用 baseline 而不是 center：链接带 padding-top:10px，切换按钮是 <button>
+       不带这条（.menu a 才匹配），盒子高度差一截，居中对齐会让按钮里的图标
+       比链接文字高出约 5px。按基线排，两者的文字才落在同一水平线上。 */
+    align-items: baseline;
     gap: 0 20px;
     margin-left: auto;
 }

@@ -1,3 +1,4 @@
+#+SLUG: reading-plan
 #+TITLE: 读书计划
 #+DATE: 2008-12-05
 #+AUTHOR: 落为匠

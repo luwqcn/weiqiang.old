@@ -1,3 +1,4 @@
+#+SLUG: benfen
 #+STARTUP: showeverything
 #+TITLE: 本分
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: gebenhagen
 #+TITLE: 哥本哈根的列车没有方向
 #+DATE: 2009-12-21
 #+AUTHOR: 落为匠

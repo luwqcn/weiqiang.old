@@ -1,3 +1,4 @@
+#+SLUG: shenme
 #+STARTUP: showeverything
 #+TITLE: 什么
 #+AUTHOR: 落为匠

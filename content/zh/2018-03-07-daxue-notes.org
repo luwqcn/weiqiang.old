@@ -1,3 +1,4 @@
+#+SLUG: daxue-notes
 #+STARTUP: showall
 #+TITLE: 「大学」学习笔记
 #+DATE: 2018-03-07 22:52:15

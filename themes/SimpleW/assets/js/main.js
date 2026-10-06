@@ -109,6 +109,28 @@
     var activeLink = null;
     var ticking = false;
 
+    /* 长目录要跟着读的位置走。
+       《医家千字文注》这种页面有上百个标题，目录被 max-height 截断后内部
+       自己能滚，但页面往下滚时目录是钉住的 —— 正在读的那一节早就跑出可视
+       区了，高亮也看不见。这里在切换高亮项时把它拉回目录可视区。
+       带 overflow 的是 .toc 自己（CSS 给它 max-height + overflow:auto），
+       而不是外层的 .post-toc 浮层。 */
+    var box = toc.querySelector(".toc") || toc;
+    var holdFollow = false;
+
+    function revealInBox(link) {
+      if (holdFollow || !box) return;
+      if (box.scrollHeight <= box.clientHeight + 4) return; // 没溢出就别动它
+      var linkTop = link.getBoundingClientRect().top;
+      var boxTop = box.getBoundingClientRect().top;
+      var view = box.clientHeight;
+      var margin = view * 0.25; // 上下都留点上下文，别把当前项贴到边上
+      var delta = linkTop - boxTop;
+      if (delta < margin || delta > view - margin) {
+        box.scrollTop += delta - margin;
+      }
+    }
+
     function activate(link) {
       if (activeLink === link) return;
       links.forEach(function (candidate) {
@@ -117,6 +139,7 @@
         else candidate.removeAttribute("aria-current");
       });
       activeLink = link;
+      revealInBox(link);
     }
 
     function updateActiveHeading() {
@@ -134,6 +157,13 @@
       ticking = true;
       window.requestAnimationFrame(updateActiveHeading);
     }
+
+    /* 鼠标/键盘落到目录里时把滚动权交回用户 —— 否则刚滚到想看的条目
+       就被自动跟随拽走了。离开目录后恢复跟随。 */
+    toc.addEventListener("mouseenter", function () { holdFollow = true; });
+    toc.addEventListener("mouseleave", function () { holdFollow = false; });
+    toc.addEventListener("focusin", function () { holdFollow = true; });
+    toc.addEventListener("focusout", function () { holdFollow = false; });
 
     links.forEach(function (link) {
       link.addEventListener("click", function () {

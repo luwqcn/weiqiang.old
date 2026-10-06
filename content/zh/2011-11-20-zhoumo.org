@@ -1,3 +1,4 @@
+#+SLUG: zhoumo
 #+STARTUP: showeverything
 #+TITLE: 周末纪事
 #+AUTHOR: 落为匠

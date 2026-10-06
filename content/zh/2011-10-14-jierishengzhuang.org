@@ -1,3 +1,4 @@
+#+SLUG: jierishengzhuang
 #+STARTUP: showeverything
 #+TITLE: 节日盛装
 #+AUTHOR: 落为匠

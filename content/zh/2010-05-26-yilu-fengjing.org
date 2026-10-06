@@ -1,3 +1,4 @@
+#+SLUG: yilu-fengjing
 #+STARTUP: showall
 #+OPTIONS: num:3 toc:nil
 #+LANGUAGE: zh-CN

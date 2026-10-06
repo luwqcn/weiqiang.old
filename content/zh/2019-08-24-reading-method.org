@@ -1,3 +1,4 @@
+#+SLUG: reading-method
 #+TITLE: 读书法
 #+DATE: 2019-08-24
 #+SUBTITLE: 收集古今中外名人读书法

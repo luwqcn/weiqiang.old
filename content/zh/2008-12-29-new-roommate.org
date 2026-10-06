@@ -1,3 +1,4 @@
+#+SLUG: new-roommate
 #+TITLE: 新室友，新生活
 #+DATE: 2008-12-29
 #+AUTHOR: 落为匠

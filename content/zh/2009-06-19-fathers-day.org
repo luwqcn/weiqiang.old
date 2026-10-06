@@ -1,3 +1,4 @@
+#+SLUG: fathers-day
 #+STARTUP: showall
 #+OPTIONS: h:4 toc:nil
 #+TITLE: 父亲节

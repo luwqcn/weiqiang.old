@@ -1,3 +1,4 @@
+#+SLUG: why-blogging
 #+STARTUP: showall
 #+OPTIONS: h:4 toc:nil
 #+AUTHOR: 落为匠

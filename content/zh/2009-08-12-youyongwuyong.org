@@ -1,3 +1,4 @@
+#+SLUG: youyongwuyong
 #+STARTUP: showeverything
 #+TITLE: 有用与无用
 #+AUTHOR: 落为匠

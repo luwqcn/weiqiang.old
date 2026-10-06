@@ -1,3 +1,4 @@
+#+SLUG: second-week-of-january
 #+STARTUP: showeverything
 #+TITLE: 2022年1月第二周
 #+AUTHOR: 落为匠

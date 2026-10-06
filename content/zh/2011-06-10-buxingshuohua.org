@@ -1,3 +1,4 @@
+#+SLUG: buxingshuohua
 #+STARTUP: showeverything
 #+TITLE: 不想说话
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: shiye
 #+STARTUP: showeverything
 #+TITLE: 视野
 #+AUTHOR: 落为匠

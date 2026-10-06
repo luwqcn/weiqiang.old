@@ -1,3 +1,4 @@
+#+SLUG: liushuizhang
 #+STARTUP: showeverything
 #+TITLE: 这些日子的流水账
 #+AUTHOR: 落为匠

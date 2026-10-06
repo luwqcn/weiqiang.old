@@ -1,3 +1,4 @@
+#+SLUG: simple-living
 #+TITLE: 简单生活
 #+DATE: 2011-12-13
 #+AUTHOR: 落为匠

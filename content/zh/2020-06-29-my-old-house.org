@@ -1,3 +1,4 @@
+#+SLUG: my-old-house
 #+TITLE: 老房子的断壁残垣，是我回不去的童年
 #+AUTHOR: 落为匠
 #+DATE: 2020-06-29

@@ -1,3 +1,4 @@
+#+SLUG: xiangjuzagan
 #+STARTUP: showeverything
 #+TITLE: 乡居杂感
 #+AUTHOR: 落为匠

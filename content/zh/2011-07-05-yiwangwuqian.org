@@ -1,3 +1,4 @@
+#+SLUG: yiwangwuqian
 #+STARTUP: showeverything
 #+TITLE: 我可以一往无前
 #+AUTHOR: 落为匠

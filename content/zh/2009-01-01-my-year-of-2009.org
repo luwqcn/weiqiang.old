@@ -1,3 +1,4 @@
+#+SLUG: my-year-of-2009
 #+TITLE: 2009个人宣言
 #+DATE: 2009-01-01
 #+AUTHOR: 落为匠

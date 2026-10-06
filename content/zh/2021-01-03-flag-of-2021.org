@@ -1,3 +1,4 @@
+#+SLUG: flag-of-2021
 #+TITLE: 2021年开始，总结与期待
 #+DATE: 2021-01-03
 #+AUTHOR: 落为匠

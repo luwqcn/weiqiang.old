@@ -1,3 +1,4 @@
+#+SLUG: teacher
 #+TITLE: 孺子不可教
 #+DATE: 2009-01-13
 #+AUTHOR: 落为匠

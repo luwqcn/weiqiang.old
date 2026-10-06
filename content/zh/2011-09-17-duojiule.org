@@ -1,3 +1,4 @@
+#+SLUG: duojiule
 #+STARTUP: showeverything
 #+TITLE: 已经多久了
 #+AUTHOR: 落为匠

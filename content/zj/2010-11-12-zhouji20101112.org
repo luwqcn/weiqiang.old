@@ -1,3 +1,4 @@
+#+SLUG: zhouji20101112
 #+STARTUP: showall
 #+OPTIONS: num:3 toc:nil
 #+LANGUAGE: zh-CN

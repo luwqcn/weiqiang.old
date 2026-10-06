@@ -1,3 +1,4 @@
+#+SLUG: lovely-persons
 #+TITLE: 那些可爱的人
 #+DATE: 2009-10-27
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: benqizhiken
 #+STARTUP: showall
 #+OPTIONS: num:nil toc:nil
 #+LANGUAGE: zh-CN

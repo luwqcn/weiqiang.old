@@ -1,3 +1,4 @@
+#+SLUG: seeking-a-way-to-new-life
 #+STARTUP: showall
 #+OPTIONS: H:4 num:nil tags:t toc:nil timestamps:t
 #+AUTHOR: 落为匠

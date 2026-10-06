@@ -1,3 +1,4 @@
+#+SLUG: cuotuoyizhou
 #+OPTIONS: num:nil toc:nil
 #+STARTUP: showeverything
 #+TITLE: 日日蹉跎又一周

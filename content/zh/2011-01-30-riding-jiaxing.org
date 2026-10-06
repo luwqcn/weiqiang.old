@@ -1,3 +1,4 @@
+#+SLUG: riding-jiaxing
 #+TITLE: 骑行小记：嘉兴行
 #+DATE: 2011-01-30
 #+AUTHOR: 落为匠

@@ -17,7 +17,7 @@
 
 子曰：君子不立危墙之下。此站名之由来，以此警示自己时刻战战兢兢，如履薄冰。
 
-本站乃互联网宇宙一蜉蝣，域名寄存于赛博菩萨 [[https://www.cloudflare.com][Cloudflare]] 并使用 DNS 和 Tunnel 服务，使用 [[https://www.gnu.org/software/emacs/][Emacs]] 和 [[https://orgmode.org][Org Mode]] 构建，通过 [[https://gitee.com][Gitee]] 和 [[https://console.cloud.tencent.com/edgeone/][EdgeOne Pages]] 部署，评论功能通过部署 [[https://artalk.js.org][Artalk]] 实现，一并感谢。
+本站乃互联网宇宙一蜉蝣，域名寄存于赛博菩萨 [[https://www.cloudflare.com][Cloudflare]] 并使用 DNS +和 Tunnel+ 服务，使用 +[[https://www.gnu.org/software/emacs/][Emacs]] 和 [[https://orgmode.org][Org Mode]]+ [[https://gohugo.io][Hugo]] 构建，通过 +[[https://gitee.com][Gitee]] 和 [[https://console.cloud.tencent.com/edgeone/][EdgeOne Pages]]+ Cloudflare Pages 部署，评论功能通过部署 +[[https://artalk.js.org][Artalk]]+ Twikoo 实现，一并感谢。
 
 * 版权
 

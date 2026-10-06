@@ -16,13 +16,14 @@
 - 2010年：注册 lifecho.org，改投 typecho 门下，混迹于 typecho 论坛，中间改域名 lwq.me，到期后未续，改回 lifecho.org，lujok.com 到期未续；2010年至2011年期间工作变动，加之赴湖南支教，发文较多；
 - 2013年：注册 zhuma.net，中间开始尝试 jekyll；
 - 2014年：博客名存实亡，基本不码字、不更新；
-- 2015年：重新开启博客之旅（[[/zh/2015-06-06-starting-again-and-why/][记录]]），年底重新注册 lujok.com，后来 zhuma.net 忘记续费被抢注；
+- 2015年：重新开启博客之旅（[[/zh/2015/starting-again-and-why/][记录]]），年底重新注册 lujok.com，后来 zhuma.net 忘记续费被抢注；
 - 2016年：2016年年中注册同名 com 域名 luweiqiang.com，开始不断折腾各类静态博客程序如 liquid, hexo, hugo, orgpage... 未果，中间在简书驻足，不到一年即弃；
 - 2018年：开始尝试 Org mode 导出 html 文件，搭建个人主页，2020年开始继续使用 lujok.com，折腾 Org mode 静态网頁生成，源文件放 github，使用 netlify 自动构建；
 - 2019年：3月找到邮件中的数据备份，恢复 +[[https://lifecho.org][原博客]]+ ，仅仅是可访问而已，不更新；继续折腾 Org mode 构建静态网页，中途几乎放弃；
-- 2021年：2月开始重新折腾 Org mode 导出 html，搜索参考了不少使用 Org mode 构建的网页，终于折腾出了点自认为可以勉强入眼的页面，又购入新域名 =waychan.cn= 作为主域名使用，记录在[[/zh/2019-08-03-blogging-with-orgmode/][这里]]；
+- 2021年：2月开始重新折腾 Org mode 导出 html，搜索参考了不少使用 Org mode 构建的网页，终于折腾出了点自认为可以勉强入眼的页面，又购入新域名 =waychan.cn= 作为主域名使用，记录在[[/zh/2019/blogging-with-orgmode/][这里]]；
 - 2022年：元旦，购入新域名 luee.cn 并启用，感觉是越短越好吧，原域名 waychan.cn 弃置。重新部署在 Vercel 上了，测试了下比 Cloudflare Pages 速度快。9月，增新域名 wejan.cn 并使用，原 luee.cn 弃用。
 - 2023年：7月，一年余未有记录，想重启时发现 Github 经常抽风，甚是恼人，遂转移至 Gitlab 并直接使用 Gitlab Pages 构建，自己浏览速度尚可。
 - 2023年9月：本地构建后同步至自建的服务器（200多淘回的 J1900 安装了 PVE 作底系统，建了几个虚拟机），使用 Cloudflare Tunnel 内网穿透实现公网访问，域名换回 +luee.cn+ 了，结构和外观稍作修改。
 - 2025年12月：把曾经所有的文章都集在一起，放在 =zh= 目录下，作为网志展示，同时今年取消了通过 Cloudflare Tunel 内网穿透实现公网访问的方案，改用通过 Gitee 和 EdgeOne Pages 部署，使用 AI 做了个 BASH 脚本一键部署，还比较方便。目前主域名 =weiqiang.org= ， =wejan.cn= 作转发也可访问。
+- 2026年12月：使用 workbuddy 迁移至 hugo 和 Cloudflare Pages，保持外观不变，增加了页面目录等功能。
 - 未完待续……

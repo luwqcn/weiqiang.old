@@ -1,3 +1,4 @@
+#+SLUG: persistence
 #+TITLE: 坚持
 #+DATE: 2011-12-31
 #+AUTHOR: 落为匠

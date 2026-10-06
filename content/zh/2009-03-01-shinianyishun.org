@@ -1,3 +1,4 @@
+#+SLUG: shinianyishun
 #+TITLE: 十年一瞬
 #+DATE: 2009-03-01
 #+AUTHOR: 落为匠

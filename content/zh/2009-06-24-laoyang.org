@@ -1,3 +1,4 @@
+#+SLUG: laoyang
 #+STARTUP: showeverything
 #+TITLE: 老杨和他的相机老伴
 #+AUTHOR: 落为匠

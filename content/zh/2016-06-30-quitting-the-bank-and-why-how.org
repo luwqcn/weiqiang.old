@@ -1,3 +1,4 @@
+#+SLUG: quitting-the-bank-and-why-how
 #+STARTUP: showall
 #+OPTIONS: h:4 toc:nil
 #+TITLE: 毕业八年，从银行转身，为了什么、想做什么

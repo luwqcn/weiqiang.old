@@ -7,50 +7,19 @@
       {{- else if eq $sec "false" }}{{ $showComments = false }}{{ end -}}
 
   返回字符串 "true" / "false"，没设置就返回空串 —— 不能用布尔值，
-  因为调用方没法区分「没设置」和「明确设为 false」（模板里 with 会把
-  两者都当成跳过）。空串表示「沿用调用方的默认值」。
+  因为调用方没法区分「没设置」和「明确设为 false」。空串表示沿用默认。
+
+  注释、相关文章、上一篇/下一篇这三个按栏目的开关走的是同一套逻辑，
+  具体实现在 func/section-flag.html，这里只是固定了键名。
 
   设置的地方（后写的赢）：
     1. `[[params.sections]]` 里该栏目那条的 `comments = true/false`
-       —— 只认 key 等于栏目目录名（xy）或栏目路径（xy/dian）的条目，
-          路径那条更具体，会覆盖父栏目的设置。
+       —— key 写目录名（xy）管整个栏目，写路径（xy/dian）只管子栏目，
+          后者更具体，会覆盖前者。
     2. 栏目 `content/<dir>/_index.md` 的 front matter `comments: false`
        —— 注意 **Org 写的 _index.org 不行**：go-org 只把固定那几个
           #+XXX 交给 Hugo，自定义键读不到，只能用配置里的注册表。
 
   页面自身的 front matter `comments:` 优先级更高，在 page.html 里单独处理。
 */ -}}
-{{- $page := . -}}
-{{- $site := $page.Site -}}
-{{- $out := "" -}}
-
-{{- $sec := $page.Section -}}
-{{- $secPath := "" -}}
-{{- with $page.CurrentSection -}}
-  {{- $secPath = replaceRE "^/|/$" "" .RelPermalink -}}
-{{- end -}}
-
-{{- /* 1a. 父栏目（目录名，如 xy） */ -}}
-{{- range $site.Params.sections | default slice -}}
-  {{- if and $sec (eq (.key | default "") $sec) (isset . "comments") -}}
-    {{- if index . "comments" }}{{ $out = "true" }}{{ else }}{{ $out = "false" }}{{ end -}}
-  {{- end -}}
-{{- end -}}
-
-{{- /* 1b. 子栏目（路径，如 xy/dian）—— 更具体，覆盖父栏目 */ -}}
-{{- if and $secPath (ne $secPath $sec) -}}
-  {{- range $site.Params.sections | default slice -}}
-    {{- if and (eq (.key | default "") $secPath) (isset . "comments") -}}
-      {{- if index . "comments" }}{{ $out = "true" }}{{ else }}{{ $out = "false" }}{{ end -}}
-  {{- end -}}
-  {{- end -}}
-{{- end -}}
-
-{{- /* 2. 栏目 _index 的 front matter */ -}}
-{{- with $page.CurrentSection -}}
-  {{- if isset .Params "comments" -}}
-    {{- if index .Params "comments" }}{{ $out = "true" }}{{ else }}{{ $out = "false" }}{{ end -}}
-  {{- end -}}
-{{- end -}}
-
-{{- return $out -}}
+{{- return (partial "func/section-flag.html" (dict "page" . "keys" (slice "comments" "Comments"))) -}}

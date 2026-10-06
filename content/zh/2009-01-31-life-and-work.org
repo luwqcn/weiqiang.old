@@ -1,3 +1,4 @@
+#+SLUG: life-and-work
 #+TITLE: 生活与工作
 #+DATE: 2009-01-31
 #+AUTHOR: 落为匠

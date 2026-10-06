@@ -1,3 +1,4 @@
+#+SLUG: zhijiaoriji
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 支教日记20101008

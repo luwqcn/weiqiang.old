@@ -1,3 +1,4 @@
+#+SLUG: two-months-from-now
 #+STARTUP: showeverything
 #+TITLE: 从今起两个月
 #+AUTHOR: 落为匠

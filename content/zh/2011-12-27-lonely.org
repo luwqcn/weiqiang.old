@@ -1,3 +1,4 @@
+#+SLUG: lonely
 #+STARTUP: showeverything
 #+TITLE: 无人慰藉和分享的孤独是苍凉
 #+AUTHOR: 落为匠

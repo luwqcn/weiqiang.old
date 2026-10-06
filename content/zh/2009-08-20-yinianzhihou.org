@@ -1,3 +1,4 @@
+#+SLUG: yinianzhihou
 #+STARTUP: showeverything
 #+TITLE: 一年之后是否落伍千里
 #+AUTHOR: 落为匠

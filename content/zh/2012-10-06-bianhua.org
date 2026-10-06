@@ -1,3 +1,4 @@
+#+SLUG: bianhua
 #+STARTUP: showeverything
 #+TITLE: 变化
 #+AUTHOR: 落为匠

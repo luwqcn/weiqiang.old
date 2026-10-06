@@ -1,3 +1,4 @@
+#+SLUG: about-choice
 #+STARTUP: showeverything
 #+TITLE: 关于选择
 #+AUTHOR: 落为匠

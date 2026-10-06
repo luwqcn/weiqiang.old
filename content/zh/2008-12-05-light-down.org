@@ -1,3 +1,4 @@
+#+SLUG: light-down
 #+TITLE: 停电当机
 #+DATE: 2008-12-05
 #+AUTHOR: 落为匠

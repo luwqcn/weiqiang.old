@@ -1,3 +1,4 @@
+#+SLUG: later
 #+STARTUP: showeverything
 #+TITLE: 从此以后
 #+AUTHOR: 落为匠

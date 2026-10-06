@@ -1,3 +1,4 @@
+#+SLUG: hbv-away
 #+STARTUP: showall
 #+OPTIONS: h:4 toc:nil
 #+TITLE: 而今迈步从头越

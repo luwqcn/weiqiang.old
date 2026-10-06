@@ -1,3 +1,4 @@
+#+SLUG: zhoumo-liushuizhang
 #+STARTUP: showeverything
 #+TITLE: 周末流水账
 #+AUTHOR: 落为匠

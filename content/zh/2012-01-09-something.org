@@ -1,3 +1,4 @@
+#+SLUG: something
 #+TITLE: 琐事几则
 #+DATE: 2012-01-09
 #+AUTHOR: 落为匠

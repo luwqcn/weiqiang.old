@@ -1,3 +1,4 @@
+#+SLUG: duanqipeixun
 #+STARTUP: showeverything
 #+TITLE: 短期培训
 #+AUTHOR: 落为匠

@@ -1,3 +1,4 @@
+#+SLUG: youyu
 #+STARTUP: showeverything
 #+TITLE: 犹豫着
 #+AUTHOR: 落为匠

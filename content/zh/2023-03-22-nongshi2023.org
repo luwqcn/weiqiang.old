@@ -1,3 +1,4 @@
+#+SLUG: nongshi2023
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 2023年农事记录

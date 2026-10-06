@@ -1,3 +1,4 @@
+#+SLUG: 24nian-zongjie
 #+STARTUP: showeverything
 #+OPTIONS: num:t toc:nil
 #+TITLE: 2024年简要总结

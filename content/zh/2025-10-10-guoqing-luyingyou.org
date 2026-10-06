@@ -1,3 +1,4 @@
+#+SLUG: guoqing-luyingyou
 #+STARTUP: showeverything
 #+OPTIONS: num:3 toc:nil
 #+TITLE: 豹行万里之国庆露营游

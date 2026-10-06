@@ -1,3 +1,4 @@
+#+SLUG: less-two-weeks
 #+STARTUP: showeverything
 #+TITLE: 两周不到
 #+AUTHOR: 落为匠

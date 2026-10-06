@@ -1,3 +1,4 @@
+#+SLUG: shaoshuoduozuo
 #+STARTUP: showeverything
 #+TITLE: 少说多做勤思考
 #+AUTHOR: 落为匠

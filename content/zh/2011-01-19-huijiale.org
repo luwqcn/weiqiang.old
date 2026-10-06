@@ -1,3 +1,4 @@
+#+SLUG: huijiale
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 回家了

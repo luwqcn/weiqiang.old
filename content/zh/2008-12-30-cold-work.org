@@ -1,3 +1,4 @@
+#+SLUG: cold-work
 #+TITLE: 感冒，加班，其他
 #+DATE: 2008-12-30
 #+AUTHOR: 落为匠

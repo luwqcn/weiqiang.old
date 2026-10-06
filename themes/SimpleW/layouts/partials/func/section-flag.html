@@ -1,0 +1,84 @@
+{{- /*
+  func/section-flag.html — 读「按栏目」设置的布尔开关。
+
+  用法：
+      {{- $flag := partial "func/section-flag.html" (dict
+            "page" .
+            "keys" (slice "related" "relatedPosts")) -}}
+      {{- if eq $flag "true" }}{{ $x = true }}
+      {{- else if eq $flag "false" }}{{ $x = false }}{{ end -}}
+
+  返回字符串 "true" / "false"，没设置就返回空串。
+  **不能用布尔值** —— 调用方没法区分「没设置」和「明确设为 false」，
+  而前者要沿用调用方的默认值，后者要真的关掉。
+
+  keys 是同一个开关的各种写法（Hugo 的 params 键大小写不稳定，
+  所以 "prevNext" 和 "prevnext" 都要列上）。
+
+  设置的地方（后写的赢）：
+    1. `[[params.sections]]` 里 key 等于栏目目录名（xy）的那条
+    2. `[[params.sections]]` 里 key 等于栏目路径（xy/dian）的那条
+       —— 更具体，覆盖父栏目
+    3. 栏目 `content/<dir>/_index.md` 的 front matter，同名键
+       —— 注意 **Org 写的 _index.org 不行**：go-org 只把固定那几个
+          #+XXX 交给 Hugo，自定义键读不到，只能用第 1、2 种写法
+
+  值的写法：true / false 都行，字符串 "true" / "false" 也认 ——
+  字符串 "false" 在模板的 if 里是真值，所以下面特意做了转换。
+*/ -}}
+{{- $page := index . "page" -}}
+{{- $keys := index . "keys" -}}
+{{- $site := $page.Site -}}
+{{- $out := "" -}}
+
+{{- $sec := $page.Section -}}
+{{- $secPath := "" -}}
+{{- with $page.CurrentSection -}}
+  {{- $secPath = replaceRE "^/|/$" "" .RelPermalink -}}
+{{- end -}}
+
+{{- if and $sec $secPath -}}
+  {{- /* 1. 父栏目（目录名，如 xy） */ -}}
+  {{- range $site.Params.sections | default slice -}}
+    {{- if eq (.key | default "") $sec -}}
+      {{- $e := . -}}
+      {{- range $keys -}}
+        {{- if isset $e . -}}
+          {{- $v := index $e . -}}
+          {{- $s := printf "%v" $v -}}
+          {{- if or (eq $s "false") (eq $s "0") (not $v) }}{{ $out = "false" }}{{ else }}{{ $out = "true" }}{{ end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* 2. 子栏目（路径，如 xy/dian）—— 更具体，覆盖父栏目 */ -}}
+  {{- if ne $secPath $sec -}}
+    {{- range $site.Params.sections | default slice -}}
+      {{- if eq (.key | default "") $secPath -}}
+        {{- $e := . -}}
+        {{- range $keys -}}
+          {{- if isset $e . -}}
+            {{- $v := index $e . -}}
+            {{- $s := printf "%v" $v -}}
+            {{- if or (eq $s "false") (eq $s "0") (not $v) }}{{ $out = "false" }}{{ else }}{{ $out = "true" }}{{ end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* 3. 栏目 _index 的 front matter */ -}}
+  {{- with $page.CurrentSection -}}
+    {{- $cs := . -}}
+    {{- range $keys -}}
+      {{- if isset $cs.Params . -}}
+        {{- $v := index $cs.Params . -}}
+        {{- $s := printf "%v" $v -}}
+        {{- if or (eq $s "false") (eq $s "0") (not $v) }}{{ $out = "false" }}{{ else }}{{ $out = "true" }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $out -}}

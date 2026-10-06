@@ -1,3 +1,4 @@
+#+SLUG: renchennian
 #+STARTUP: showeverything
 #+TITLE: 壬辰年
 #+AUTHOR: 落为匠

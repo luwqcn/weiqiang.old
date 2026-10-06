@@ -1,3 +1,4 @@
+#+SLUG: daishanhualanman
 #+STARTUP: showeverything
 #+TITLE: 待山花烂漫
 #+AUTHOR: 落为匠

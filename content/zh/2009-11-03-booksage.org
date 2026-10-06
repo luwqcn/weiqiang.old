@@ -1,3 +1,4 @@
+#+SLUG: booksage
 #+TITLE: 书是有年龄的
 #+DATE: 2009-11-03
 #+AUTHOR: 落为匠

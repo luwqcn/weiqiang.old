@@ -1,3 +1,4 @@
+#+SLUG: first-work-day
 #+TITLE: 新年工作第一天
 #+DATE: 2012-01-29
 #+AUTHOR: 落为匠

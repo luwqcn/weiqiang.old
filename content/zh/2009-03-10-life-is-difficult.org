@@ -1,3 +1,4 @@
+#+SLUG: life-is-difficult
 #+TITLE: 生活很难
 #+DATE: 2009-03-10
 #+AUTHOR: 落为匠

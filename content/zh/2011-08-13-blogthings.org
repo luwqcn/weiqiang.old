@@ -1,3 +1,4 @@
+#+SLUG: blogthings
 #+STARTUP: showeverything
 #+TITLE: 这博客的一点事
 #+AUTHOR: 落为匠

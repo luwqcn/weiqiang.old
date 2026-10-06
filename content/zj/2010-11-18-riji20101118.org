@@ -1,3 +1,4 @@
+#+SLUG: riji20101118
 #+STARTUP: showall
 #+OPTIONS: num:3 toc:nil
 #+LANGUAGE: zh-CN

@@ -1,3 +1,4 @@
+#+SLUG: kongxiang
 #+STARTUP: showeverything
 #+TITLE: 只因空想太美
 #+AUTHOR: 落为匠

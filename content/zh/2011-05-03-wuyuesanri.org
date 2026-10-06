@@ -1,3 +1,4 @@
+#+SLUG: wuyuesanri
 #+STARTUP: showeverything
 #+OPTIONS: num:nil toc:nil
 #+TITLE: 五月三日

@@ -1,3 +1,4 @@
+#+SLUG: tcm-learning
 #+TITLE: 学习中医的困惑与入门方法
 #+DATE: 2021-12-04
 #+AUTHOR: 落为匠

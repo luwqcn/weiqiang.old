@@ -1,3 +1,4 @@
+#+SLUG: riquanshi-baoyu-qita
 #+STARTUP: showeverything
 #+TITLE: 日全食、暴雨、其他
 #+AUTHOR: 落为匠

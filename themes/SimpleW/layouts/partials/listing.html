@@ -22,6 +22,20 @@
 {{- $meta := partial "func/section-meta.html" $page -}}
 
 {{- /*
+  正文标题编号方式，和文章页（page.html）共用 [params.post] 的开关：
+  默认 false 用视觉分层标记，true 用 1 / 1.1 / 1.1.1 数字编号。
+  栏目页自己的 _index 里也可以写 headingNumbers = true 单独改。
+*/ -}}
+{{- $numHeadings := false -}}
+{{- $postCfg := site.Params.post | default dict -}}
+{{- range $k := slice "headingNumbers" "headingnumbers" -}}
+  {{- if isset $postCfg $k }}{{ $numHeadings = index $postCfg $k }}{{ end -}}
+{{- end -}}
+{{- range $k := slice "headingNumbers" "headingnumbers" -}}
+  {{- if isset $page.Params $k }}{{ $numHeadings = index $page.Params $k }}{{ end -}}
+{{- end -}}
+
+{{- /*
   右侧目录：默认只有单页（page.html）才有。栏目页想单独开，就在自己的
   _index 里写一行开关：
 
@@ -111,7 +125,9 @@
     {{- $c = partial "func/heading-anchors.html" $c -}}
     {{- $c = replaceRE `(?s)<nav>\s*<ul>.*?</nav>` "" $c | safeHTML -}}
   {{- end -}}
-<div class="section-content">{{ $c }}</div>
+  {{- /* 脚注 / 注释这类「容器标题」不参与编号，也不加分层标记 */ -}}
+  {{- $c = partial "func/heading-nonumber.html" $c -}}
+<div class="section-content{{ if $numHeadings }} num-headings{{ end }}">{{ $c }}</div>
 {{- end -}}
 
 {{- $pcfg := site.Params.pagination | default dict -}}
