@@ -1,0 +1,69 @@
+{{- /*
+  partials/comments/artalk.html — Artalk (self-hosted, the original site's choice).
+
+  [params.comments.artalk]
+    server   = "https://cmt.example.org"     # required
+    site     = "危墙"                         # defaults to site title
+    locale   = "zh-CN"
+    cdn      = "https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1"
+    pageKey  = ""        # "" → use the page path; "legacy" → let Artalk decide
+    legacyKeys = false   # true → pageKey 沿用旧站的 /zh/xxx.html 形式（见下）
+    darkMode = "auto"    # auto | light | dark | false
+    showPV   = true
+
+  pageKey 的三种来源（按优先级）：
+    1. 显式字符串：全站共用一个 key，一般不用
+    2. "legacy"：交给 Artalk，它会取 location.pathname
+    3. 空（默认）：用 RelPermalink，即本站自己的路径
+
+  legacyKeys —— 改漂亮 URL 后保住老评论用的开关。
+  评论是按 pageKey 存的，而旧站（Org-Mode 导出）的 pageKey 就是当时的
+  location.pathname：/zh/xxx.html。切成 /zh/xxx/ 之后，Artalk 在新路径下
+  找不到任何记录 —— 老评论不会丢，只是查不出来。打开 legacyKeys 让新页面
+  继续用旧 key 去取评论，等于先接住再说；等评论数据在后端真正改成新的 key
+  （见 scripts/artalk-migrate.py），再把这个开关关掉。
+*/ -}}
+{{- $a := site.Params.comments.artalk | default dict -}}
+{{- $server := $a.server | default "" -}}
+{{- if not $server -}}
+<p class="comments-disabled">请在 config 中配置 <code>params.comments.artalk.server</code> 后再启用 Artalk。</p>
+{{- else -}}
+{{- $cdn := $a.cdn | default "https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1" -}}
+{{- $pk := $a.pageKey | default "" -}}
+{{- if eq $pk "legacy" -}}
+  {{- $pk = "" -}}
+{{- else if not $pk -}}
+  {{- if $a.legacyKeys -}}
+    {{- /* 漂亮 URL 回退成旧站的 .html key：/zh/xxx/ -> /zh/xxx.html */ -}}
+    {{- $stem := strings.TrimSuffix "/" .RelPermalink -}}
+    {{- if $stem -}}
+      {{- $pk = printf "%s.html" $stem -}}
+    {{- else -}}
+      {{- $pk = "/" -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $pk = .RelPermalink -}}
+  {{- end -}}
+{{- end -}}
+{{- $scheme := site.Params.colorScheme | default "light" -}}
+{{- $dark := $a.darkMode | default "auto" -}}
+{{- if and (eq $scheme "light") (eq $dark "auto") }}{{ $dark = false }}{{ end -}}
+<link rel="stylesheet" href="{{ $cdn }}/Artalk.css">
+<div id="Comments"></div>
+<script src="{{ $cdn }}/Artalk.js" defer></script>
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  if (typeof Artalk === "undefined") return;
+  Artalk.init({{ dict
+      "el" "#Comments"
+      "pageKey" $pk
+      "pageTitle" .Title
+      "server" $server
+      "site" ($a.site | default site.Title)
+      "locale" ($a.locale | default "zh-CN")
+      "darkMode" $dark
+      "useBackendConf" false
+    | jsonify | safeJS }});
+});
+</script>
+{{- end -}}

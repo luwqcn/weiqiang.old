@@ -1,0 +1,19 @@
+{{- /*
+  partials/scripts.html — end-of-body scripts.
+
+  Hooks:
+    layouts/partials/custom-js.html   a template you own
+    params.customScripts              raw <script>…</script> markup
+*/ -}}
+{{- $js := resources.Get "js/main.js" -}}
+{{- if $js -}}
+  {{- $js = $js | minify | fingerprint -}}
+  <script src="{{ $js.RelPermalink }}" defer></script>
+{{- end -}}
+
+{{- if templates.Exists "partials/custom-js.html" }}
+{{ partial "custom-js.html" . }}
+{{- end }}
+{{- with site.Params.customScripts }}
+{{ . | safeHTML }}
+{{- end }}

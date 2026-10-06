@@ -1,0 +1,59 @@
+#+STARTUP: showeverything
+#+OPTIONS: num:nil toc:nil
+#+TITLE: 2025年秋假旅行记录
+#+AUTHOR: 落为匠
+#+DATE: 2025-11-16
+#+DESCRIPTION: 2025年秋季开始的小学秋假，记录短途旅行印象。
+#+KEYWORDS: 秋假, 旅行
+
+11月，据说是有始以来第一次的小学秋假正式落地。请了一天假，连着周末两天，带娃周边逛了逛，算是对得起这个假期。
+
+此次目的地为临海台州府城，看看城墙，然后随处走走，体验露营。最终走了四处：台州府城、麂崝山、白沙湾度假区、鸡笼山，古城、海边露营、沙滩、山顶露营，都体验了一遍。
+
+临海城墙只开放了一段，不值这个门票。台州府城内物价有点高，作为看惯了江南古镇的人，不推荐。白沙湾度假区不错，下回可以再去躺平度日。
+
+以下留一点照片以备忘。
+
+台州府城：
+
+#+CAPTION: 嘉善门
+[[file:/images/202511/jiashanmen.jpg]]
+
+#+caption: 剑来
+[[file:/images/202511/jianlai.jpg]]
+
+#+caption: 城墙远眺
+[[file:/images/202511/changcheng.jpg]]
+
+#+caption: 府城
+[[file:/images/202511/chengqiang.jpg]]
+
+#+caption: 临海
+[[file:/images/202511/linhai.jpg]]
+
+海边露营：
+
+#+caption: 海边日出
+[[file:/images/202511/haibianrichu.jpg]]
+
+沙滩：
+
+#+caption: 沙滩
+[[file:/images/202511/shatan.jpg]]
+
+#+caption: 海边
+[[file:/images/202511/haibian.jpg]]
+
+山顶露营：
+
+#+caption: 山顶豹5
+[[file:/images/202511/bao5luying.jpg]]
+
+#+caption: 山顶
+[[file:/images/202511/shanding.jpg]]
+
+#+caption: 日落
+[[file:/images/202511/riluo.jpg]]
+
+#+caption: 日出
+[[file:/images/202511/richu.jpg]]

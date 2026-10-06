@@ -1,0 +1,67 @@
+{{- /*
+  partials/footer.html — the postamble.
+
+  Tokens available inside `params.footer.infoLines` and `footer.copyright`:
+    {lastmod}  the current page's last-modified date
+    {year}     current year
+    {author}   params.author
+    {since}    params.since
+    {title}    site title
+
+  Knobs:
+    params.footer.title        heading above the nav (default 「本站导航」)
+    params.footer.showLastmod  print the "本页最后更新" line (default true)
+    params.footer.infoLines    []string additional lines (HTML/markdown allowed)
+    params.footer.copyright    string   the copyright line
+    params.footer.toTop        bool     show the ↑顶部 link (default true)
+*/ -}}
+{{- $sections := partial "func/sections.html" site -}}
+{{- $f := site.Params.footer | default dict -}}
+
+{{- $showLastmod := true -}}
+{{- if isset $f "showlastmod" }}{{ $showLastmod = $f.showLastmod }}{{ end -}}
+{{- $toTop := true -}}
+{{- if isset $f "totop" }}{{ $toTop = $f.toTop }}{{ end -}}
+
+{{- /* token substitution */ -}}
+{{- $repl := dict
+    "{lastmod}" (.Lastmod.Format "2006-01-02")
+    "{year}" (now.Format "2006")
+    "{author}" (site.Params.author | default "")
+    "{since}" (printf "%v" (site.Params.since | default ""))
+    "{title}" site.Title -}}
+
+{{- $copyright := $f.copyright | default "" -}}
+{{- if not $copyright -}}
+  {{- $author := site.Params.author | default site.Title -}}
+  {{- $suffix := "." -}}
+  {{- with site.Params.since }}{{ $suffix = printf ", SINCE %v." . }}{{ end -}}
+  {{- $copyright = printf "&copy; <a href=\"%s\" class=\"author\">%s</a>%s" site.Home.Permalink $author $suffix -}}
+{{- end -}}
+{{- range $k, $v := $repl }}{{ $copyright = replace $copyright $k $v }}{{ end -}}
+
+<footer id="postamble" class="status">
+<div id="footer-menu">
+<h2 class="article-title">{{ $f.title | default (i18n "siteNav" | default "本站导航") }}</h2>
+<div class="footer-nav">
+<a href="{{ site.Home.RelPermalink }}">{{ site.Params.homeLabel | default (i18n "home" | default "首页") }}</a>
+{{- range $sections -}}
+  {{- if .footer }} &bull; <a href="{{ .url | relURL }}"{{ if .external }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>
+  {{- end -}}
+{{- end -}}
+{{- range $f.extraLinks | default slice }} &bull; <a href="{{ .url | relURL }}"{{ if .external }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>
+{{- end -}}
+{{- if $toTop }} &bull; <a href="#top">&#8593; {{ i18n "toTop" | default "顶部" }}</a>{{ end }}
+</div>
+</div>
+
+<div id="footer-info">
+{{- if $showLastmod }}
+{{ replace (i18n "lastUpdated" | default "本页最后更新: {lastmod}.") "{lastmod}" (.Lastmod.Format "2006-01-02") }}<br>
+{{- end -}}
+{{- range $f.infoLines | default slice }}
+{{ $line := . }}{{ range $k, $v := $repl }}{{ $line = replace $line $k $v }}{{ end }}{{ $line | safeHTML }}<br>
+{{- end -}}
+{{ $copyright | safeHTML }}
+</div>
+</footer>

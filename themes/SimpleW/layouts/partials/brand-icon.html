@@ -1,0 +1,25 @@
+{{- /*
+  partials/brand-icon.html — the site mark in the top-left corner.
+
+  Inlines an SVG from `assets/` so it can inherit the current text colour
+  (and therefore follow dark mode). Falls back to an <img> for raster marks.
+
+  Set `params.brand.icon` to override; the theme ships `images/logo.svg`.
+*/ -}}
+{{- $icon := site.Params.brand.icon | default "images/logo.svg" -}}
+{{- $alt := site.Params.brand.alt | default "" -}}
+{{- $r := resources.Get $icon -}}
+{{- if $r -}}
+  {{- if eq $r.MediaType.SubType "svg" -}}
+    {{- $svg := $r.Content -}}
+    {{- $svg = replaceRE `(?s)<\?xml.*?\?>` "" $svg -}}
+    {{- $svg = replaceRE `(?s)<!--.*?-->` "" $svg -}}
+    {{- $svg | safeHTML -}}
+  {{- else -}}
+    <img src="{{ $r.RelPermalink }}" alt="{{ $alt }}" width="24" height="24" loading="eager">
+  {{- end -}}
+{{- else -}}
+  {{- with site.Params.brand.icon -}}
+    <img src="{{ . | relURL }}" alt="{{ $alt }}" width="24" height="24" loading="eager">
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,41 @@
+{{- /*
+  Block: recent — the latest posts, optionally narrowed to some sections.
+
+  [[params.home.blocks]]
+    type           = "recent"
+    title          = "最近更新"
+    sections       = ["zh", "yue"]   # omit for all sections
+    excludeSections = ["bc"]
+    count          = 5
+    style          = "grouped"       # grouped | cards | plain
+    group          = false           # false = one flat list (the original look)
+    showDesc       = true            # use the description as a title tooltip
+    more           = { name = "网志", url = "/zh/" }
+*/ -}}
+{{- $b := .block -}}
+{{- $ctx := .ctx -}}
+{{- $secs := $b.sections | default slice -}}
+{{- $excl := $b.excludeSections | default slice -}}
+{{- $count := $b.count | default 5 -}}
+{{- $group := false -}}
+{{- if isset $b "group" }}{{ $group = $b.group }}{{ end -}}
+{{- $showDesc := true -}}
+{{- if isset $b "showdesc" }}{{ $showDesc = $b.showDesc }}{{ end -}}
+
+{{- $pages := site.RegularPages -}}
+{{- if $secs }}{{ $pages = where $pages "Section" "in" $secs }}{{ end -}}
+{{- if $excl }}{{ $pages = where $pages "Section" "not in" $excl }}{{ end -}}
+{{- with $b.type_filter }}{{ $pages = where $pages "Type" . }}{{ end -}}
+{{- $pages = $pages.ByDate.Reverse | first $count -}}
+
+<section class="home-block block-recent">
+{{- with $b.title }}<h2 class="block-title">{{ . }}</h2>{{ end -}}
+{{- partial "entry-list.html" (dict
+      "pages" $pages
+      "style" ($b.style | default "grouped")
+      "group" $group
+      "showDesc" $showDesc) -}}
+{{- with $b.more }}
+<nav class="index-item"><p>{{ $b.moreLabel | default (i18n "moreLink" | default "更多可见：") }} <a href="{{ .url | relURL }}">{{ .name }}</a></p></nav>
+{{- end }}
+</section>

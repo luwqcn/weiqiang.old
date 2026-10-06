@@ -1,0 +1,73 @@
+{{- /*
+  home.html — the homepage.
+
+  Two layers, both optional and independent:
+
+    1. `content/_index.md` body — plain markdown, rendered first.
+    2. `[[params.home.blocks]]` — a list of blocks, rendered in order.
+       If you define no blocks, a sensible default (recent + sections) runs.
+
+  Set `params.home.showContent = false` to skip layer 1,
+  or `params.home.title = "…"` to print an <h1> above everything.
+
+  Prefer full control? Put this in your own layouts/index.html — Hugo lets a
+  site file shadow the theme's.
+*/ -}}
+{{ define "main" }}
+{{- $cfg := site.Params.home | default dict -}}
+{{- $showContent := true -}}
+{{- if isset $cfg "showcontent" }}{{ $showContent = $cfg.showContent }}{{ end -}}
+{{- $showTitle := false -}}
+{{- if isset $cfg "showtitle" }}{{ $showTitle = $cfg.showTitle }}{{ end -}}
+{{- $blocks := $cfg.blocks | default slice -}}
+{{- $body := trim .Content " \n\t" -}}
+
+{{- /*
+  拆成两拨：hero（开场白）先渲染，再渲染 content/_index.md 的正文，
+  其余块排在正文之后。这样「欢迎！」才会落在页面文字的最上面，
+  而不是夹在正文和「最近更新」中间。
+
+  想让别的块也跑到正文之上，给它加一行 `position = "top"`。
+  想让 hero 回到正文之后，写成 `position = "bottom"`。
+*/ -}}
+{{- $top := slice -}}
+{{- $rest := slice -}}
+{{- range $b := $blocks -}}
+  {{- $pos := $b.position | default "" -}}
+  {{- $isHero := eq ($b.type | default "") "hero" -}}
+  {{- if and (not $isHero) (eq $pos "bottom") -}}
+    {{- $rest = $rest | append $b -}}
+  {{- else if or $isHero (eq $pos "top") -}}
+    {{- $top = $top | append $b -}}
+  {{- else -}}
+    {{- $rest = $rest | append $b -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if or $showTitle $cfg.title }}
+{{- with ($cfg.title | default .Title) }}<h1 class="title">{{ . }}</h1>{{ end -}}
+{{- end -}}
+
+{{- range $b := $top -}}
+  {{- partial "blocks/render.html" (dict "block" $b "ctx" $) -}}
+{{- end -}}
+
+{{- if and $showContent $body }}
+<div class="home-content">{{ .Content }}</div>
+{{- end -}}
+
+{{- if $rest -}}
+  {{- range $b := $rest -}}
+    {{- partial "blocks/render.html" (dict "block" $b "ctx" $) -}}
+  {{- end -}}
+{{- else -}}
+  {{- partial "blocks/render.html" (dict "block" (dict
+        "type" "recent"
+        "title" ($cfg.recentTitle | default (i18n "recentPosts" | default "最近更新"))
+        "count" ($cfg.recentCount | default 5)
+        "group" false) "ctx" $) -}}
+  {{- partial "blocks/render.html" (dict "block" (dict
+        "type" "sections"
+        "title" ($cfg.sectionsTitle | default (i18n "sections" | default "栏目"))) "ctx" $) -}}
+{{- end -}}
+{{ end }}

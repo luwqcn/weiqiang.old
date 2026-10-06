@@ -1,0 +1,130 @@
+# SimpleW — English
+# Override any of these in your site's i18n/en.toml.
+
+[home]
+other = "Home"
+
+[skipToContent]
+other = "Skip to content"
+
+[mainNav]
+other = "Main navigation"
+
+[siteNav]
+other = "Site navigation"
+
+[nav]
+other = "Menu"
+
+[toTop]
+other = "Top"
+
+[toggleTheme]
+other = "Toggle colour scheme"
+
+[lastUpdated]
+other = "Last updated: {lastmod}."
+
+[recentPosts]
+other = "Recent posts"
+
+[sections]
+other = "Sections"
+
+[moreLink]
+other = "More in"
+
+[postsUnit]
+other = "posts"
+
+[noPosts]
+other = "Nothing here yet."
+
+[noTerms]
+other = "Nothing here yet."
+
+[yearSuffix]
+other = ""
+
+[countSuffix]
+other = "("
+
+[countUnit]
+other = " posts)"
+
+[yearIndex]
+other = "Jump to year"
+
+# Axis labels for the day-grid heatmap (the "calendar" listing style),
+# comma separated. Month labels thin out to every third on narrow screens.
+[monthShort]
+other = "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"
+
+[weekdayShort]
+other = "Mon,Wed,Fri"
+
+[heatmapAria]
+other = "posting heatmap"
+
+[pagination]
+other = "Pagination"
+
+[prevPage]
+other = "Newer"
+
+[nextPage]
+other = "Older"
+
+[toc]
+other = "Contents"
+
+[postNav]
+other = "Previous / next post"
+
+[relatedPosts]
+other = "Related posts"
+
+[readingTime]
+other = "1 min read"
+
+[minutes]
+other = "min read"
+
+[words]
+other = "words"
+
+[updated]
+other = "Updated"
+
+[comments]
+other = "Comments"
+
+[commentsDisabled]
+other = "Comments are disabled."
+
+[commentTemplateMissing]
+other = "Comment template not found"
+
+[commentProviderUnknown]
+other = "Unknown comment provider"
+
+[customCommentsHint]
+other = "This is the custom comment template placeholder. Copy it to layouts/partials/comments/custom.html in your own site and build on it."
+
+[needJS]
+other = "Please enable JavaScript to view the comments."
+
+[pageviews]
+other = "Views"
+
+[loading]
+other = "Loading..."
+
+[notFound]
+other = "Page not found"
+
+[notFoundHint]
+other = "The page you were looking for may have moved or been deleted."
+
+[backHome]
+other = "Back home"

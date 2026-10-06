@@ -1,0 +1,20 @@
+#+TITLE: 典籍
+#+OPTIONS: num:nil h:3
+#+OPTIONS: comment:nil pagenav:nil entrymeta:nil
+#+LANGUAGE: zh-CN
+#+AUTHOR: 落为匠
+#+DATE: 2015-12-31
+#+DESCRIPTION: 半農的个人笔记本，包括中医学习笔记、文本整理、学拳记录等，人生有大愿力，而后有大建树。
+#+KEYWORDS: 中医, 古籍整理, 太极拳
+
+#+begin_export html
+<div class="meta">
+  <p>书房：这里记录半農的个人笔记，重点关注中医类、古典类、拳理类等，人生有大愿力，而后有大建树。以十年为单位，积累人生资本。</p>
+</div>
+#+end_export
+
+- [[file:zhengqige.org][正氣歌 [宋]文天祥]] [2022-01-23]
+- [[/xy/dian/beixiziyi/][北溪字義]] [2021-12-18]
+- [[/xy/dian/xinglizixun/][性理字训]] [2021-02-28]
+- [[/xy/dian/zhijiageyan/][朱子治家格言]] [2021-02-27]
+- [[/xy/dian/dushu-fennian-richeng/][读书分年日程]] [2020-02-28]

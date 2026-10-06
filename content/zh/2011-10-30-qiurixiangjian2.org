@@ -1,0 +1,29 @@
+#+STARTUP: showeverything
+#+TITLE: 乡间·秋（二）
+#+AUTHOR: 落为匠
+#+DATE: 2011-10-30
+#+DESCRIPTION: 
+#+KEYWORDS: 
+
+周末回乡下，今天干了点农活，好几年不干活了，平时也不怎么运动，身体真有些抗不住，尴尬的。
+
+算是忙里偷闲，照了几张，大多废片，盛开的菊花挺好看的，可惜不多。稻子也快熟了，又一年丰收季。
+
+#+caption: 稻谷
+[[file:/images/201110/daogu.jpeg]]
+
+#+caption: 杭菊花
+[[file:/images/201110/juhua.jpeg]]
+
+#+caption: 落叶
+[[file:/images/201110/luoye.jpeg]]
+
+#+caption: 双生
+[[file:/images/201110/twins.jpeg]]
+
+#+caption: 叶如蝶
+[[file:/images/201110/ye.jpeg]]
+
+最后一张很废很废。
+
+以上。辛卯年十月初四日。

@@ -1,0 +1,35 @@
+{{- /*
+  Block: sections — a card grid of all registered categories.
+
+  [[params.home.blocks]]
+    type      = "sections"
+    title     = "栏目"
+    showCount = true
+    showDesc  = true
+    only      = ["zh", "bc"]   # optional allow-list
+    exclude   = ["xy"]         # optional deny-list
+*/ -}}
+{{- $b := .block -}}
+{{- $sections := partial "func/sections.html" site -}}
+{{- $only := $b.only | default slice -}}
+{{- $exclude := $b.exclude | default slice -}}
+{{- $showCount := true -}}
+{{- if isset $b "showcount" }}{{ $showCount = $b.showCount }}{{ end -}}
+{{- $showDesc := true -}}
+{{- if isset $b "showdesc" }}{{ $showDesc = $b.showDesc }}{{ end -}}
+
+<section class="home-block block-sections">
+{{- with $b.title }}<h2 class="block-title">{{ . }}</h2>{{ end }}
+<div class="section-cards">
+{{- range $sections -}}
+  {{- if and .home (not (and $only (not (in $only .key)))) (not (in $exclude .key)) }}
+  <a class="section-card" href="{{ .url | relURL }}"{{ if .external }} target="_blank" rel="noopener"{{ end }}>
+    <span class="sc-name">{{ .name }}</span>
+    {{- with .subtitle }}<span class="sc-sub">{{ . }}</span>{{ end -}}
+    {{- if and $showDesc .description }}<span class="sc-desc">{{ .description | plainify | truncate 60 }}</span>{{ end -}}
+    {{- if and $showCount .count }}<span class="sc-desc">{{ .count }} {{ i18n "postsUnit" | default "篇" }}</span>{{ end -}}
+  </a>
+  {{- end -}}
+{{- end }}
+</div>
+</section>

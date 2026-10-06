@@ -1,0 +1,14 @@
+{{- /*
+  _markup/render-heading.html — heading render hook.
+
+  Gives every heading a stable id and an invisible anchor link you can click
+  to copy the URL. Purely additive: the class is styled in components.css,
+  and the visual output is identical to the default renderer.
+*/ -}}
+{{- $level := .Level -}}
+{{- $id := .Anchor -}}
+{{- $text := .Text -}}
+<h{{ $level }} id="{{ $id }}">
+  {{- $text | safeHTML -}}
+  <a class="heading-anchor" href="#{{ $id }}" aria-label="链接到本节">#</a>
+</h{{ $level }}>

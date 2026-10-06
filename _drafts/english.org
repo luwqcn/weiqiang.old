@@ -1,0 +1,143 @@
+#+STARTUP: showeverything
+#+LANGUAGE: zh-CN
+#+OPTIONS: num:t toc:nil pagenav:nil author:nil
+#+EMAIL: lu@weiqiang.org
+#+TITLE: 英语练习记录
+#+AUTHOR: 陆伟强
+#+DATE: <2026-03-28 六>
+#+DESCRIPTION: 2026年重拾英语，记录日常生活场景使用的短句，便于练习。
+#+KEYWORDS: 英语
+
+* 场景一：购物类
+
+商场购衣服、鞋子等
+
+1.我想买条裙子。 I'd like a dress.
+
+2.我能不能试试？ Could I try it on?
+
+3.有中码的吗？ Do you have a medium?
+
+4.这个颜色褪色吗？ Does this color fade?
+
+5.是最新款吗？ Is this the latest fashion?
+
+6.请问试衣间在哪？ Where's the fitting room, please?
+
+7.太紧了。 It's too tight.
+
+8.有没有其他颜色？ Is it available in any other colors?
+
+9.它们不搭。 They don't match.
+
+10.看着像量身定制似的。 It looks tailor-made on you.
+
+11.这是什么材质的？ What is it made of?
+
+12.我能带几件进去（试穿）？ How many items can I bring in?
+
+13.需要特别保养吗？ Do they need any special care?
+
+14.有什么可以搭配这衬衫的吗？ Do you have anything to go with this shirt?
+
+15.我觉得这个颜色不配我的肤色。 I don't think this color suits my skin tone.
+
+16.我穿这个怎么样？ How does it look on me?
+
+17.你穿这件很好。 It looks good on you.
+
+18.拉链开了。 The zipper is open.
+
+19.我卡住了。 I'm stuck here.
+
+20.有黑色吗？ Do you have it in black?
+
+21.有没有浅色的？ Do you have it in light colors?
+
+22.跟太高了。 The heels are too high.
+
+23.我要了。 I'll take it.
+
+24.码数错了。 It's the wrong size for me.
+
+25.我能不能试试小一码的？ Could I try one size smaller?
+
+26.我想买项链。 I'm looking for a necklace.
+
+27.我就看看，谢谢。 I'm just looking, thanks.
+
+28.暂时缺货了。 They're out of stock.
+
+29.这鞋子夹脚。 These shoes hurt my feet.
+
+30.卖完了。 They're sold out.
+
+* 场景二：就餐相关
+
+1.能帮我摆好桌子吗？ Could you help me set the table?
+
+2.能把醋递给我吗？ Could you pass me the vinegar?
+
+3.晚餐我妈做了一只烤鸭。 My mom roasted a duck for dinner.
+
+4.帮我打一下鸡蛋吧。 Help me whisk the eggs.
+
+5.关火。 Turn off the heat.
+
+6.我炖了些羊肉。 I stewed some lamb.
+
+7.你把菜烧糊了？ Did you burn the food?
+
+8.她为我做了个蛋糕。 She baked a cake for me.
+
+9.能给我这个菜谱吗？ Could I have the recipe?
+
+10.这个菜谱做起来很难。 This recipe is difficult to follow.
+
+11.能削一下黄瓜皮吗？ Could you peel the cucumber?
+
+12.我来切土豆丁。 I'll chop up the potatoes.
+
+13.切猪肉的时候注意手。 Watch your hands when you slice the pork.
+
+14.加点水进去。 Pour in some water.
+
+15.打个鸡蛋。 Crack an egg.
+
+16.加一小撮黑胡椒。 Add a pinch of black pepper.
+
+17.能帮我把菜端上桌吗？ Could you help me serve the dishes?
+
+18.我炒了虾。 I stir-fried some shrimps.
+
+19.你做饭很棒。 You're a good cook!
+
+20.把洋葱吃完。 Eat up the onions.
+
+21.我来洗碗。 I'll do the dishes.
+
+22.我吃饱了。 I'm full.
+
+23.把吃剩下的放冰箱。 Keep the leftovers in the fridge.
+
+24.你们送餐吗？ Do you deliver?
+
+25.我要点个汉堡外卖。 I'd like to order a hamburger for dilivery.
+
+26.能不加蒜吗？ Can I get that without garlic?
+
+27.送餐额外收费吗？ Does delivery cost extra?
+
+28.我自取。 I'll pick it up.
+
+29.我要买一送一套餐。 I'd like the two-for-one special, please.
+
+30.我的叫餐还没到。 My food's not arrived yet.
+
+31.我要预订。 I'd like to make a reservation.
+
+32.我要订四人桌。 I'd like to reserve a table for four.
+
+33.这地方人挤满了。 This place is packed.
+
+34.

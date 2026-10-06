@@ -1,0 +1,24 @@
+{{- /*
+  Block: columns — a two/three column grid of markdown cards.
+
+  [[params.home.blocks]]
+    type    = "columns"
+    title   = "三件事"
+    columns = 3
+    items   = [
+      { title = "读书", content = "…" },
+      { title = "写字", content = "…" },
+    ]
+*/ -}}
+{{- $b := .block -}}
+<section class="home-block block-columns">
+{{- with $b.title }}<h2 class="block-title">{{ . }}</h2>{{ end }}
+<div class="section-cards">
+{{- range $b.items | default slice }}
+  <div class="section-card">
+    {{- with .title }}<span class="sc-name">{{ . }}</span>{{ end -}}
+    {{- with .content }}<span class="sc-desc">{{ . | markdownify }}</span>{{ end -}}
+  </div>
+{{- end }}
+</div>
+</section>

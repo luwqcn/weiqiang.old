@@ -1,0 +1,161 @@
+{{- /*
+  partials/listing.html — the one template behind every category page.
+
+  It powers `section`, `term`, and generic `list` pages, so "自由定义分类页"
+  reduces to: edit `[[params.sections]]` in config, and/or drop an
+  `_index.md` into the section. Call it with the Page as the context:
+
+      {{ partial "listing.html" . }}
+
+  Resolution — later wins:
+    theme defaults → registry entry → `content/<dir>/_index.md` front matter
+
+  Front matter keys an `_index.md` may carry:
+    title, description, subtitle
+    style:  grouped | calendar | cards | plain
+    scope:  recursive | direct
+    group:  true | false
+    showMeta: true | false
+    showToc: true | false   —— 本页要不要右侧目录（默认否，见下）
+*/ -}}
+{{- $page := . -}}
+{{- $meta := partial "func/section-meta.html" $page -}}
+
+{{- /*
+  右侧目录：默认只有单页（page.html）才有。栏目页想单独开，就在自己的
+  _index 里写一行开关：
+
+      Markdown : showToc: true
+      Org      : #+SHOWTOC: true
+
+  想让所有栏目页都有，写 params.toc.onListings = true（逐页开关优先）。
+  页面本身没有标题时 .TableOfContents 为空，开了也不会多出空框。
+*/ -}}
+{{- $showToc := false -}}
+{{- with (site.Params.toc | default dict).onListings }}{{ $showToc = . }}{{ end -}}
+{{- with $meta.toc }}{{ $showToc = true }}{{ end -}}
+{{- /*
+  再给逐页一个开关（Markdown 的 _index.md 可直接写 `showToc: true`）。
+  Org 内容里自定义的 `#+XXX:` 并不会进 .Params（实测 go-org 只认
+  author/date/description/filetags/keywords/options 等固定几个键），
+  所以 Org 栏目页请用 hugo.toml 里 [[params.sections]] 的 `toc = true`。
+  统一用 printf "%v" 归一化，免得字符串 "false" 被当成真值。
+*/ -}}
+{{- range $k := slice "showToc" "showtoc" -}}
+  {{- if isset $page.Params $k -}}
+    {{- $v := printf "%v" (index $page.Params $k) -}}
+    {{- if eq $v "false" -}}{{ $showToc = false -}}
+    {{- else if eq $v "true" -}}{{ $showToc = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- /*
+  逐页开关优先级最高。Org 的 `#+SHOWTOC:` 给进来的是字符串，
+  所以统一用 printf "%v" 归一化后再比，免得 "false" 被当成真值。
+  （Hugo 对 params 的键大小写不总一致，两种写法都查一遍。）
+*/ -}}
+{{- range $k := slice "showToc" "showtoc" -}}
+  {{- if isset $page.Params $k -}}
+    {{- $v := printf "%v" (index $page.Params $k) -}}
+    {{- if eq $v "false" -}}{{ $showToc = false -}}
+    {{- else if eq $v "true" -}}{{ $showToc = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $showToc }}<div class="post-layout has-toc"><div class="post-main">{{ end -}}
+
+{{- /* ---- how many pages, and which ones ---- */ -}}
+{{- $scope := site.Params.listScope | default "recursive" -}}
+{{- with $page.Params.scope }}{{ $scope = . }}{{ end -}}
+{{- $pages := $page.Pages -}}
+{{- if $page.IsSection -}}
+  {{- if eq $scope "direct" -}}
+    {{- $pages = $page.RegularPages -}}
+  {{- else -}}
+    {{- $pages = $page.RegularPagesRecursive -}}
+  {{- end -}}
+{{- end -}}
+{{- $pages = $pages.ByDate.Reverse -}}
+
+{{- $showMeta := true -}}
+{{- if isset $page.Params "showmeta" }}{{ $showMeta = $page.Params.showMeta }}{{ end -}}
+
+{{- $group := (eq $meta.style "grouped") -}}
+{{- if isset $page.Params "group" }}{{ $group = $page.Params.group }}{{ end -}}
+
+{{- $calCfg := site.Params.listing.calendar | default dict -}}
+{{- $calCount := true -}}
+{{- if isset $calCfg "showcount" }}{{ $calCount = $calCfg.showCount }}{{ end -}}
+{{- $isCalendar := eq $meta.style "calendar" -}}
+
+<header class="page-header">
+  <h1 class="title">{{ $meta.name }}{{ if $isCalendar }}{{ if $calCount }}<span class="count-badge"> · {{ len $pages }} {{ i18n "postsUnit" | default "篇" }}</span>{{ end }}{{ end }}</h1>
+  {{- with $meta.subtitle }}<p class="subtitle">{{ . }}</p>{{ end -}}
+</header>
+
+{{- if and $showMeta $meta.description }}
+<div class="meta">{{ $meta.description | markdownify }}</div>
+{{- end -}}
+
+{{- with $page.Content -}}
+  {{- $c := . -}}
+  {{- /*
+    挂了右侧目录时做两件事：
+      1. 摘掉 Org 的 `#+TOC:` 生成的内联目录 —— 同一页两个目录很啰嗦。
+         RE2 没有反向引用，但内层的都是 </ul>，非贪婪取到第一个 </nav> 即可。
+      2. 给正文标题补上悬停才出现的 # 锚点（Org 不走 render-heading 钩子，
+         标题上本来没有）。与文章页共用 func/heading-anchors.html。
+     replaceRE 返回字符串，最后必须过一遍 safeHTML，否则标签会被转义。
+  */ -}}
+  {{- if $showToc -}}
+    {{- $c = partial "func/heading-anchors.html" $c -}}
+    {{- $c = replaceRE `(?s)<nav>\s*<ul>.*?</nav>` "" $c | safeHTML -}}
+  {{- end -}}
+<div class="section-content">{{ $c }}</div>
+{{- end -}}
+
+{{- $pcfg := site.Params.pagination | default dict -}}
+{{- $doPaginate := false -}}
+{{- if isset $pcfg "enabled" }}{{ $doPaginate = $pcfg.enabled }}{{ end -}}
+
+{{- /*
+  hideList：只输出页头 + 说明 + 正文，不列文章，也不分页、不做年份导航。
+  配置里 `[[params.sections]] hideList = true`，或该栏目的 _index 里写
+  `hideList: true`。适合 /xy/ 这类正文已经把各话题讲完的导览页。
+*/ -}}
+{{- $hideList := false -}}
+{{- with $meta.hideList }}{{ $hideList = . }}{{ end -}}
+
+{{- if $hideList -}}
+  {{- /* 什么都不列 */ -}}
+{{- else if and $doPaginate (gt (len $pages) 0) -}}
+  {{- $paginator := $page.Paginate $pages -}}
+  {{- partial "entry-list.html" (dict
+        "pages" $paginator.Pages
+        "style" $meta.style
+        "group" $group) -}}
+  {{- partial "pagination.html" $paginator -}}
+{{- else -}}
+  {{- partial "entry-list.html" (dict
+        "pages" $pages
+        "style" $meta.style
+        "group" $group) -}}
+{{- end -}}
+
+{{- /* Optional year-by-year index for very long sections */ -}}
+{{- $yearIndex := false -}}
+{{- if isset $page.Params "yearindex" }}{{ $yearIndex = $page.Params.yearIndex }}{{ end -}}
+{{- if and (not $hideList) $yearIndex $pages }}
+<nav class="year-index" aria-label="{{ i18n "yearIndex" | default "年份导航" }}">
+  <span class="timestamp">{{ i18n "yearIndex" | default "年份导航" }}：</span>
+  {{- range $pages.GroupByDate "2006" }}
+  <a href="#year-{{ .Key }}" class="chip">{{ .Key }}</a>
+  {{- end }}
+</nav>
+{{- end -}}
+
+{{- if $showToc -}}
+</div>
+{{- partial "toc.html" $page -}}
+</div>
+{{- end -}}

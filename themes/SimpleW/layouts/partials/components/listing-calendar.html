@@ -1,0 +1,131 @@
+{{- /*
+  components/listing-calendar.html — the "calendar" listing style.
+
+  One collapsible block per year:
+
+      ▸ 2026 · 41 篇
+          [month axis ...............]
+          [ year day-grid heatmap    ]
+          09/27  a post title
+          09/27  another post title
+          …
+
+  Call with a dict:
+      {{ partial "components/listing-calendar.html" (dict "pages" $pages) }}
+
+  Everything below lives under `[params.listing.calendar]` and is optional:
+
+      heatmap       true       draw the year day-grid
+      palette       "accent"   accent | ink — which heat ramp to paint
+      weekStart     "monday"   monday | sunday — top row of the grid
+      levels        [1,2,4,7]  minimum posts for heat level 1..N
+      months        []         month axis labels; empty → i18n `monthShort`
+      monthAxis     true       show the Jan…Dec axis
+      weekdayAxis   true       show the Mon/Wed/Fri axis
+      openYears     1          how many recent years start expanded (-1 = all)
+      dateFormat    "01/02"    Go layout for the row date
+      showCount     true       "· N 篇" next to the year
+      maxTitles     12         titles in a heatmap cell's tooltip
+
+  Note on pagination: the grid is drawn from whatever set reaches this partial.
+  With `[params.pagination] enabled = true` each page therefore shows a partial
+  year and the counts reflect that page only — the calendar reads best with
+  pagination off, which is also how the original site behaved.
+*/ -}}
+
+{{- $pages := .pages -}}
+{{- $cfg := site.Params.listing.calendar | default dict -}}
+
+{{- $heatmap := true -}}
+{{- if isset $cfg "heatmap" }}{{ $heatmap = $cfg.heatmap }}{{ end -}}
+
+{{- $monthAxis := true -}}
+{{- if isset $cfg "monthaxis" }}{{ $monthAxis = $cfg.monthAxis }}{{ end -}}
+
+{{- $weekdayAxis := true -}}
+{{- if isset $cfg "weekdayaxis" }}{{ $weekdayAxis = $cfg.weekdayAxis }}{{ end -}}
+
+{{- $showCount := true -}}
+{{- if isset $cfg "showcount" }}{{ $showCount = $cfg.showCount }}{{ end -}}
+
+{{- $openYears := 1 -}}
+{{- if isset $cfg "openyears" }}{{ $openYears = int $cfg.openYears }}{{ end -}}
+
+{{- $palette := $cfg.palette | default "accent" -}}
+{{- $dateFormat := $cfg.dateFormat | default "01/02" -}}
+{{- $weekStart := $cfg.weekStart | default "monday" -}}
+{{- $mondayFirst := eq $weekStart "monday" -}}
+{{- $unit := i18n "postsUnit" | default "篇" -}}
+
+{{- $months := split (i18n "monthShort" | default "1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月") "," -}}
+{{- with $cfg.months }}{{ $months = . }}{{ end -}}
+{{- $weekdays := split (i18n "weekdayShort" | default "一,三,五") "," -}}
+
+{{- /* The grid box is always 7 rows tall, so 89px — see heatmap.html. */ -}}
+{{- $vh := 89 -}}
+{{- $whisker := 0 -}}
+{{- if not $mondayFirst }}{{ $whisker = 1 }}{{ end -}}
+
+<div class="listing-calendar palette-{{ $palette }}">
+{{- range $i, $g := ($pages.ByDate.Reverse).GroupByDate "2006" }}
+  {{- $isOpen := false -}}
+  {{- if lt $openYears 0 }}{{ $isOpen = true }}{{ else if lt $i $openYears }}{{ $isOpen = true }}{{ end -}}
+
+  {{- /* Same arithmetic as heatmap.html, needed here to place the month axis. */ -}}
+  {{- $jan1 := time.AsTime (printf "%s-01-01T00:00:00Z" $g.Key) -}}
+  {{- $dec31 := time.AsTime (printf "%s-12-31T00:00:00Z" $g.Key) -}}
+  {{- $days := add (div (sub $dec31.Unix $jan1.Unix) 86400) 1 -}}
+  {{- $firstRow := int $jan1.Weekday -}}
+  {{- if $mondayFirst }}{{ $firstRow = mod (add $firstRow 6) 7 }}{{ end -}}
+  {{- $cols := div (add (add $days $firstRow) 6) 7 -}}
+  {{- $rowPages := $g.Pages.ByDate.Reverse }}
+
+  <details class="year"{{ if $isOpen }} open{{ end }}>
+    <summary class="year-head">
+      <svg class="year-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+      <h2 class="year-title">{{ $g.Key }}{{ if $showCount }}<span class="count-badge"> · {{ len $rowPages }} {{ $unit }}</span>{{ end }}</h2>
+    </summary>
+
+    <div class="year-body">
+      {{- if or $heatmap $monthAxis $weekdayAxis }}
+      <div class="heat-wrap">
+        {{- if $monthAxis }}
+        <div class="heat-months" aria-hidden="true">
+          {{- range $mi, $label := $months }}
+          {{- $m1 := time.AsTime (printf "%s-%02d-01T00:00:00Z" $g.Key (add $mi 1)) -}}
+          {{- $doy := div (sub $m1.Unix $jan1.Unix) 86400 -}}
+          {{- $col := div (add (int $doy) $firstRow) 7 -}}
+          {{- $pct := printf "%.2f" (mul (div (float $col) (float $cols)) 100) }}
+          <span style="left:{{ $pct }}%">{{ $label }}</span>
+          {{- end }}
+        </div>
+        {{- end }}
+        {{- if $weekdayAxis }}
+        <div class="heat-weekdays" aria-hidden="true">
+          {{- range $k, $label := $weekdays }}
+          {{- $row := add $whisker (mul $k 2) -}}
+          {{- $top := printf "%.2f" (mul (div (add (mul $row 13) 5.5) 89.0) 100) }}
+          <span style="top:{{ $top }}%">{{ $label }}</span>
+          {{- end }}
+        </div>
+        {{- end }}
+        {{- if $heatmap }}
+        {{- partial "components/heatmap.html" (dict "year" $g.Key "pages" $rowPages "cfg" $cfg) }}
+        {{- end }}
+      </div>
+      {{- end }}
+
+      <div class="rows">
+        {{- range $rowPages }}
+        <div class="row">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $dateFormat }}</time>
+          <a href="{{ .RelPermalink }}"{{ with .Description }} title="{{ . }}"{{ end }}>{{ .Title }}</a>
+        </div>
+        {{- end }}
+      </div>
+    </div>
+  </details>
+{{- end }}
+</div>

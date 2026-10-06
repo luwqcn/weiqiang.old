@@ -1,0 +1,354 @@
+/* ==========================================================================
+   SimpleW — listing.css
+   The "calendar" listing style.
+
+   One collapsible <details> per year: a year header with a post count, the
+   year's day-grid heatmap (columns = weeks, rows = weekdays), then a compact
+   "MM/DD  title" row per post.
+
+   Layout and interactions follow the reference design; the colours are re-cut
+   to this theme's tokens. Note the theme runs on a 62.5% root, so 1rem = 10px
+   and every size below is read in that scale.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Heat ramp
+
+   Two ramps, picked by `[params.listing.calendar] palette`:
+
+     accent (default) — the site's 赭红 #ab4f49, so the grid sits inside the
+                        existing palette instead of fighting it
+     ink              — the reference's slate-blue, if you want the original
+                        look exactly
+
+   Cells are painted through the `.heat-*` classes, so switching ramps never
+   touches the markup.
+   -------------------------------------------------------------------------- */
+.listing-calendar {
+    --heat-0: #ededed;
+    --heat-1: #eedad7;
+    --heat-2: #dcb0ab;
+    --heat-3: #c47d77;
+    --heat-4: #ab4f49;
+    --heat-stroke: rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .listing-calendar {
+    --heat-0: #26292f;
+    --heat-1: #4a302e;
+    --heat-2: #7d4c47;
+    --heat-3: #b06a64;
+    --heat-4: #e88c85;
+    --heat-stroke: rgba(255, 255, 255, 0.65);
+}
+
+.listing-calendar.palette-ink {
+    --heat-0: #e8ebee;
+    --heat-1: #c3d3e4;
+    --heat-2: #88a1bc;
+    --heat-3: #6783a1;
+    --heat-4: #3d5b7a;
+}
+
+:root[data-theme="dark"] .listing-calendar.palette-ink {
+    --heat-0: #26292f;
+    --heat-1: #263a4e;
+    --heat-2: #3d5b7a;
+    --heat-3: #6783a1;
+    --heat-4: #a8bdd4;
+}
+
+/* The media query is the no-JS fallback for `params.colorScheme = "auto"`,
+   mirroring how utils.css resolves the rest of the palette. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .listing-calendar {
+        --heat-0: #26292f;
+        --heat-1: #4a302e;
+        --heat-2: #7d4c47;
+        --heat-3: #b06a64;
+        --heat-4: #e88c85;
+        --heat-stroke: rgba(255, 255, 255, 0.65);
+    }
+
+    :root:not([data-theme]) .listing-calendar.palette-ink {
+        --heat-0: #26292f;
+        --heat-1: #263a4e;
+        --heat-2: #3d5b7a;
+        --heat-3: #6783a1;
+        --heat-4: #a8bdd4;
+    }
+}
+
+.listing-calendar .heat-empty {
+    fill: var(--heat-0);
+}
+
+.listing-calendar .heat-l1 {
+    fill: var(--heat-1);
+}
+
+.listing-calendar .heat-l2 {
+    fill: var(--heat-2);
+}
+
+.listing-calendar .heat-l3 {
+    fill: var(--heat-3);
+}
+
+.listing-calendar .heat-l4 {
+    fill: var(--heat-4);
+}
+
+/* --------------------------------------------------------------------------
+   2. Container and the year accordion
+   -------------------------------------------------------------------------- */
+.listing-calendar {
+    margin-top: 2rem;
+}
+
+.listing-calendar .year {
+    border-top: 1px solid var(--rule-color);
+    margin: 0;
+}
+
+.listing-calendar .year:last-child {
+    border-bottom: 1px solid var(--rule-color);
+}
+
+.listing-calendar .year-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.4rem 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+/* Kill the disclosure triangle in every engine.
+   注意：summary 上是 display:flex —— Chrome/Safari 的 ::-webkit-details-marker
+   在 flex 容器里会失效，Firefox 也会把默认三角当成一个 flex item 画出来。
+   所以 ::marker（现代 Firefox / Chrome）和 ::-moz-list-bullet（老 Firefox）
+   都得给上，否则年份左边会出现两个箭头。不能写在同一条规则里：无效选择器
+   会让整条声明被丢掉。 */
+.listing-calendar .year-head::-webkit-details-marker {
+    display: none;
+}
+
+.listing-calendar .year-head::marker {
+    content: none;
+}
+
+.listing-calendar .year-head::-moz-list-bullet {
+    display: none;
+}
+
+.listing-calendar .year-chev {
+    width: 1.2rem;
+    height: 1.2rem;
+    flex: 0 0 auto;
+    color: var(--time-color);
+    transition: transform var(--dur) var(--ease),
+        color var(--dur) var(--ease);
+}
+
+.listing-calendar .year[open] .year-chev {
+    transform: rotate(90deg);
+}
+
+.listing-calendar .year-head:hover .year-chev {
+    color: var(--main-color);
+}
+
+.listing-calendar .year-title {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--main-color);
+}
+
+.listing-calendar .year-body {
+    padding-bottom: 2rem;
+}
+
+/* "· 41 篇" — muted and lighter than the heading it rides on */
+.count-badge {
+    font-weight: 400;
+    color: var(--time-color);
+}
+
+.page-header .count-badge {
+    font-size: 1.5rem;
+}
+
+.listing-calendar .count-badge {
+    font-size: 1.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. The day-grid
+
+   A two-column grid: a narrow gutter for the weekday axis, and the month axis
+   + the SVG stacked in column 2. The gutter collapses to zero width on phones,
+   where the weekday axis is dropped and only every third month is labelled —
+   otherwise twelve labels overlap into a smear.
+   -------------------------------------------------------------------------- */
+.listing-calendar .heat-wrap {
+    display: grid;
+    grid-template-columns: 0 minmax(0, 1fr);
+    margin: 0.6rem 0 1.8rem;
+}
+
+.listing-calendar .heat-months {
+    grid-column: 2;
+    position: relative;
+    height: 1.6em;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--desc-color);
+}
+
+.listing-calendar .heat-months span {
+    position: absolute;
+    top: 0;
+    white-space: nowrap;
+}
+
+.listing-calendar .heat-weekdays {
+    display: none;
+    grid-column: 1;
+    grid-row: 2;
+    position: relative;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--desc-color);
+}
+
+.listing-calendar .heat-weekdays span {
+    position: absolute;
+    right: 0.8rem;
+    transform: translateY(-50%);
+    white-space: nowrap;
+}
+
+.listing-calendar .heat {
+    grid-column: 2;
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* The cells get a hover outline so a day is readable against its neighbours.
+   Clicking one jumps to that day's first post — a redundancy, not the only
+   path, which is why they are deliberately kept out of the tab order and the
+   accessible list below carries the real navigation. */
+.listing-calendar .heat-day {
+    cursor: pointer;
+    stroke: transparent;
+    stroke-width: 1;
+    transition: stroke var(--dur) var(--ease);
+}
+
+.listing-calendar .heat-day:hover {
+    stroke: var(--heat-stroke);
+}
+
+/* --------------------------------------------------------------------------
+   4. The compact rows
+   -------------------------------------------------------------------------- */
+.listing-calendar .row {
+    display: flex;
+    align-items: baseline;
+    gap: 1.6rem;
+    padding: 0.8rem 0;
+}
+
+.listing-calendar .row time {
+    flex: 0 0 auto;
+    width: 5rem;
+    padding-right: 0;
+    color: var(--time-color);
+    /* 日期跟着标题一起放大，14px 起、宽屏到 15px。
+       clamp() 里别写相邻的 var()，Hugo 的 CSS 压缩器会吃掉中间空格。 */
+    font-size: clamp(1.4rem, 1.35rem + 0.1vw, 1.5rem);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* No dashed leader here — a hundred of them would read as noise. The title
+   keeps the theme's ink and only shifts hue on hover. */
+.listing-calendar .row a {
+    /* 16px 起步，随视口宽到 18px（1rem = 10px，见 base.css 的 62.5%） */
+    font-size: clamp(1.6rem, 1.5rem + 0.2vw, 1.8rem);
+    line-height: 1.6;
+    color: var(--main-color);
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.listing-calendar .row a:hover {
+    color: var(--link-color-hover);
+    border-bottom: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. Responsive
+   -------------------------------------------------------------------------- */
+@media screen and (min-width: 640px) {
+    .listing-calendar .heat-wrap {
+        grid-template-columns: 2.6rem minmax(0, 1fr);
+    }
+
+    .listing-calendar .heat-weekdays {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .listing-calendar .heat-months span:not(:nth-child(3n + 1)) {
+        display: none;
+    }
+
+    .listing-calendar .row {
+        gap: 1.2rem;
+    }
+
+    .listing-calendar .row time {
+        width: 4.6rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .listing-calendar .year-title {
+        font-size: 1.8rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   6. Print and forced colours
+   -------------------------------------------------------------------------- */
+@media print {
+    .listing-calendar .heat-wrap {
+        display: none;
+    }
+
+    .listing-calendar .row a {
+        color: #000;
+    }
+}
+
+/* Colour is the only thing that separates the levels, so give the cells a
+   shape-based fallback when the OS overrides the palette. */
+@media (forced-colors: active) {
+    .listing-calendar .heat-empty {
+        fill: Canvas;
+    }
+
+    .listing-calendar .heat-day {
+        fill: CanvasText;
+    }
+}

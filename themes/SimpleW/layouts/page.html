@@ -1,0 +1,204 @@
+{{- /* page.html — a single post / page. */ -}}
+{{ define "main" }}
+{{- $meta := site.Params.post | default dict -}}
+{{- $metaKeys := $meta.meta | default (slice "date" "section" "tags") -}}
+{{- $df := site.Params.dateFormat | default "2006-01-02" -}}
+{{- $tocHTML := partial "toc.html" . -}}
+
+{{- /*
+  只有「栏目里的文章」才有上一篇/下一篇和相关文章。
+  站点根目录下的独立页面（关于、收藏、SiteLog…）不属于任何栏目，
+  翻页和相关文章对它们没有意义，所以整块不输出。
+  单篇想强行开启，可以在 front matter 里写 `showPrevNext = true`。
+*/ -}}
+{{- $isPost := ne .Section "" -}}
+{{- if isset .Params "ispost" }}{{ $isPost = index .Params "ispost" }}{{ end -}}
+
+{{- $showTags := true -}}
+{{- if isset $meta "showtags" }}{{ $showTags = index $meta "showtags" }}{{ end -}}
+{{- if isset .Params "showtags" }}{{ $showTags = index .Params "showtags" }}{{ end -}}
+
+<article class="post{{ with .Params.bodyClass }} {{ . }}{{ end }}">
+{{- /*
+  post-layout 包住整篇（标题 + 元信息 + 正文），目录的 top:0 才等于
+  main 的最上边；只包正文的话目录会挂在标题下面，得滚一段才吸顶。
+*/ -}}
+<div class="post-layout{{ if $tocHTML }} has-toc{{ end }}">
+<div class="post-main">
+<header>
+  {{- /* 标题自带锚点，方便直接链到文章标题，也避免与其它 id 撞车 */ -}}
+  {{- $titleID := .Params.anchor | default "" -}}
+  {{- if not $titleID -}}
+    {{- with .File }}{{ $titleID = .BaseFileName }}{{ end -}}
+  {{- end -}}
+  {{- if not $titleID }}{{ $titleID = .Title | anchorize }}{{ end -}}
+  <h1 class="title" id="{{ $titleID }}"><a class="title-link" href="{{ .RelPermalink }}">{{ .Title }}</a></h1>
+  {{- with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end -}}
+</header>
+
+{{- if $metaKeys }}
+<div id="entrymeta" class="status">
+  {{- $sep := false -}}
+  {{- range $metaKeys -}}
+    {{- if eq . "date" -}}
+      {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
+      <time class="date" datetime="{{ $.Date.Format "2006-01-02" }}">{{ $.Date.Format $df }}</time>
+      {{- $sep = true -}}
+    {{- else if eq . "lastmod" -}}
+      {{- if ne ($.Lastmod.Format "2006-01-02") ($.Date.Format "2006-01-02") -}}
+        {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
+        <span>{{ i18n "updated" | default "更新于" }} <time datetime="{{ $.Lastmod.Format "2006-01-02" }}">{{ $.Lastmod.Format $df }}</time></span>
+        {{- $sep = true -}}
+      {{- end -}}
+    {{- else if eq . "section" -}}
+      {{- with $.CurrentSection -}}{{- if .Title -}}
+        {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{- $sep = true -}}
+      {{- end -}}{{- end -}}
+    {{- /* 标签不再挤在日期旁边，单独渲染在正文末尾、上一篇/下一篇之上 */ -}}
+    {{- else if eq . "categories" -}}
+      {{- with $.Params.categories -}}
+        {{- $categories := . -}}
+        {{- if eq "string" (printf "%T" $categories) }}{{ $categories = slice $categories }}{{ end -}}
+        {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
+        {{- range $i, $t := $categories }}{{ if $i }}<span aria-hidden="true"> </span>{{ end }}<a href="{{ printf "%s%s/" ("categories/" | relURL) ($t | urlize) }}">{{ $t }}</a>{{ end -}}
+        {{- $sep = true -}}
+      {{- end -}}
+    {{- else if eq . "readingTime" -}}
+      {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
+      {{- /* 按中文阅读速度估算，而不是 Hugo 默认的英文 200 词/分钟 */ -}}
+      <span>{{ partial "func/reading-time.html" $ }} {{ i18n "minutes" | default "分钟" }}</span>
+      {{- $sep = true -}}
+    {{- else if eq . "wordCount" -}}
+      {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
+      {{- /* Hugo 的 .WordCount 按空格切词，中文整段只算几个「词」，这里改成按字统计 */ -}}
+      <span>{{ partial "func/count-words.html" $ }} {{ i18n "words" | default "字" }}</span>
+      {{- $sep = true -}}
+    {{- end -}}
+  {{- end }}
+</div>
+{{- end }}
+
+{{- with .Params.cover }}
+<figure class="post-cover">
+  <img src="{{ . | relURL }}" alt="{{ $.Params.coverAlt | default $.Title }}" loading="lazy">
+  {{- with $.Params.coverCaption }}<figcaption>{{ . }}</figcaption>{{ end -}}
+</figure>
+{{- end }}
+
+{{- /*
+  标题锚点：鼠标移到标题上时，右侧出现一个可点的 #。
+  Markdown 内容由 _markup/render-heading.html 负责；Org 内容不走那个钩子，
+  所以这里用正则补一遍。RE2 不支持反向引用，只能按级别各来一次。
+*/ -}}
+{{- $content := .Content -}}
+{{- if $tocHTML -}}
+  {{- $content = partial "func/heading-anchors.html" $content -}}
+  {{- /*
+    有右侧目录时，把 Org 文件里 `#+TOC:` 生成的内联目录摘掉 —— 同一页
+    上下两个目录很啰嗦。内层都是 </ul>，非贪婪取到第一个 </nav> 即可。
+  */ -}}
+  {{- $content = replaceRE `(?s)<nav>\s*<ul>.*?</nav>` "" $content -}}
+{{- end -}}
+
+{{- /* replaceRE 返回的是普通字符串，直接打印会被转义，必须过一道 safeHTML */ -}}
+<div class="post-body">
+{{ $content | safeHTML }}
+</div>
+
+{{- /*
+  标签单列一行，放在正文之后、上一篇/下一篇之上。
+  来源依次为：filetags（org 的 #+FILETAGS）→ keywords（org 的 #+KEYWORDS）
+  → tags（front matter）。没有任何一项时不输出，避免空行。
+  filetags 排在最前：它是作者显式打的标签，比 #+KEYWORDS 里的描述性词更准。
+
+  独立页面（关于 / 收藏 / SiteLog）不显示标签：它们的 #+KEYWORDS 是站点级
+  描述词，不是文章标签，点进去也没有对应归档。单个独立页面想开，在头信息里
+  写 `isPost: true` 即可。
+
+  链接一律走 .GetTerms，而不是自己拿 urlize 拼 URL —— 拼出来的路径和 Hugo
+  建词条时的规则并不总是一致（go-org 只按空格切 #+KEYWORDS，
+  「方程豹5,豹行万里」会被当成一整个词），手工拼就会 404。
+  .GetTerms 给的是 Hugo 自己那份，链接和词条页必然对得上。
+
+  显示名取 .Page.Data.Term（原始词，不像 .LinkTitle 会被首字母大写），
+  再用 strings.Trim 掐掉首尾的逗号顿号 —— go-org 按空格切 #+KEYWORDS，
+  「本草, 笔记」会留下带尾巴逗号的词，直接显示很难看。
+  注意 Hugo 的 strings.Trim / TrimLeft / TrimRight 是 cutset 在前：
+  strings.Trim cutset string，写反了会得到「，,、;；」这种结果。
+*/ -}}
+{{- if and $showTags $isPost -}}
+  {{- $taxo := "" -}}
+  {{- if .Params.filetags }}{{ $taxo = "filetags" -}}
+  {{- else if .Params.keywords }}{{ $taxo = "keywords" -}}
+  {{- else if .Params.tags }}{{ $taxo = "tags" -}}
+  {{- end -}}
+  {{- with $taxo -}}
+    {{- $terms := $.GetTerms $taxo -}}
+    {{- with $terms }}
+<div class="post-tags" aria-label="{{ i18n "tags" | default "标签" }}">
+      {{- range $terms -}}
+        {{- $href := .Page.RelPermalink -}}
+        {{- $name := strings.TrimSpace (printf "%v" (.Page.Data.Term | default .LinkTitle)) -}}
+        {{- $name = strings.TrimRight "，,、;；" $name -}}
+        {{- $name = strings.TrimLeft "，,、;；" $name -}}
+        {{- with $name -}}
+<a href="{{ $href }}" rel="tag">#{{ $name }}</a>
+        {{- end -}}
+      {{- end -}}
+</div>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $showNav := true -}}
+{{- if isset $meta "showprevnext" }}{{ $showNav = index $meta "showprevnext" }}{{ end -}}
+{{- if isset .Params "showprevnext" }}{{ $showNav = index .Params "showprevnext" }}{{ end -}}
+{{- if and $isPost $showNav -}}
+  {{- $prev := .PrevInSection -}}
+  {{- $next := .NextInSection -}}
+  {{- if or $prev $next }}
+<nav class="pagenav" aria-label="{{ i18n "postNav" | default "上一篇 / 下一篇" }}">
+  <span class="pageleft">{{ with $next }}&larr; <a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}</span>
+  <span class="pageright">{{ with $prev }}<a href="{{ .RelPermalink }}">{{ .Title }}</a> &rarr;{{ end }}</span>
+</nav>
+  {{- end -}}
+{{- end }}
+
+{{- if $isPost }}{{ partial "related.html" . }}{{ end }}
+
+{{- /*
+  评论：文章默认显示；站点根目录的独立页面（关于 / 收藏 / SiteLog）默认不显示。
+  头信息里写 `comments: true` 可以给某篇独立页面单独打开；
+  `comments: false` 则在哪类页面都能关掉。
+*/ -}}
+{{- $showComments := $isPost -}}
+{{- /*
+  按栏目整体开/关：配置里该栏目那条写 `comments = false`，整个栏目的文章
+  就都不挂评论框；写 `comments = true` 则整个栏目都开（含 Org 写的文章）。
+  具体怎么配见 partials/func/section-comments.html 顶部说明。
+*/ -}}
+{{- $secComments := partial "func/section-comments.html" . -}}
+{{- if eq $secComments "true" -}}
+  {{- $showComments = true -}}
+{{- else if eq $secComments "false" -}}
+  {{- $showComments = false -}}
+{{- end -}}
+{{- /* 页面自己的 front matter 优先级最高，放在最后 */ -}}
+{{- if isset .Params "comments" -}}
+  {{- $pc := .Params.comments -}}
+  {{- if eq (printf "%v" $pc) "false" -}}
+    {{- $showComments = false -}}
+  {{- else if eq (printf "%v" $pc) "true" -}}
+    {{- $showComments = true -}}
+  {{- else if reflect.IsMap $pc -}}
+    {{- if isset $pc "enabled" }}{{ $showComments = $pc.enabled }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $showComments }}{{ partial "comments.html" . }}{{ end }}
+</div>
+{{ $tocHTML }}
+</div>
+</article>
+{{ end }}

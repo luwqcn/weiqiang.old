@@ -1,0 +1,183 @@
+{{- /*
+  partials/head.html — everything inside <head>.
+
+  Site-level hooks you can use without editing the theme:
+    params.customHead          raw HTML appended to <head>
+    layouts/partials/custom-head.html   a real template, if you need logic
+*/ -}}
+{{- $scheme := site.Params.colorScheme | default "light" -}}
+
+{{- /* ---------- title ---------- */ -}}
+{{- $title := "" -}}
+{{- if .IsHome -}}
+  {{- $title = site.Title -}}
+  {{- with site.Params.tagline }}{{ $title = printf "%s - %s" site.Title . }}{{ end -}}
+{{- else -}}
+  {{- $title = printf "%s - %s" .Title site.Title -}}
+{{- end -}}
+{{- if .Params.hiddenTitle }}{{ $title = site.Title }}{{ end -}}
+
+{{- /* ---------- description ---------- */ -}}
+{{- $desc := "" -}}
+{{- with .Description }}{{ $desc = . }}{{ end -}}
+{{- if not $desc }}{{ with .Summary }}{{ $desc = . }}{{ end }}{{ end -}}
+{{- if not $desc }}{{ $desc = site.Params.description | default "" }}{{ end -}}
+{{- $desc = $desc | plainify | htmlUnescape | truncate 200 -}}
+
+{{- /* ---------- keywords ---------- */ -}}
+{{- $keywords := slice -}}
+{{- with .Params.keywords }}{{ $keywords = . }}{{ end -}}
+{{- if not $keywords }}{{ with .Params.tags }}{{ $keywords = . }}{{ end }}{{ end -}}
+{{- if not $keywords }}{{ with site.Params.keywords }}{{ $keywords = . }}{{ end }}{{ end -}}
+
+{{- /* ---------- CSS bundle ---------- */ -}}
+{{- $sheetNames := slice "css/base.css" "css/layout.css" "css/components.css" "css/listing.css" "css/extras.css" "css/utils.css" "css/chroma.css" -}}
+{{- $sheets := slice -}}
+{{- range $sheetNames -}}
+  {{- with resources.Get . }}{{ $sheets = $sheets | append . }}{{ end -}}
+{{- end -}}
+{{- /* Drop in a site-level assets/css/custom.css to append your own rules. */ -}}
+{{- with resources.Get "css/custom.css" }}{{ $sheets = $sheets | append . }}{{ end -}}
+{{- $css := $sheets | resources.Concat "css/simplew.bundle.css" | minify | fingerprint -}}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $desc }}">
+{{- with $keywords }}
+  {{- /* go-org 只按空格切 #+KEYWORDS，「危墙之下, 村野闲居」会留下带尾巴逗号
+        的词（"危墙之下,"），直接 delimit 会变成「危墙之下,, 村野闲居」。
+        这里先掐掉每项首尾的逗号再拼。
+        注意 Hugo 的 strings.TrimRight 是 cutset 在前。 */ -}}
+  {{- $clean := slice -}}
+  {{- range $k := $keywords -}}
+    {{- $k = strings.TrimSpace (printf "%v" $k) -}}
+    {{- $k = strings.TrimRight ",，" $k -}}
+    {{- $k = strings.TrimLeft ",，" $k -}}
+    {{- with $k }}{{ $clean = $clean | append $k }}{{ end -}}
+  {{- end -}}
+  {{- with $clean }}
+<meta name="keywords" content="{{ delimit $clean ", " }}">
+  {{- end -}}
+{{- end -}}
+<meta name="generator" content="Hugo {{ hugo.Version }}">
+<meta name="theme" content="SimpleW">
+{{- with site.Params.author }}
+<meta name="author" content="{{ . }}">
+{{- end }}
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- /* ---------- colour scheme: resolved before first paint ---------- */ -}}
+<script>
+(function () {
+  var scheme = {{ $scheme | jsonify }};
+  var root = document.documentElement;
+  try {
+    var saved = window.localStorage.getItem("simplew-scheme");
+    if (saved === "dark" || saved === "light") { root.dataset.theme = saved; return; }
+  } catch (e) {}
+  if (scheme === "dark") { root.dataset.theme = "dark"; return; }
+  if (scheme === "light") { root.dataset.theme = "light"; return; }
+  root.dataset.theme = (window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+})();
+</script>
+
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">
+
+{{- /* ---------- icons / manifest ---------- */ -}}
+{{- with site.Params.favicon }}
+<link rel="icon" href="{{ . | relURL }}">
+{{- else -}}
+<link rel="icon" type="image/svg+xml" href="{{ "images/favicon.svg" | relURL }}">
+{{- with resources.Get "images/favicon-32x32.png" }}
+<link rel="icon" type="image/png" sizes="32x32" href="{{ .RelPermalink }}">
+{{- end }}
+{{- end }}
+{{- with site.Params.webmanifest }}
+<link rel="manifest" href="{{ . | relURL }}">
+{{- end }}
+{{- with site.Params.appleTouchIcon }}
+<link rel="apple-touch-icon" href="{{ . | relURL }}">
+{{- end }}
+
+{{- /* ---------- feeds ---------- */ -}}
+{{- range .AlternativeOutputFormats }}
+<link rel="alternate" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}">
+{{- end }}
+
+{{- /* ---------- social cards ---------- */ -}}
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+{{- with site.Language.Locale }}
+<meta property="og:locale" content="{{ replace . "-" "_" }}">
+{{- end }}
+{{- $ogimg := "" -}}
+{{- with .Params.cover }}{{ $ogimg = . }}{{ end -}}
+{{- if not $ogimg }}{{ with .Params.images }}{{ $ogimg = index . 0 }}{{ end }}{{ end -}}
+{{- if not $ogimg }}{{ with site.Params.ogImage }}{{ $ogimg = . }}{{ end }}{{ end -}}
+{{- with $ogimg }}
+<meta property="og:image" content="{{ . | absURL }}">
+{{- end }}
+{{- if .IsPage }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- if not .Lastmod.IsZero }}
+<meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- /* Org-Mode 的 #+TAGS: 只有一个值时，Hugo 拿到的是字符串而非切片，
+       直接 range 会让整站构建失败。这里统一兜成切片。 */ -}}
+{{- $artTags := .Params.tags -}}
+{{- if eq "string" (printf "%T" $artTags) }}{{ $artTags = slice $artTags }}{{ end -}}
+{{- range $artTags }}
+<meta property="article:tag" content="{{ . }}">
+{{- end }}
+{{- end }}
+<meta name="twitter:card" content="{{ if $ogimg }}summary_large_image{{ else }}summary{{ end }}">
+{{- with site.Params.twitterHandle }}
+<meta name="twitter:site" content="{{ . }}">
+{{- end }}
+
+{{- /* ---------- structured data ---------- */ -}}
+{{- if .IsPage }}
+<script type="application/ld+json">
+{{ dict
+    "@context" "https://schema.org"
+    "@type" "BlogPosting"
+    "headline" .Title
+    "datePublished" (.Date.Format "2006-01-02")
+    "dateModified" (.Lastmod.Format "2006-01-02")
+    "description" $desc
+    "inLanguage" site.Language.Locale
+    "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+    "author" (dict "@type" "Person" "name" (site.Params.author | default site.Title))
+    "publisher" (dict "@type" "Organization" "name" site.Title)
+| jsonify | safeJS }}
+</script>
+{{- else if .IsHome }}
+<script type="application/ld+json">
+{{ dict
+    "@context" "https://schema.org"
+    "@type" "WebSite"
+    "name" site.Title
+    "url" site.Home.Permalink
+    "description" $desc
+    "inLanguage" site.Language.Locale
+| jsonify | safeJS }}
+</script>
+{{- end }}
+
+{{- /* ---------- verification / analytics hooks ---------- */ -}}
+{{- range site.Params.headMeta | default slice }}
+<meta name="{{ .name }}" content="{{ .content }}">
+{{- end }}
+
+{{- /* ---------- user hooks ---------- */ -}}
+{{- if templates.Exists "partials/custom-head.html" }}
+{{ partial "custom-head.html" . }}
+{{- end }}
+{{- with site.Params.customHead }}
+{{ . | safeHTML }}
+{{- end }}

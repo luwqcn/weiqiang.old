@@ -1,0 +1,49 @@
+{{- /*
+  partials/comments/twikoo.html
+
+  Twikoo 评论。配置写在站点 config 的 [params.comments.twikoo]：
+
+    envId = "https://xxx.vercel.app"   # 必填：Vercel / Netlify 自建地址，
+                                       # 或腾讯云开发的环境 ID
+    lang  = "zh-CN"
+    cdn   = "https://cdn.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.min.js"
+                                       # 可选，默认 jsDelivr
+
+  说明两点：
+  - 脚本用 defer 加载，内联脚本只注册 DOMContentLoaded 回调；defer 脚本一定
+    在 DOMContentLoaded 之前执行，所以回调里 twikoo 已经就绪。CDN 万一挂了，
+    轮询几次再放弃，避免评论区整块空白。
+  - 评论按 path 存，默认取页面永久链接。若从旧站迁来且旧 key 是 /zh/xxx.html
+    这种带后缀的路径，把 path 改成想要的值即可（"legacy" = 旧站路径）。
+*/ -}}
+{{- $t := site.Params.comments.twikoo | default dict -}}
+{{- $envId := $t.envId | default "" -}}
+{{- if not $envId -}}
+<p class="comments-disabled">请在 config 中配置 <code>params.comments.twikoo.envId</code> 后再启用 Twikoo。</p>
+{{- else -}}
+{{- $cdn := $t.cdn | default "https://cdn.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.min.js" -}}
+{{- $path := .RelPermalink -}}
+{{- if eq ($t.path | default "") "legacy" }}{{ $path = printf "%s.html" (strings.TrimSuffix "/" .RelPermalink) }}{{ end -}}
+<div id="twikoo"></div>
+<script src="{{ $cdn }}" defer></script>
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  var tries = 0;
+  (function init() {
+    if (typeof twikoo === "undefined") {
+      // CDN 还没到（或挂了）：给几秒钟重试，超过就放弃，留个提示
+      if (++tries <= 20) return setTimeout(init, 300);
+      var box = document.getElementById("twikoo");
+      if (box) box.innerHTML = '<p class="comments-disabled">评论脚本加载失败，请检查网络或稍后重试。</p>';
+      return;
+    }
+    twikoo.init({{ dict
+        "envId" $envId
+        "el" "#twikoo"
+        "lang" ($t.lang | default "zh-CN")
+        "path" $path
+      | jsonify | safeJS }});
+  })();
+});
+</script>
+{{- end -}}

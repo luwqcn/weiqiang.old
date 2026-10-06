@@ -1,0 +1,107 @@
+{{- /*
+  func/section-meta.html — resolve the display settings for a listing page.
+
+  Call with a Page (a section page, a term page, or any list page):
+      {{ $meta := partial "func/section-meta.html" . }}
+
+  Resolution order (later wins):
+    1. theme defaults        (`params.section*`)
+    2. registry entry        (`[[params.sections]]` matched by key)
+    3. content front matter  (`content/<dir>/_index.md`)
+
+  Returns: name, subtitle, description, style, order — never nil.
+*/ -}}
+
+{{- $page := . -}}
+{{- $site := $page.Site -}}
+{{- $defaultStyle := $site.Params.sectionStyle | default "grouped" -}}
+
+{{- $name := $page.Title -}}
+{{- $subtitle := "" -}}
+{{- $description := $page.Description -}}
+{{- $style := $defaultStyle -}}
+{{- $order := 100 -}}
+{{- /*
+  hideList —— 该栏目页只作「说明 / 导航」用，不输出文章列表。
+  适合 /xy/ 这种自身正文已经把各话题和链接写清楚、下面再挂一串
+  全部文章纯属重复的页面。
+  两处都能开：配置里的 `[[params.sections]] hideList = true`，
+  或 content/<dir>/_index.md 的 front matter `hideList: true`。
+*/ -}}
+{{- $hideList := false -}}
+{{- /*
+  toc —— 该栏目页要不要挂右侧浮动目录。默认否（目录本来只给单页用）。
+  在 `[[params.sections]]` 里写 `toc = true` 打开；Markdown 的 _index 也可以
+  用 front matter `showToc: true`。页面自身没有标题时开了也不会出现空框。
+*/ -}}
+{{- $toc := false -}}
+
+{{- /* Was the title written by hand, or derived from the directory name? */ -}}
+{{- $explicitTitle := "" -}}
+{{- with $page.Params.title }}{{ $explicitTitle = . }}{{ end -}}
+{{- $pageURL := $page.RelPermalink -}}
+
+{{- /* ---- which registry key applies? ---- */ -}}
+{{- $key := "" -}}
+{{- if $page.IsSection -}}
+  {{- $key = $page.Section -}}
+  {{- if not $key }}{{ with $page.File }}{{ $key = .BaseFileName }}{{ end }}{{ end -}}
+{{- else if $page.Data.Term -}}
+  {{- $key = printf "%s/%s" $page.Data.Plural $page.Data.Term -}}
+{{- end -}}
+
+{{- /* ---- 2. registry ---- */ -}}
+{{- range $site.Params.sections | default slice -}}
+  {{- $rk := .key | default "" -}}
+  {{- if and $rk (or (eq $rk $key) (eq $rk (printf "/%s" $key))) -}}
+    {{- with .subtitle }}{{ $subtitle = . }}{{ end -}}
+    {{- with .style }}{{ $style = . }}{{ end -}}
+    {{- if isset . "order" }}{{ $order = .order }}{{ end -}}
+    {{- if not $description -}}{{ with .description }}{{ $description = . }}{{ end }}{{ end -}}
+    {{- /* the registry can name a section with no _index.md at all */ -}}
+    {{- if not $explicitTitle -}}{{ with .name }}{{ $name = . }}{{ end }}{{ end -}}
+    {{- /* 只对 registry 里 hideList 的条目生效，但必须「正是这一层」：
+           子栏目的 .Section 仍然是父级 key（/xy/dian/ 的 Section 是 xy），
+           不比对 URL 的话父栏目一关、子栏目全被连坐。 */ -}}
+    {{- $hide := false -}}
+    {{- with .hideList }}{{ $hide = . }}{{ end -}}
+    {{- with .hidelist }}{{ $hide = . }}{{ end -}}
+    {{- if $hide -}}
+      {{- with .url -}}
+        {{- if eq (. | relURL) $pageURL }}{{ $hideList = true }}{{ end -}}
+      {{- else -}}
+        {{- if eq $pageURL (printf "/%s/" $key) }}{{ $hideList = true }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- /* toc 同理：只认正是这一层的页面 */ -}}
+    {{- if .toc -}}
+      {{- with .url -}}
+        {{- if eq (. | relURL) $pageURL }}{{ $toc = true }}{{ end -}}
+      {{- else -}}
+        {{- if eq $pageURL (printf "/%s/" $key) }}{{ $toc = true }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* ---- 3. content front matter ---- */ -}}
+{{- with $page.Params.subtitle }}{{ $subtitle = . }}{{ end -}}
+{{- with $page.Params.style }}{{ $style = . }}{{ end -}}
+{{- if isset $page.Params "order" }}{{ $order = $page.Params.order }}{{ end -}}
+{{- with $page.Params.hideList }}{{ $hideList = . }}{{ end -}}
+{{- with $page.Params.showToc }}{{ $toc = . }}{{ end -}}
+{{- with $page.Description }}{{ $description = . }}{{ end -}}
+
+{{- /* Term pages: fall back to a generated name ---- */ -}}
+{{- if and (not $page.IsSection) $page.Data.Term -}}
+  {{- if not $name }}{{ $name = $page.Data.Term }}{{ end -}}
+{{- end -}}
+
+{{- return (dict
+    "name" $name
+    "subtitle" $subtitle
+    "description" $description
+    "style" $style
+    "order" $order
+    "hideList" $hideList
+    "toc" $toc) -}}

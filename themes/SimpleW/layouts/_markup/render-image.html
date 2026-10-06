@@ -1,0 +1,27 @@
+{{- /*
+  _markup/render-image.html — image render hook.
+
+  Adds lazy loading and, when the author writes a plain markdown image with a
+  title, wraps it in a <figure> with a caption (matching the org-publish
+  output the theme is modelled on).
+
+      ![alt text](/images/a.jpg "图片说明")
+
+  A title that looks like `class=no-border` is treated as an attribute
+  instead of a caption.
+*/ -}}
+{{- $u := .Destination -}}
+{{- if not (or (hasPrefix $u "http") (hasPrefix $u "/")) -}}
+  {{- $u = (printf "%s%s" .Page.RelPermalink $u) -}}
+{{- end -}}
+{{- $alt := .Text | default .PlainText -}}
+{{- $title := .Title -}}
+
+{{- if $title -}}
+<figure>
+  <img src="{{ $u }}" alt="{{ $alt }}" title="{{ $title }}" loading="lazy" decoding="async">
+  <figcaption>{{ $title }}</figcaption>
+</figure>
+{{- else -}}
+<img src="{{ $u }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+{{- end -}}

@@ -1,0 +1,969 @@
+/* ==========================================================================
+   SimpleW — components.css
+   Reusable UI: headings, entry lists, cards, pagination, TOC, taxonomies,
+   home blocks, comments, footnotes, Org-mode leftovers.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Title block & meta
+   -------------------------------------------------------------------------- */
+.title {
+    margin: 5px 0;
+}
+
+/* 标题自带链接，但视觉上仍是一个纯标题 */
+.title .title-link,
+.title .title-link:hover {
+    border-bottom: none;
+    padding-bottom: 0;
+    color: inherit;
+}
+
+.title .title-link:hover {
+    color: var(--link-color-hover);
+}
+
+.subtitle {
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 16px;
+    opacity: 0.8;
+}
+
+#entrymeta {
+    color: var(--desc-color);
+    font-size: 1.6rem;
+}
+
+#entrymeta .sep {
+    margin: 0 0.5em;
+    opacity: 0.6;
+}
+
+/* 正文末尾的标签行，位于「上一篇 / 下一篇」之上 */
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+    margin-top: 2.4rem;
+}
+
+.post-tags a,
+.post-tags span {
+    display: inline-block;
+    padding: 0.15rem 0.9rem;
+    border: 1px solid var(--rule-color);
+    border-bottom: 1px solid var(--rule-color);
+    border-radius: var(--radius-sm);
+    background: var(--card-bg);
+    color: var(--bq-color);
+    font-size: 1.6rem;
+    text-decoration: none;
+}
+
+.post-tags a:hover {
+    border-color: var(--accent);
+    border-bottom: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.date {
+    color: var(--time-color);
+    font-size: 1.6rem;
+    min-width: 85px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.index-title p {
+    font-weight: 800;
+    font-size: 3.2rem !important;
+}
+
+.index-title {
+    transition: opacity var(--dur) var(--ease);
+}
+
+.index-title:hover {
+    opacity: 0.7;
+}
+
+.index-item p {
+    font-size: 1.6rem !important;
+}
+
+span .timestamp,
+.timestamp {
+    font-size: 1.5rem;
+    color: var(--time-color);
+}
+
+.description {
+    margin-top: -0.6em;
+    color: var(--desc-color);
+    font-size: 1.8rem;
+}
+
+/* Section / category page intro */
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-header .page-desc,
+.meta {
+    color: var(--bq-color);
+    font-size: 1.7rem;
+    opacity: 0.9;
+}
+
+.page-header .page-desc p,
+.meta p {
+    font-size: 1.7rem !important;
+    margin: 10px 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. Entry list — the year-grouped list with dashed leaders
+   -------------------------------------------------------------------------- */
+.year-group {
+    margin: 2rem auto;
+}
+
+.year-group > h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.year-group > h2 small {
+    font-size: 1.5rem;
+    color: var(--desc-color);
+    font-weight: 400;
+}
+
+.entries {
+    display: block;
+}
+
+.entry {
+    padding: 10px 2px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    border-radius: var(--radius-sm);
+    border-bottom: none;
+    padding-bottom: 10px;
+    transition: background-color var(--dur) var(--ease),
+        color var(--dur) var(--ease);
+}
+
+.entry:hover {
+    border-bottom: none;
+    padding: 10px 2px;
+    background-color: var(--card-bg-hover);
+    color: var(--link-color-hover);
+}
+
+.entry:hover .entry-title {
+    color: var(--link-color-hover);
+}
+
+span.entry-title {
+    font-size: 1.8rem;
+    display: flex;
+    min-width: 0;
+}
+
+span.entry-dashed {
+    flex-grow: 1;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    border: 1px dashed var(--leader-color);
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+    align-self: center;
+}
+
+.entry-pin {
+    font-size: 1.4rem;
+    color: var(--accent);
+    margin-right: 0.4em;
+}
+
+.clearfix {
+    clear: both;
+}
+
+/* --------------------------------------------------------------------------
+   3. Cards (article.post-entry) — used by "cards" style sections
+   -------------------------------------------------------------------------- */
+section,
+article {
+    margin: 1.2em auto;
+}
+
+article.post-entry {
+    border: 1px solid var(--rule-color);
+    border-radius: var(--radius-md);
+    padding: 5px 10px;
+    background-color: var(--card-bg);
+    transition: background-color var(--dur) var(--ease),
+        border-color var(--dur) var(--ease);
+}
+
+article.post-entry:hover {
+    background-color: var(--card-bg-hover);
+    border-color: var(--rule-strong);
+}
+
+h2.article-title {
+    margin-top: 0;
+    font-size: 2rem;
+}
+
+h2.article-title a {
+    border-bottom: none;
+    display: block;
+}
+
+h2.article-title a:hover {
+    border-bottom: none;
+}
+
+span.pubdate {
+    color: var(--time-color);
+}
+
+article.post-entry .card-summary {
+    color: var(--desc-color);
+    font-size: 1.6rem;
+    margin: 0.4em 0 0.2em;
+}
+
+article.post-entry .card-meta {
+    color: var(--time-color);
+    font-size: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. Tag / term chips
+   -------------------------------------------------------------------------- */
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 0.8rem;
+    margin: 1.2rem 0;
+    padding: 0;
+    list-style: none;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    border: 1px solid var(--rule-color);
+    border-radius: 999px;
+    padding: 0.15em 1em;
+    font-size: 1.5rem;
+    color: var(--bq-color);
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--rule-color);
+}
+
+.chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    border-bottom-style: solid;
+    padding-bottom: 0.15em;
+}
+
+.chip .chip-count {
+    font-size: 1.3rem;
+    color: var(--desc-color);
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   5. Pagination
+   -------------------------------------------------------------------------- */
+nav.pagenav {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--rule-strong);
+    padding: 14px 10px;
+    margin-top: 30px;
+    gap: 1rem;
+}
+
+span.pageleft,
+span.pageright {
+    max-width: 50%;
+}
+
+span.pageright {
+    text-align: right;
+    margin-left: auto;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 3rem 0 1rem;
+    flex-wrap: wrap;
+    font-size: 1.6rem;
+}
+
+.pagination a,
+.pagination span {
+    border: 1px solid var(--rule-color);
+    border-radius: var(--radius-sm);
+    padding: 0.2em 0.9em;
+    border-bottom: 1px solid var(--rule-color);
+    color: var(--bq-color);
+    background: var(--card-bg);
+}
+
+.pagination a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    /* 同 .section-card：盖掉全局 a:hover 的 padding-bottom:2px，避免翻页按钮悬停时抖动 */
+    padding-bottom: 0.2em;
+}
+
+.pagination .is-current {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.pagination .is-disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   6. Related posts
+   -------------------------------------------------------------------------- */
+.related-posts {
+    margin-top: 2.4rem;
+    padding: 1.4rem 1.6rem 1.6rem;
+    border: 1px solid var(--rule-color);
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+}
+
+.related-posts > h2 {
+    margin-bottom: 0.6rem;
+    font-size: 2rem;
+}
+
+.related-posts ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.related-posts li {
+    padding: 0.5rem 0;
+    line-height: 1.7;
+}
+
+.related-posts li + li {
+    border-top: 1px dashed var(--rule-color);
+}
+
+.related-posts li::before {
+    content: "·";
+    margin-right: 0.6em;
+    color: var(--desc-color);
+}
+
+.related-posts .related-title {
+    font-size: 1.8rem;
+}
+
+.related-posts .related-meta {
+    margin-left: 0.6em;
+    color: var(--time-color);
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+}
+
+@media screen and (max-width: 600px) {
+    .related-posts .related-meta {
+        display: block;
+        margin-left: 0;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7. Table of contents
+   -------------------------------------------------------------------------- */
+.toc {
+    border: 1px solid var(--rule-color);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.2rem;
+    margin: 0;
+    background: var(--card-bg);
+    font-size: 1.65rem;
+}
+
+.toc > summary,
+.toc > .toc-title {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.75rem;
+    list-style: none;
+}
+
+.toc > summary::-webkit-details-marker {
+    display: none;
+}
+
+.toc > summary::before {
+    content: "▸ ";
+    color: var(--desc-color);
+}
+
+.toc[open] > summary::before {
+    content: "▾ ";
+}
+
+.toc nav ul,
+.toc ul {
+    margin: 0.8rem 0 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.toc ul ul {
+    margin-top: 0.2rem;
+    padding-left: 1.1rem;
+}
+
+.toc li {
+    margin: 0.15em 0;
+    line-height: 1.5;
+}
+
+.toc a {
+    display: block;
+    margin-left: -1px;
+    padding: 0.25rem 0.6rem;
+    border-left: 2px solid transparent;
+    border-bottom: none;
+    color: var(--bq-color);
+    transition: color var(--dur) var(--ease),
+        border-color var(--dur) var(--ease),
+        background-color var(--dur) var(--ease);
+}
+
+.toc a:hover,
+.toc a.is-active {
+    color: var(--accent);
+    border-bottom: none;
+}
+
+.toc a.is-active {
+    border-left-color: var(--accent);
+    font-weight: 700;
+}
+
+/* Org's own TOC container, when importing org-published HTML */
+#table-of-contents li {
+    clear: both;
+}
+
+#text-table-of-contents ul {
+    padding-left: 1.6rem;
+}
+
+/* --------------------------------------------------------------------------
+   7. Home page blocks — the pluggable homepage system
+   -------------------------------------------------------------------------- */
+.home-block {
+    margin: 2.4rem auto;
+}
+
+.home-block > .block-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+/* hero / intro */
+.block-hero .hero-title,
+.block-hero .hero-title p {
+    font-weight: 800;
+    font-size: 3.2rem;
+    margin: 0 0 0.4em;
+    line-height: 1.3;
+}
+
+.block-hero .hero-body {
+    font-size: 1.8rem;
+}
+
+/* section cards */
+.section-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.2rem;
+    margin: 1.6rem 0;
+}
+
+.section-card {
+    display: block;
+    border: 1px solid var(--rule-color);
+    border-radius: var(--radius-md);
+    padding: 1.2rem 1.4rem;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--rule-color);
+    /* 只做颜色过渡，不做位移 —— 鼠标移上去卡片会「跳」一下，很闹。
+       注意别写成一条多值 transition：Hugo 的 CSS 压缩器会吃掉相邻
+       var() 之间的空格（var(--dur) var(--ease) → var(--dur)var(--ease)）。 */
+    transition: border-color var(--dur) linear;
+    transition: box-shadow var(--dur) linear;
+}
+
+.section-card:hover,
+.section-card:focus-visible {
+    border-color: var(--accent);
+    /* 关键：必须把 border-bottom 和 padding-bottom 整套写回来。
+       全局 a:hover 里有 `border-bottom:1px solid; padding-bottom:2px`
+       （优先级 0,1,1，高于 .section-card 的 0,1,0），而栏目卡片正是 <a>，
+       于是悬停时底部内边距被从 1.2rem 压成 2px，卡片整块往上缩、
+       同一行下面的内容跟着跳 —— 看着就像卡片「动」了一下。 */
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1.2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.section-card .sc-name {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--main-color);
+    display: block;
+}
+
+.section-card .sc-sub {
+    font-size: 1.5rem;
+    color: var(--desc-color);
+    display: block;
+    margin-top: 0.15em;
+}
+
+.section-card .sc-desc {
+    font-size: 1.5rem;
+    color: var(--bq-color);
+    opacity: 0.85;
+    display: block;
+    margin-top: 0.6em;
+    line-height: 1.7;
+}
+
+/* free-form link list block */
+.link-list {
+    margin: 1rem 0;
+    padding: 0;
+    list-style: none;
+}
+
+.link-list li {
+    padding: 5px 0;
+    font-size: 1.8rem;
+}
+
+.link-list li a {
+    margin-left: 10px;
+}
+
+.link-list .ll-label {
+    color: var(--desc-color);
+    margin-left: 0.6em;
+    font-size: 1.6rem;
+}
+
+/* --------------------------------------------------------------------------
+   8. Comments — provider-agnostic shell
+   -------------------------------------------------------------------------- */
+#comment,
+.comments {
+    margin: 30px auto;
+    font-size: 1.6rem;
+}
+
+#comment a,
+.comments a {
+    border-bottom: none;
+}
+
+#comment a:hover,
+.comments a:hover {
+    border-bottom: none;
+}
+
+#comment hr {
+    margin: 6em auto 3em;
+    width: 15%;
+    border: 10px dotted;
+    border-left: 0;
+    border-right: 0;
+    border-color: var(--accent-soft);
+    border-top: 1px;
+}
+
+.comments hr {
+    margin: 5em auto 2.5em;
+    width: 15%;
+    border: 0;
+    border-top: 10px dotted var(--accent-soft);
+}
+
+.pl {
+    display: flex;
+    margin: 2em 0;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.pl h4 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.pl .tj {
+    color: var(--desc-color);
+    font-size: 1.5rem;
+}
+
+.comments-provider {
+    margin-top: 1.5rem;
+}
+
+.comments-disabled {
+    color: var(--desc-color);
+    font-size: 1.6rem;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+/* Artalk theming hooks (kept from the original stylesheet) */
+.artalk,
+.atk-layer-wrap {
+    --at-color-border: var(--accent-soft) !important;
+    --at-color-bg: var(--bg-color) !important;
+}
+
+.atk-main-editor > .atk-header input {
+    border-bottom: 1px dashed var(--accent-soft) !important;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   9. Footnotes & Org leftovers
+   -------------------------------------------------------------------------- */
+.footnum {
+    font-size: 1.8rem;
+}
+
+.footdef sup {
+    font-size: 1.2rem;
+    line-height: 1;
+    top: 0.4em;
+}
+
+.footpara {
+    display: inline;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.footpara a {
+    word-break: break-all;
+}
+
+#footnotes {
+    margin-top: 3rem;
+    font-size: 1.6rem;
+    color: var(--bq-color);
+}
+
+#footnotes h2 {
+    font-size: 1.8rem;
+}
+
+.todo {
+    background-color: #c0392b;
+    color: #fff;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    background-clip: padding-box;
+    font-size: 1em;
+    font-family: var(--mono-fonts);
+    line-height: 1;
+}
+
+.done {
+    background-color: #2e7d32;
+    color: #fff;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    background-clip: padding-box;
+    font-size: 1em;
+    font-family: var(--mono-fonts);
+    line-height: 1;
+}
+
+.priority {
+    color: orange;
+    font-family: var(--mono-fonts);
+}
+
+ul.org-ul {
+    margin-left: 20px;
+    padding-left: 0;
+}
+
+ul.org-ul li {
+    padding: 5px 0;
+    font-size: 1.8rem;
+}
+
+ul.org-ul li a {
+    margin-left: 10px;
+}
+
+ol.org-ol {
+    margin-left: 20px;
+    padding-left: 10px;
+}
+
+ol.org-ol li {
+    font-size: 1.8rem;
+}
+
+#zhijiao ol.org-ol {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+#zhijiao ol.org-ol li {
+    display: inline-flex;
+    margin-right: 1.5em;
+    width: 45%;
+}
+
+ol.linenums {
+    color: #4c666c;
+    margin: 0 0 0 40px;
+}
+
+ol.linenums li {
+    line-height: 18px;
+    padding-left: 12px;
+}
+
+/* Org src blocks with the language badge in the corner */
+.org-src-container {
+    border: 1px solid var(--rule-strong);
+    box-shadow: 3px 3px 3px var(--rule-color);
+    font-family: var(--mono-fonts);
+    font-size: 1em;
+    margin: 1em auto;
+    padding: 0.1em 0.5em;
+    position: relative;
+    border-radius: var(--radius-sm);
+}
+
+.org-src-container > pre {
+    overflow: auto;
+}
+
+.org-src-container > pre:before {
+    display: block;
+    position: absolute;
+    background-color: #b3b3b3;
+    top: 0;
+    right: 0;
+    padding: 0 0.5em;
+    border-bottom-left-radius: 8px;
+    border: 0;
+    color: #fff;
+    font-size: 0.8em;
+}
+
+/* Language badge labels. Extend freely — add
+   `.org-src-container > pre.src-<lang>:before { content: '<label>'; }` */
+.org-src-container > pre.src-sh:before { content: "sh"; }
+.org-src-container > pre.src-bash:before { content: "bash"; }
+.org-src-container > pre.src-shell:before { content: "shell"; }
+.org-src-container > pre.src-zsh:before { content: "zsh"; }
+.org-src-container > pre.src-emacs-lisp:before { content: "Emacs Lisp"; }
+.org-src-container > pre.src-lisp:before { content: "Lisp"; }
+.org-src-container > pre.src-scheme:before { content: "Scheme"; }
+.org-src-container > pre.src-clojure:before { content: "Clojure"; }
+.org-src-container > pre.src-org:before { content: "Org"; }
+.org-src-container > pre.src-python:before { content: "Python"; }
+.org-src-container > pre.src-ipython:before { content: "iPython"; }
+.org-src-container > pre.src-R:before { content: "R"; }
+.org-src-container > pre.src-julia:before { content: "Julia"; }
+.org-src-container > pre.src-perl:before { content: "Perl"; }
+.org-src-container > pre.src-ruby:before { content: "Ruby"; }
+.org-src-container > pre.src-php:before { content: "PHP"; }
+.org-src-container > pre.src-java:before { content: "Java"; }
+.org-src-container > pre.src-kotlin:before { content: "Kotlin"; }
+.org-src-container > pre.src-scala:before { content: "Scala"; }
+.org-src-container > pre.src-c:before,
+.org-src-container > pre.src-C:before { content: "C"; }
+.org-src-container > pre.src-cpp:before { content: "C++"; }
+.org-src-container > pre.src-csharp:before { content: "C#"; }
+.org-src-container > pre.src-rust:before { content: "Rust"; }
+.org-src-container > pre.src-go:before { content: "Go"; }
+.org-src-container > pre.src-js:before,
+.org-src-container > pre.src-javascript:before { content: "Javascript"; }
+.org-src-container > pre.src-typescript:before { content: "Typescript"; }
+.org-src-container > pre.src-html:before,
+.org-src-container > pre.src-browser:before { content: "HTML"; }
+.org-src-container > pre.src-css:before { content: "CSS"; }
+.org-src-container > pre.src-scss:before { content: "SCSS"; }
+.org-src-container > pre.src-sass:before { content: "Sass"; }
+.org-src-container > pre.src-less:before { content: "Less"; }
+.org-src-container > pre.src-json:before { content: "JSON"; }
+.org-src-container > pre.src-yaml:before { content: "YAML"; }
+.org-src-container > pre.src-toml:before { content: "TOML"; }
+.org-src-container > pre.src-xml:before { content: "XML"; }
+.org-src-container > pre.src-sql:before { content: "SQL"; }
+.org-src-container > pre.src-sqlite:before { content: "SQLite"; }
+.org-src-container > pre.src-mysql:before { content: "MySQL"; }
+.org-src-container > pre.src-makefile:before { content: "Make"; }
+.org-src-container > pre.src-docker:before { content: "Dockerfile"; }
+.org-src-container > pre.src-nginx:before { content: "nginx"; }
+.org-src-container > pre.src-latex:before { content: "LaTeX"; }
+.org-src-container > pre.src-markdown:before { content: "Markdown"; }
+.org-src-container > pre.src-matlab:before { content: "Matlab"; }
+.org-src-container > pre.src-haskell:before { content: "Haskell"; }
+.org-src-container > pre.src-swift:before { content: "Swift"; }
+.org-src-container > pre.src-dart:before { content: "Dart"; }
+.org-src-container > pre.src-elixir:before { content: "Elixir"; }
+.org-src-container > pre.src-erlang:before { content: "Erlang"; }
+.org-src-container > pre.src-nix:before { content: "Nix"; }
+.org-src-container > pre.src-awk:before { content: "Awk"; }
+.org-src-container > pre.src-sed:before { content: "Sed"; }
+.org-src-container > pre.src-dot:before { content: "Dot"; }
+.org-src-container > pre.src-plantuml:before { content: "PlantUML"; }
+.org-src-container > pre.src-gnuplot:before { content: "Gnuplot"; }
+.org-src-container > pre.src-ditaa:before { content: "Ditaa"; }
+.org-src-container > pre.src-text:before { content: "text"; }
+
+/* --------------------------------------------------------------------------
+   10. Hugo / Chroma syntax highlighting wrapper
+   -------------------------------------------------------------------------- */
+.highlight {
+    position: relative;
+    margin: 1.4em auto;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg-color-quote);
+    border: 1px solid var(--rule-color);
+}
+
+.highlight pre,
+.chroma {
+    margin: 0;
+    border-radius: 0;
+    /* The palette comes from chroma.css; the surface follows the design tokens. */
+    background-color: var(--bg-color-quote) !important;
+    -webkit-text-size-adjust: none;
+    font-size: 1.55rem;
+}
+
+.highlight pre {
+    padding: 1.1rem 1.3rem;
+}
+
+/* A bare <pre> that is not a highlight block (e.g. indented markdown) */
+#content > pre,
+.post-body > pre {
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--rule-color);
+    padding: 1.1rem 1.3rem;
+}
+
+/* Chroma line numbers */
+.chroma .lntable {
+    border: 0;
+    display: table;
+    width: 100%;
+}
+
+.chroma .lntable td {
+    border: 0;
+    padding: 0;
+}
+
+.chroma .lntd:first-child {
+    width: 1%;
+}
+
+.chroma .ln {
+    color: var(--desc-color);
+    padding-right: 1em;
+    user-select: none;
+}
+
+.chroma .hl {
+    background: rgba(171, 79, 73, 0.1);
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   11. Theme switch button (opt-in)
+   -------------------------------------------------------------------------- */
+.theme-toggle {
+    appearance: none;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--bq-color);
+    cursor: pointer;
+    font-size: 1.7rem;
+    line-height: 1;
+    padding: 0.2em 0.45em;
+    font-family: inherit;
+}
+
+.theme-toggle:hover {
+    color: var(--accent);
+    border-color: var(--rule-color);
+}
+
+/* --------------------------------------------------------------------------
+   12. 404
+   -------------------------------------------------------------------------- */
+.notfound {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+.notfound .code {
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--rule-strong);
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.3em;
+}

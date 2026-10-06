@@ -1,0 +1,44 @@
+# SimpleW — theme metadata
+# https://gohugo.io/themes/creating/#theme-configuration-file
+
+name = "SimpleW"
+license = "MIT"
+licenselink = "https://github.com/shujiaccn/SimpleW/blob/main/LICENSE"
+
+description = "一个现代、简洁的中文写作主题：年份分组索引、可配置栏目、可切换评论引擎、积木式主页。"
+
+homepage = "https://weiqiang.org/"
+demosite = "https://weiqiang.org/"
+
+tags = [
+  "blog",
+  "personal",
+  "chinese",
+  "minimal",
+  "clean",
+  "responsive",
+  "dark mode",
+  "taxonomies",
+]
+
+features = [
+  "年份分组文章索引（虚线引导线 + 右对齐日期）",
+  "配置驱动的栏目系统：增删分类只改 config",
+  "可选评论引擎：Artalk / Giscus / Disqus / Waline / Twikoo / Utterances / 完全自定义",
+  "积木式主页：hero / recent / list / sections / taxonomy / markdown / columns / html",
+  "分类页可自由定义：风格、范围、分组、年份导航",
+  "深浅色模式（可选，默认关闭以保持原有观感）",
+  "多语言界面文案",
+  "零 JavaScript 依赖（除评论与主题切换）",
+  "SEO：Open Graph、Twitter Card、JSON-LD",
+  "打印样式、无障碍跳转链接、响应式断点与原站一致",
+]
+
+[author]
+  name = "LOWEJAN"
+  homepage = "https://weiqiang.org/"
+
+[original]
+  name = "SimpleW"
+  homepage = "https://weiqiang.org/"
+  note = "一个现代、简洁的中文写作主题"

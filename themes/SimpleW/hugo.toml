@@ -1,0 +1,79 @@
+# ===========================================================================
+# SimpleW — 主题默认参数
+#
+# 关于这份文件的实测结论（Hugo 0.166，已用 `hugo config` 验证）：
+#   * [params]        会与站点配置合并，站点同名参数优先 → 可以在这里放默认值
+#   * [markup] 等其它  **不会** 从主题合并，必须在站点的 hugo.toml 里写
+#
+# 所以下面只放扁平的、无副作用的默认值；站点写没写都一样，因为模板本身
+# 也都用 `default` 兜底了。删掉这份文件主题照样能跑。
+#
+# 必须写在【站点】配置里的两项，见 exampleSite/hugo.toml 与 README「Markdown 渲染」：
+#
+#   [markup.goldmark.renderer]
+#     unsafe = true       # 保留内容里的内联 HTML（Org-Mode 迁移几乎必需）
+#                         # 不开的话 <span class="section-number-2"> 之类会被静默丢弃
+#
+#   [markup.highlight]
+#     noClasses = false   # Chroma 输出 class，配色才能跟随深浅色
+#                         # 代码块由主题的 render hook 强制处理，无需配置；
+#                         # 这一项是为了 {{< highlight >}} shortcode
+#
+#   [markup.tableOfContents]
+#     startLevel = 2      # 与原站「目录从二级标题开始」的习惯一致
+#     endLevel = 4
+# ===========================================================================
+
+[params]
+  # 完全沿用原站观感；"auto" 跟随系统深浅色并显示切换按钮；"dark" 恒为深色
+  colorScheme = "light"
+
+  # 列表页默认风格：
+  #   calendar（按年折叠 + 年度日格热力图 + 紧凑行）← 默认
+  #   grouped（按年分组 + 虚线引导线）| cards（卡片）| plain（纯链接）
+  sectionStyle = "calendar"
+
+  # 列表页默认收录范围：recursive（含子目录）| direct（仅本层）
+  listScope = "recursive"
+
+  # 日期格式（Go 的参考时间写法）
+  dateFormat = "2006-01-02"
+
+  # 未登记在 [[params.sections]] 里的顶层目录，是否自动出现在导航中
+  sectionsAuto = true
+
+  # -------------------------------------------------------------------------
+  # calendar 样式的默认值
+  #
+  # 下面只是把默认值摊开写出来，方便对照。模板本身都有兜底，删掉这段照样跑。
+  # 要改请写在【站点】的 hugo.toml 里 —— 站点同名参数优先于这里。
+  # -------------------------------------------------------------------------
+  [params.listing.calendar]
+    heatmap = true          # 画年度日格；关掉就只剩年份折叠 + 行列表
+    palette = "accent"      # accent（赭红，沿用本站配色）| ink（参考站的青灰）
+    weekStart = "monday"    # monday（中文日历习惯）| sunday（参考站原样）
+    levels = [1, 2, 4, 7]   # 当日篇数达到几篇进入第 1/2/3/4 档
+    monthAxis = true        # 月份轴（1月…12月）
+    weekdayAxis = true      # 星期轴（一/三/五）
+    openYears = 1           # 默认展开最近几年；-1 = 全部展开，0 = 全部折叠
+    dateFormat = "01/02"    # 行首日期，Go 写法
+    showCount = true        # 年份与 h1 后面跟「· N 篇」
+    maxTitles = 12          # 单元格悬浮提示里最多列几篇标题
+
+  # 文章页默认值；站点可在自己的 hugo.toml 中覆盖。
+  #
+  #   meta              标题下显示哪些元信息：date | lastmod | section | tags |
+  #                     categories | readingTime | wordCount
+  #   relatedCount      文末「相关文章」最多几篇，0 = 关闭
+  #   wordsPerMinute    中文阅读速度（字/分钟），用于估算阅读时间
+  #   toc.enabled/open  目录开关；宽屏挂在正文右侧空白里，窄屏自动隐藏
+  [params.post]
+    meta = ["date", "wordCount", "readingTime"]
+    showPrevNext = true
+    showTags = true
+    relatedCount = 5
+    wordsPerMinute = 400
+
+  [params.toc]
+    enabled = true
+    open = true

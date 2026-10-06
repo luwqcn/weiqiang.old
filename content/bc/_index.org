@@ -1,0 +1,10 @@
+#+TITLE: 本草志
+#+OPTIONS: comment:nil pagenav:nil entrymeta:nil author:nil
+#+DATE: 2008-11-18
+#+AUTHOR: 陆伟强
+#+DESCRIPTION: 生于江南，寻觅本草江湖。
+#+KEYWORDS: 江南, 本草, 危墙
+
+# 注：原先这里的 .meta 段落和一篇卡的 #+HTML 由 <div class="meta"> 承担，
+# 前者与 #+DESCRIPTION 重复（主题会自己渲染 .meta），后者的 href 指向
+# 旧站的 000-xuyan.html。列表现已由主题自动生成，故一并删除。

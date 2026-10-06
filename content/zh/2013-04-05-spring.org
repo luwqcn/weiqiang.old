@@ -1,0 +1,13 @@
+#+STARTUP: showeverything
+#+TITLE: 春
+#+AUTHOR: 落为匠
+#+DATE: 2013-04-05
+#+DESCRIPTION: 春草生。
+#+KEYWORDS: 景色
+
+春，绿，养眼。
+
+#+caption: 春草
+[[file:/images/201304/grass.jpg]]
+
+癸巳年二月廿五。

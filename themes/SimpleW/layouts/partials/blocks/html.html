@@ -1,0 +1,13 @@
+{{- /*
+  Block: html — a raw escape hatch. No sanitising, so it is on you.
+
+  [[params.home.blocks]]
+    type    = "html"
+    title   = ""
+    content = """<div class="whatever">…</div>"""
+*/ -}}
+{{- $b := .block -}}
+<section class="home-block block-html">
+{{- with $b.title }}<h2 class="block-title">{{ . }}</h2>{{ end -}}
+{{- $b.content | safeHTML -}}
+</section>

@@ -1,0 +1,36 @@
+{{- /*
+  partials/comments/waline.html
+
+  [params.comments.waline]
+    serverURL = "https://waline.example.org"   # required
+    lang      = "zh-CN"
+    emoji     = ["https://unpkg.com/@waline/emojis@1.2.0/weibo"]
+    meta      = ["nick", "mail", "link"]
+    pageview  = false
+    reaction  = true
+    css       = "https://unpkg.com/@waline/client@v3/dist/waline.css"
+    module    = "https://unpkg.com/@waline/client@v3/dist/waline.js"
+*/ -}}
+{{- $w := site.Params.comments.waline | default dict -}}
+{{- $server := $w.serverURL | default "" -}}
+{{- if not $server -}}
+<p class="comments-disabled">请在 config 中配置 <code>params.comments.waline.serverURL</code> 后再启用 Waline。</p>
+{{- else -}}
+<link rel="stylesheet" href="{{ $w.css | default "https://unpkg.com/@waline/client@v3/dist/waline.css" }}">
+<div id="waline"></div>
+<script type="module">
+  import { init } from {{ $w.module | default "https://unpkg.com/@waline/client@v3/dist/waline.js" | jsonify }};
+  init({{ dict
+      "el" "#waline"
+      "serverURL" $server
+      "lang" ($w.lang | default "zh-CN")
+      "dark" "html[data-theme=\"dark\"]"
+      "emoji" ($w.emoji | default slice)
+      "meta" ($w.meta | default (slice "nick" "mail" "link"))
+      "pageview" ($w.pageview | default false)
+      "reaction" ($w.reaction | default true)
+      "requiredMeta" ($w.requiredMeta | default slice)
+      "login" ($w.login | default "enable")
+    | jsonify | safeJS }});
+</script>
+{{- end -}}

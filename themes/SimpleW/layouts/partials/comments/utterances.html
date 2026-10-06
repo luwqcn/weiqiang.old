@@ -1,0 +1,40 @@
+{{- /*
+  partials/comments/utterances.html — GitHub Issues comments, no backend.
+
+  [params.comments.utterances]
+    repo       = "user/repo"          # required
+    issueTerm  = "pathname"           # pathname | url | title | og:title
+    label      = "comment"
+    lightTheme = "github-light"
+    darkTheme  = "photon-dark"
+*/ -}}
+{{- $u := site.Params.comments.utterances | default dict -}}
+{{- if not $u.repo -}}
+<p class="comments-disabled">请在 config 中配置 <code>params.comments.utterances.repo</code> 后再启用 Utterances。</p>
+{{- else -}}
+<script src="https://utteranc.es/client.js"
+        repo="{{ $u.repo }}"
+        issue-term="{{ $u.issueTerm | default "pathname" }}"
+        label="{{ $u.label | default "comment" }}"
+        theme="{{ $u.lightTheme | default "github-light" }}"
+        crossorigin="anonymous"
+        async></script>
+<script>
+(function () {
+  var light = {{ $u.lightTheme | default "github-light" | jsonify | safeJS }};
+  var dark = {{ $u.darkTheme | default "photon-dark" | jsonify | safeJS }};
+  function sync() {
+    var frame = document.querySelector("iframe.utterances-frame");
+    if (!frame || !frame.contentWindow) return;
+    frame.contentWindow.postMessage({
+      type: "set-theme",
+      theme: document.documentElement.dataset.theme === "dark" ? dark : light
+    }, "https://utteranc.es");
+  }
+  window.addEventListener("load", sync);
+  new MutationObserver(sync).observe(document.documentElement, {
+    attributes: true, attributeFilter: ["data-theme"]
+  });
+})();
+</script>
+{{- end -}}

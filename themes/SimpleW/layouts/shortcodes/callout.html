@@ -1,0 +1,15 @@
+{{- /*
+  shortcode: callout
+
+      {{< callout type="tip" title="小提示" >}}
+      正文，支持 **markdown**。
+      {{< /callout >}}
+
+  type: note | tip | warn | danger | quote
+*/ -}}
+{{- $type := .Get "type" | default "note" -}}
+{{- $title := .Get "title" -}}
+<div class="callout callout-{{ $type }}">
+{{- with $title }}<p class="callout-title">{{ . }}</p>{{ end }}
+{{- with .Inner }}{{ . | markdownify }}{{ end }}
+</div>

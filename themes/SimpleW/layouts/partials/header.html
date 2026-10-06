@@ -1,0 +1,61 @@
+{{- /*
+  partials/header.html — the top bar.
+
+  The menu is generated from `[[params.sections]]` (entries with nav = true),
+  so adding or removing a category in config is all it takes.
+
+  Optional knobs:
+    params.header.showHome   bool  show a 首页 link first (default true)
+    params.header.sticky     bool  keep the bar pinned on scroll (default false)
+    params.header.navAnchor  bool  show the "导航 ↓" jump link (default true)
+    params.header.extraLinks []map {name, url} appended after the sections
+*/ -}}
+{{- $sections := partial "func/sections.html" site -}}
+{{- $hdr := site.Params.header | default dict -}}
+
+{{- $showHome := true -}}
+{{- if isset $hdr "showhome" }}{{ $showHome = $hdr.showHome }}{{ end -}}
+{{- $sticky := false -}}
+{{- if isset $hdr "sticky" }}{{ $sticky = $hdr.sticky }}{{ end -}}
+{{- $navAnchor := true -}}
+{{- if isset $hdr "navanchor" }}{{ $navAnchor = $hdr.navAnchor }}{{ end -}}
+{{- $scheme := site.Params.colorScheme | default "light" -}}
+
+<nav id="top" class="status{{ if $sticky }} is-sticky{{ end }}" aria-label="{{ i18n "mainNav" | default "主导航" }}">
+<div class="menu">
+
+{{- /* ---------- brand / site mark ---------- */ -}}
+<a class="brand" href="{{ site.Home.RelPermalink }}">
+{{- partial "brand-icon.html" . -}}
+{{- with site.Params.brand.text }}<span class="brand-text">{{ . }}</span>{{ end -}}
+<span class="visually-hidden">{{ site.Title }}</span>
+</a>
+
+<div class="nav-links">
+{{- if $showHome }}
+<a href="{{ site.Home.RelPermalink }}"{{ if $.IsHome }} aria-current="page"{{ end }}>{{ site.Params.homeLabel | default (i18n "home" | default "首页") }}</a>
+{{- end -}}
+
+{{- range $sections -}}
+  {{- if .nav -}}
+    {{- $isCurrent := false -}}
+    {{- if and .page (eq .page.RelPermalink $.RelPermalink) }}{{ $isCurrent = true }}{{ end -}}
+    {{- if and .page (hasPrefix $.RelPermalink .page.RelPermalink) }}{{ $isCurrent = true }}{{ end -}}
+    <a href="{{ .url | relURL }}"{{ if $isCurrent }} aria-current="page"{{ end }}{{ if .external }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>
+  {{- end -}}
+{{- end -}}
+
+{{- range $hdr.extraLinks | default slice }}
+<a href="{{ .url | relURL }}"{{ if .external }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>
+{{- end -}}
+
+{{- if eq $scheme "auto" }}
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="{{ i18n "toggleTheme" | default "切换深浅色" }}" title="{{ i18n "toggleTheme" | default "切换深浅色" }}">◐</button>
+{{- end -}}
+
+{{- if $navAnchor }}
+<a href="#footer-menu">{{ i18n "nav" | default "导航" }} &#8595;</a>
+{{- end }}
+</div>
+</div>
+</nav>

@@ -1,0 +1,12 @@
+{{- /* 404.html */ -}}
+{{ define "main" }}
+<div class="notfound">
+  <span class="code">404</span>
+  <h1 class="title">{{ i18n "notFound" | default "页面不存在" }}</h1>
+  <p class="description">{{ i18n "notFoundHint" | default "你要找的内容可能已被移动或删除。" }}</p>
+  <p>
+    <a href="{{ site.Home.RelPermalink }}">{{ i18n "backHome" | default "返回首页" }}</a>
+    {{- with site.Params.footer.extraLinks }} &bull; <a href="{{ (index . 0).url | relURL }}">{{ (index . 0).name }}</a>{{ end }}
+  </p>
+</div>
+{{ end }}

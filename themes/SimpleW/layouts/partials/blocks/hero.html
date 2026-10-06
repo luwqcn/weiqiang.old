@@ -1,0 +1,15 @@
+{{- /*
+  Block: hero — the opening statement.
+
+  [[params.home.blocks]]
+    type    = "hero"
+    title   = "**欢迎！**"      # markdown, rendered large and bold
+    content = """
+    正文若干段落，支持 markdown。
+    """
+*/ -}}
+{{- $b := .block -}}
+<section class="home-block block-hero">
+{{- with $b.title }}<div class="hero-title">{{ . | markdownify }}</div>{{ end -}}
+{{- with $b.content }}<div class="hero-body">{{ . | markdownify }}</div>{{ end -}}
+</section>

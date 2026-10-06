@@ -1,0 +1,22 @@
+{{- /*
+  _markup/render-codeblock.html — fenced code blocks.
+
+  The theme needs Chroma to emit CSS *classes* rather than inline styles, so
+  the syntax colours can follow the light/dark design tokens (see
+  assets/css/chroma.css). Forcing it here means the theme works with Hugo's
+  default configuration — no `[markup.highlight] noClasses = false` needed.
+
+  Per-block options written in the info string still work:
+
+      ```bash {linenos=table,hl_lines=[2 3]}
+      ...
+      ```
+
+  Anything Hugo hands us in `.Options` is forwarded verbatim.
+*/ -}}
+{{- $opts := dict "noClasses" false "tabWidth" 4 "guessSyntax" true -}}
+{{- with .Options -}}
+  {{- $opts = merge $opts . -}}
+{{- end -}}
+{{- $result := transform.HighlightCodeBlock . $opts -}}
+{{- $result.Wrapped -}}

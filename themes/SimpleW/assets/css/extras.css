@@ -1,0 +1,150 @@
+/* ==========================================================================
+   SimpleW — extras.css
+   Small additions introduced by the rebuild: heading anchors, callouts,
+   block wrappers, the year jump bar.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Block wrappers
+   -------------------------------------------------------------------------- */
+.home-content,
+.section-content {
+    margin: 0 auto 1.5rem;
+}
+
+.home-content > :first-child,
+.section-content > :first-child {
+    margin-top: 0;
+}
+
+.home-block > .block-title:first-child {
+    margin-top: 0;
+}
+
+/* 首页第一个块（现在通常是 hero「欢迎！」）紧贴页头，别空出 2.4rem */
+.content > .home-block:first-child,
+.content > .home-content:first-child {
+    margin-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. Linkable headings
+   -------------------------------------------------------------------------- */
+.heading-anchor {
+    margin-left: 0.35em;
+    color: var(--desc-color);
+    opacity: 0;
+    border-bottom: none;
+    font-weight: 400;
+    font-size: 0.8em;
+    transition: opacity var(--dur) var(--ease);
+}
+
+h1:hover > .heading-anchor,
+h2:hover > .heading-anchor,
+h3:hover > .heading-anchor,
+h4:hover > .heading-anchor,
+h5:hover > .heading-anchor,
+h6:hover > .heading-anchor,
+.heading-anchor:focus-visible {
+    opacity: 0.7;
+}
+
+.heading-anchor:hover {
+    opacity: 1;
+    color: var(--accent);
+    border-bottom: none;
+}
+
+/* --------------------------------------------------------------------------
+   3. Callout shortcode
+   -------------------------------------------------------------------------- */
+.callout {
+    border: 1px solid var(--rule-color);
+    border-left-width: 3px;
+    border-radius: var(--radius-sm);
+    background: var(--card-bg);
+    padding: 0.4rem 1.2rem;
+    margin: 1.6em auto;
+}
+
+.callout > p,
+.callout > .callout-title {
+    font-size: 1.7rem;
+    margin: 0.7em 0;
+}
+
+.callout-title {
+    font-weight: 700;
+}
+
+.callout-note {
+    border-left-color: #6b8cae;
+}
+
+.callout-tip {
+    border-left-color: #4c8c6b;
+}
+
+.callout-warn {
+    border-left-color: #b98a2e;
+}
+
+.callout-danger {
+    border-left-color: #a94442;
+}
+
+.callout-quote {
+    border-left-color: var(--accent);
+    font-family: var(--bq-fonts);
+    font-size: 1.8rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. Post cover
+   -------------------------------------------------------------------------- */
+.post-cover {
+    margin: 1.6em auto;
+}
+
+.post-cover img {
+    border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   5. Tables wrapped by JS + the year jump bar
+   -------------------------------------------------------------------------- */
+.table-wrap {
+    margin: 1.6em auto;
+}
+
+.table-wrap > table {
+    margin: 0;
+}
+
+.year-index {
+    margin: 2rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.year-index .chip {
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   6. Section page listing refinements
+   -------------------------------------------------------------------------- */
+.page-header {
+    margin-top: 0;
+}
+
+.page-header .title {
+    margin-top: 0;
+}
+
+.section-card .sc-desc + .sc-desc {
+    margin-top: 0.3em;
+}

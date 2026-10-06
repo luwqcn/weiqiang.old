@@ -1,0 +1,12 @@
+{{- /*
+  _markup/render-link.html — link render hook.
+
+  External links open in a new tab with the right rel attributes; everything
+  else is left alone. `target="_blank"` is set on the markup as well as in JS
+  so it also works without JavaScript.
+*/ -}}
+{{- $u := .Destination -}}
+{{- $external := or (hasPrefix $u "http://") (hasPrefix $u "https://") (hasPrefix $u "//") -}}
+<a href="{{ $u }}"
+   {{- if $external }} target="_blank" rel="noopener noreferrer"{{ end }}
+   {{- with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>

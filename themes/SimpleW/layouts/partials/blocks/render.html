@@ -1,0 +1,19 @@
+{{- /*
+  partials/blocks/render.html — dispatch one homepage block to its template.
+
+  Call with:  {{ partial "blocks/render.html" (dict "block" $b "ctx" $) }}
+
+  Block types shipped: hero | recent | list | sections | taxonomy | markdown | html
+  A block is a map from `[[params.home.blocks]]`. `type` picks the template.
+  Unknown types render nothing rather than failing the build, and you can add
+  your own by creating `layouts/partials/blocks/<type>.html` in your site.
+*/ -}}
+{{- $b := .block -}}
+{{- $ctx := .ctx -}}
+{{- $type := $b.type | default "html" -}}
+{{- $path := printf "blocks/%s.html" $type -}}
+{{- if templates.Exists (printf "partials/%s" $path) -}}
+  {{- partial $path (dict "block" $b "ctx" $ctx) -}}
+{{- else -}}
+  {{- warnf "SimpleW: unknown home block type %q (no partials/%s)" $type $path -}}
+{{- end -}}

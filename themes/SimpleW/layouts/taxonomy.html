@@ -1,0 +1,30 @@
+{{- /* taxonomy.html — the index of a taxonomy, e.g. /tags/. */ -}}
+{{ define "main" }}
+{{- $items := slice -}}
+{{- range $term, $tp := .Data.Terms -}}
+  {{- $items = $items | append (dict "name" $tp.Page.Title "url" $tp.Page.RelPermalink "count" $tp.Count) -}}
+{{- end -}}
+{{- $sortBy := .Params.sort | default (site.Params.taxonomySort | default "count") -}}
+{{- if eq $sortBy "name" -}}
+  {{- $items = sort $items "name" -}}
+{{- else -}}
+  {{- $items = sort $items "count" "desc" -}}
+{{- end -}}
+
+<header class="page-header">
+  <h1 class="title">{{ .Title }}</h1>
+  {{- with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end -}}
+</header>
+{{- with .Description }}<div class="meta">{{ . | markdownify }}</div>{{ end -}}
+{{- with .Content }}<div class="section-content">{{ . }}</div>{{ end }}
+
+{{- if $items }}
+<div class="chips">
+{{- range $items }}
+  <a class="chip" href="{{ .url }}">{{ .name }} <span class="chip-count">{{ .count }}</span></a>
+{{- end }}
+</div>
+{{- else }}
+<p class="description">{{ i18n "noTerms" | default "暂无内容。" }}</p>
+{{- end }}
+{{ end }}

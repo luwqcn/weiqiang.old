@@ -1,0 +1,20 @@
+{{- /*
+  Block: list — a hand-written list of links (the 往事如烟 style).
+
+  [[params.home.blocks]]
+    type  = "list"
+    title = "往事如烟"
+    items = [
+      { text = "2010年：", name = "支教", url = "/zj/" },
+      { text = "2011年：", name = "藏区", url = "/zq/" },
+    ]
+*/ -}}
+{{- $b := .block -}}
+<section class="home-block block-list">
+{{- with $b.title }}<h2 class="block-title">{{ . }}</h2>{{ end }}
+<ul class="link-list org-ul">
+{{- range $b.items | default slice }}
+  <li>{{- with .text }}{{ . }}{{ end }}<a href="{{ .url | relURL }}"{{ if .external }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>{{ with .label }}<span class="ll-label">{{ . }}</span>{{ end }}</li>
+{{- end }}
+</ul>
+</section>

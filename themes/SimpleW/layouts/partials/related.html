@@ -1,0 +1,47 @@
+{{- /*
+  partials/related.html — related posts shown after post navigation.
+
+  params.post.relatedCount controls the maximum number of entries (default 5).
+  Set it to 0 to hide the section. A page-level relatedCount overrides the site.
+
+  Fallback: when Hugo finds no related pages (e.g. a post without tags), fill
+  the list with the nearest posts from the same section so the block is never
+  empty.
+*/ -}}
+{{- $post := site.Params.post | default dict -}}
+{{- $count := 5 -}}
+{{- /* 配置键的大小写在不同 Hugo 版本里不一定一致，两种都认一遍 */ -}}
+{{- if isset $post "relatedcount" }}{{ $count = int (index $post "relatedcount") }}{{ end -}}
+{{- if isset $post "relatedCount" }}{{ $count = int (index $post "relatedCount") }}{{ end -}}
+{{- if isset .Params "relatedcount" }}{{ $count = int (index .Params "relatedcount") }}{{ end -}}
+{{- if isset .Params "relatedCount" }}{{ $count = int (index .Params "relatedCount") }}{{ end -}}
+{{- if gt $count 0 -}}
+  {{- $related := site.RegularPages.Related . | first $count -}}
+  {{- if lt (len $related) $count -}}
+    {{- $seen := slice .RelPermalink -}}
+    {{- range $related }}{{ $seen = $seen | append .RelPermalink }}{{ end -}}
+    {{- $pool := where (where site.RegularPages "Section" .Section) "RelPermalink" "ne" .RelPermalink -}}
+    {{- if eq .Section "" }}{{ $pool = where site.RegularPages "RelPermalink" "ne" .RelPermalink }}{{ end -}}
+    {{- $fallback := slice -}}
+    {{- range sort $pool "Date" "desc" -}}
+      {{- if lt (len $fallback) (sub $count (len $related)) -}}
+        {{- if not (in $seen .RelPermalink) }}{{ $fallback = $fallback | append . }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $related = $related | append $fallback -}}
+  {{- end -}}
+  {{- with $related }}
+<section class="related-posts" aria-labelledby="related-posts-title">
+  <h2 id="related-posts-title">{{ i18n "relatedPosts" | default "相关文章" }}</h2>
+  <ul>
+    {{- $df := site.Params.dateFormat | default "2006-01-02" -}}
+    {{- range . }}
+    <li>
+      <a class="related-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <time class="related-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $df }}</time>
+    </li>
+    {{- end }}
+  </ul>
+</section>
+  {{- end -}}
+{{- end -}}

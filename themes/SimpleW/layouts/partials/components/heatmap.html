@@ -1,0 +1,90 @@
+{{- /*
+  components/heatmap.html — one year drawn as a "day grid" (calendar heatmap).
+
+  Columns are weeks, rows are weekdays, so every day of the year owns exactly
+  one cell. The empty grid is painted once with an SVG <pattern>; days that
+  actually have posts are drawn on top at one of N intensity levels.
+
+  Geometry follows the reference design: 11px cell, 13px pitch, 2px corner
+  radius, 7 rows → the box is always 89px tall and 52 or 53 columns wide.
+
+  Call with a dict:
+      {{ partial "components/heatmap.html" (dict
+           "year"  "2026"
+           "pages" $pagesOfThatYear
+           "cfg"   $calendarCfg) }}
+
+  Reads from `$cfg` (i.e. `[params.listing.calendar]`):
+      weekStart   "monday"  monday | sunday — which row is the top row
+      levels      [1,2,4,7] minimum posts for level 1..N
+      months      {}        axis labels; empty → i18n `monthShort`
+      maxTitles   12        titles listed in a cell's tooltip before "…"
+
+  The palette lives in CSS: the cell classes `heat-empty` / `heat-l1..lN` are
+  painted by listing.css, so switching ramps is a pure stylesheet change.
+*/ -}}
+
+{{- $year := .year -}}
+{{- $pages := .pages -}}
+{{- $cfg := .cfg | default dict -}}
+
+{{- $cell := 11 -}}
+{{- $pitch := 13 -}}
+{{- $rx := 2 -}}
+
+{{- $weekStart := $cfg.weekStart | default "monday" -}}
+{{- $mondayFirst := eq $weekStart "monday" -}}
+
+{{- $levels := slice 1 2 4 7 -}}
+{{- with $cfg.levels }}{{ $levels = . }}{{ end -}}
+
+{{- $maxTitles := 12 -}}
+{{- if isset $cfg "maxtitles" }}{{ $maxTitles = int $cfg.maxTitles }}{{ end -}}
+
+{{- /* Parse as UTC midnight so the day arithmetic is exact everywhere.
+       (A local-time parse would break by one day across a DST boundary.) */ -}}
+{{- $jan1 := time.AsTime (printf "%s-01-01T00:00:00Z" $year) -}}
+{{- $dec31 := time.AsTime (printf "%s-12-31T00:00:00Z" $year) -}}
+{{- $days := add (div (sub $dec31.Unix $jan1.Unix) 86400) 1 -}}
+
+{{- /* Row that 1 January lands on: 0 = first row of the grid */ -}}
+{{- $firstRow := int $jan1.Weekday -}}
+{{- if $mondayFirst }}{{ $firstRow = mod (add $firstRow 6) 7 }}{{ end -}}
+
+{{- /* 52 or 53 columns, and the resulting viewBox */ -}}
+{{- $cols := div (add (add $days $firstRow) 6) 7 -}}
+{{- $vw := sub (mul $cols $pitch) 2 -}}
+{{- $vh := sub (mul 7 $pitch) 2 -}}
+
+{{- $patternID := printf "heat-%s" $year -}}
+{{- $unit := i18n "postsUnit" | default "篇" -}}
+
+<svg class="heat" viewBox="0 0 {{ $vw }} {{ $vh }}" role="img"
+     aria-label="{{ $year }} {{ i18n "heatmapAria" | default "年发文热力图" }}，{{ len $pages }} {{ $unit }}">
+  <defs>
+    <pattern id="{{ $patternID }}" width="{{ $pitch }}" height="{{ $pitch }}"
+             patternUnits="userSpaceOnUse">
+      <rect class="heat-empty" width="{{ $cell }}" height="{{ $cell }}" rx="{{ $rx }}"></rect>
+    </pattern>
+  </defs>
+  <rect width="{{ $vw }}" height="{{ $vh }}" fill="url(#{{ $patternID }})"></rect>
+  {{- range $pages.GroupByDate "2006-01-02" }}
+  {{- $d := time.AsTime (printf "%sT00:00:00Z" .Key) -}}
+  {{- $doy := div (sub $d.Unix $jan1.Unix) 86400 -}}
+  {{- $row := int $d.Weekday -}}
+  {{- if $mondayFirst }}{{ $row = mod (add $row 6) 7 }}{{ end -}}
+  {{- $col := div (add (int $doy) $firstRow) 7 -}}
+  {{- $n := len .Pages -}}
+  {{- $lvl := 1 -}}
+  {{- range $i, $min := $levels }}{{ if ge $n (int $min) }}{{ $lvl = add $i 1 }}{{ end }}{{ end -}}
+  {{- $titles := slice -}}
+  {{- range first $maxTitles .Pages.ByDate.Reverse }}{{ $titles = $titles | append .Title }}{{ end -}}
+  {{- $tip := printf "%s · %d %s\n%s" .Key $n $unit (delimit $titles "\n") -}}
+  {{- if gt (len .Pages) $maxTitles }}{{ $tip = printf "%s\n…" $tip }}{{ end }}
+  <rect class="heat-day heat-l{{ $lvl }}"
+        x="{{ mul $col $pitch }}" y="{{ mul $row $pitch }}"
+        width="{{ $cell }}" height="{{ $cell }}" rx="{{ $rx }}"
+        aria-label="{{ .Key }}：{{ $n }} {{ $unit }}"
+        data-href="{{ (index .Pages.ByDate.Reverse 0).RelPermalink }}"><title>{{ $tip }}</title></rect>
+  {{- end }}
+</svg>

@@ -1,0 +1,79 @@
+{{- /*
+  partials/entry-list.html — renders a set of pages.
+
+  Call with a dict:
+      {{ partial "entry-list.html" (dict
+           "pages" $pages
+           "style" "grouped"     # grouped | calendar | cards | plain
+           "group" true          # grouped only: split into year sections
+           "showDesc" true) }}
+
+  grouped  → the original layout: title, dashed leader, right-aligned date
+  calendar → one collapsible block per year: day-grid heatmap + MM/DD rows
+  cards    → bordered cards with a summary line
+  plain    → a compact link list
+*/ -}}
+{{- $pages := .pages -}}
+{{- $style := .style | default "grouped" -}}
+{{- $showDesc := true -}}
+{{- if isset . "showdesc" }}{{ $showDesc = .showDesc }}{{ end -}}
+{{- $group := true -}}
+{{- if isset . "group" }}{{ $group = .group }}{{ end -}}
+
+{{- if not $pages -}}
+  <p class="description">{{ i18n "noPosts" | default "暂无内容。" }}</p>
+
+{{- else if eq $style "calendar" -}}
+  {{- partial "components/listing-calendar.html" (dict "pages" $pages) -}}
+
+{{- else if eq $style "cards" -}}
+  {{- range $pages }}
+  <article class="post-entry">
+    <h2 class="article-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+    <div class="card-meta">
+      <span class="pubdate">{{ .Date.Format (site.Params.dateFormat | default "2006-01-02") }}</span>
+      {{- with .Params.tags }}<span class="sep">·</span>
+        {{- range $t := . }} <a href="{{ printf "%s%s/" ("tags/" | relURL) ($t | urlize) }}">{{ $t }}</a>{{ end -}}
+      {{- end }}
+    </div>
+    {{- with .Description }}
+    <p class="card-summary">{{ . }}</p>
+    {{- else }}
+      {{- with .Summary }}
+      <p class="card-summary">{{ . | plainify | truncate 120 }}</p>
+      {{- end }}
+    {{- end }}
+  </article>
+  {{- end }}
+
+{{- else if eq $style "plain" -}}
+  <ul class="link-list">
+    {{- range $pages }}
+    <li>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      {{- with .Params.label }}<span class="ll-label">{{ . }}</span>{{ end }}
+      <time class="timestamp" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format (site.Params.dateFormat | default "2006-01-02") }}</time>
+    </li>
+    {{- end }}
+  </ul>
+
+{{- else if $group -}}
+  {{- /* grouped by year — mirrors the org-publish output */ -}}
+  {{- range $pages.GroupByDate "2006" }}
+  <section id="year-{{ .Key }}" class="year-group">
+    <h2>{{ .Key }}{{ i18n "yearSuffix" | default " 年" }} <small>{{ i18n "countSuffix" | default "（共" }}{{ len .Pages }}{{ i18n "countUnit" | default " 篇）" }}</small></h2>
+    <div class="entries">
+      {{- range .Pages }}
+      {{- partial "components/entry-row.html" (dict "page" . "showDesc" $showDesc) }}
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+{{- else -}}
+  <div class="entries">
+    {{- range $pages }}
+    {{- partial "components/entry-row.html" (dict "page" . "showDesc" $showDesc) }}
+    {{- end }}
+  </div>
+{{- end -}}

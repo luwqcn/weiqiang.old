@@ -1,0 +1,20 @@
+{{- /*
+  func/reading-time.html — reading time that makes sense for Chinese text.
+
+  Hugo's .ReadingTime assumes ~200 latin words per minute, which turns a long
+  Chinese article into "1 分钟". This one divides the character count from
+  func/count-words.html by a CJK reading speed.
+
+  Speed: params.post.wordsPerMinute (default 400 characters per minute).
+  Never returns less than 1 minute.
+
+  Call with a Page, or with a plain-text string.
+*/ -}}
+{{- $speed := 400 -}}
+{{- $post := site.Params.post | default dict -}}
+{{- with $post.wordsPerMinute }}{{ $speed = int . }}{{ end -}}
+{{- if le $speed 0 }}{{ $speed = 400 }}{{ end -}}
+{{- $n := partial "func/count-words.html" . -}}
+{{- $min := div (add $n (sub $speed 1)) $speed -}}
+{{- if lt $min 1 }}{{ $min = 1 }}{{ end -}}
+{{- return $min -}}

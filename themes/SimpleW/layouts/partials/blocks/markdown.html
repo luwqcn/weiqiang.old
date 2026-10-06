@@ -1,0 +1,18 @@
+{{- /*
+  Block: markdown — an arbitrary markdown passage, any section of the page.
+
+  [[params.home.blocks]]
+    type    = "markdown"
+    title   = "关于本站"
+    content = """
+    正文，支持 **markdown** 与 shortcode。
+    """
+    file    = "home/intro.md"   # alternative: pull from assets/, or content/
+*/ -}}
+{{- $b := .block -}}
+<section class="home-block block-markdown">
+{{- with $b.title }}<h2 class="block-title">{{ . }}</h2>{{ end -}}
+{{- $src := $b.content | default "" -}}
+{{- with $b.file }}{{ $r := resources.Get . }}{{ if $r }}{{ $src = $r.Content }}{{ end }}{{ end -}}
+{{- $src | markdownify -}}
+</section>

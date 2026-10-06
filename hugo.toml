@@ -1,0 +1,436 @@
+# ===========================================================================
+# 危墙 · weiqiang.org
+#
+# 这个文件是主题能力的完整演示。重构自 Emacs + Org-Mode 生成的原站。
+# 想改栏目、主页、评论、评论模板，基本都只需要动这个文件。
+# ===========================================================================
+
+baseURL = "https://weiqiang.org/"
+title = "危墙"
+theme = "SimpleW"
+
+locale = "zh-CN"
+defaultContentLanguage = "zh-cn"
+timeZone = "Asia/Shanghai"
+enableRobotsTXT = true
+summaryLength = 60
+
+# ---------------------------------------------------------------------------
+# 链接形式 —— 干净链接（pretty URL）
+#
+# uglyURLs = false（Hugo 默认）让页面落到目录里的 index.html：
+#
+#   content/zh/2026-07-05-rensheng-yiyi.org  →  /zh/2026-07-05-rensheng-yiyi/
+#
+# 目录结构与 content/ 一一对应，因此不需要 [permalinks]：默认规则已经给出
+# 同样的结果，少一处配置就少一处要维护的地方。若个别栏目想换路径，再单独加
+# [permalinks] 覆盖即可（注意别在 pattern 里写 .html）。
+#
+# 从 /zh/xxx.html 迁过来时，站外反链会 404 —— 需要在服务器（nginx / Cloudflare
+# 等）配 rewrite 把 .html 请求 301 到去掉后缀的路径，或保留旧路径做重定向页。
+# ---------------------------------------------------------------------------
+uglyURLs = false
+
+# ---------------------------------------------------------------------------
+# 安全策略 —— 必须开启，否则整站无法构建
+#
+# Hugo 0.167 默认把 text/org（和 text/html）挡在内容白名单之外，.org 源文件
+# 会直接报 "access denied: text/org is not whitelisted"。本站内容全部是
+# Org-Mode，所以这里显式放行。markdown 一并保留，日后混用也不会踩坑。
+#
+# 摆放位置有讲究：TOML 里 [table] 之后的裸键值对都归该表所有，所以这段必须
+# 放在所有顶层标量（uglyURLs 等）之后，否则 uglyURLs 会被吃进 [security]。
+# ---------------------------------------------------------------------------
+[security]
+  allowContent = ['^text/org$', '^text/markdown$']
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
+
+[taxonomies]
+  # 本站标签的实际来源是 Org 的 #+FILETAGS 和 #+KEYWORDS，没有内容用 front
+  # matter 的 `tags`。为了让标签地址统一是 /tags/<词>/，这里不再注册
+  # `tag = "tags"` —— 那个位置让给 keywords（见下方 [permalinks]）。
+  filetag = "filetags"
+  # Org 的 #+KEYWORDS 是本站文章标签的最大来源，注册成分类法后文章页的
+  # 标签胶囊才能点开对应归档页。
+  # 注意：Hugo 用它原始解析到的值建词条，因此 #+KEYWORDS 必须一个词一项、
+  # 用逗号或空格分隔，不要塞进长句。
+  keyword = "keywords"
+  category = "categories"
+
+# ---------------------------------------------------------------------------
+# 标签地址统一成 /tags/<词>/
+#
+# keywords 是分类法名（front matter 键），但对外不想暴露成 /keywords/。
+# Hugo 的 permalinks 可以按分类法逐条指定，于是词条页落到 /tags/<词>/，
+# 列表页由 content/keywords/_index.md 的 url 指到 /tags/。
+# filetags、categories 因为没在这里覆盖，仍走各自的 /filetags/、/categories/。
+# ---------------------------------------------------------------------------
+[permalinks]
+  keywords = "/tags/:slug/"
+
+# ---------------------------------------------------------------------------
+# Markdown 渲染 —— 这两项必须写在站点配置里
+#
+# 主题里的 [markup] 不会合并过来（实测 Hugo 0.166 只合并主题的 [params]），
+# 所以站点必须自己声明。两者缺一都会出问题：
+#
+#   unsafe = true        内容里的内联 HTML 会被整段丢弃。Org-Mode 迁移过来的
+#                        文章常带 <span class="section-number-2">、<b> 之类，
+#                        不开这个就会静默丢内容。
+#   noClasses = false    Chroma 输出 class 而非内联样式，主题的 chroma.css
+#                        才能跟随深浅色。代码块（```…```）由主题的 render
+#                        hook 强制处理，这一项是为了 {{< highlight >}} shortcode。
+# ---------------------------------------------------------------------------
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = false
+    lineNos = false
+    guessSyntax = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
+
+# 相关文章按标签、分类和年份计算；标签相同的文章优先。
+[related]
+  threshold = 20
+  includeNewer = true
+  toLower = true
+  [[related.indices]]
+    name = "filetags"
+    weight = 110
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "categories"
+    weight = 80
+  [[related.indices]]
+    # org 的 #+KEYWORDS，多数文章只有这一项标签来源
+    name = "keywords"
+    weight = 60
+  [[related.indices]]
+    name = "date"
+    weight = 10
+    pattern = "2006"
+
+# ---------------------------------------------------------------------------
+# 站点参数
+# ---------------------------------------------------------------------------
+[params]
+  author = "LOWEJAN"
+  since = 2008
+  description = "耕读传家久，诗书继世长。采菊桑林下，江南半農夫。"
+  keywords = ["危墙之下", "村野闲居", "桑下居", "行止齋", "中医", "传统文化", "手作", "围墙里"]
+  dateFormat = "2006-01-02"
+
+  # 列表页（分类页）默认风格：
+  #   calendar  按年折叠 + 年度日格热力图 + 「MM/DD 标题」紧凑行
+  #   grouped   按年分组 + 虚线引导线（原站观感）
+  #   cards     卡片
+  #   plain     纯链接
+  # 单个栏目可以在 [[params.sections]] 里用自己的 style 覆盖它。
+  sectionStyle = "calendar"
+
+  # 列表页默认收录范围：recursive（含子目录）| direct（仅本层）
+  listScope = "recursive"
+
+  # light = 完全沿用原站观感（默认）
+  # auto  = 跟随系统深浅色，并在导航栏出现切换按钮
+  colorScheme = "light"
+
+  # 站点标志：assets/images/logo.svg 会被内联，随主题色变化
+  [params.brand]
+    icon = "images/logo.svg"
+    # text = "危墙"     # 想在图标旁显示文字就打开这行
+
+  [params.header]
+    showHome = true
+    sticky = false
+    navAnchor = true
+    extraLinks = [
+      # uglyURLs 下 RSS 落在 /index.xml（各栏目还有 /zh/index.xml 等）
+      { name = "订阅", url = "/index.xml" },
+    ]
+
+  [params.footer]
+    title = "本站导航"
+    showLastmod = true
+    toTop = true
+    # 额外的页脚信息行，支持 {lastmod} {year} {author} {since} {title} 占位符
+    infoLines = [
+      "本站无 AI 生成的内容，若非注明皆为原创，版权保留，详见<a href=\"/about/\">关于</a>页。",
+    ]
+
+  # -------------------------------------------------------------------------
+  # 栏目注册表 —— 增加或删除分类，只改这一段
+  #
+  #   key         必填，同时对应 content/<key>/ 目录
+  #   name        导航与页面标题
+  #   subtitle    副标题（如斋号）
+  #   description 分类页简介
+  #   style       calendar（按年折叠+日格热力图）| grouped（按年分组）
+  #               | cards（卡片）| plain（纯链接）；不写则用全局 sectionStyle
+  #   order       越小越靠前
+  #   nav         是否出现在顶部导航
+  #   footer      是否出现在页脚导航
+  #   home        是否出现在主页栏目卡片
+  # -------------------------------------------------------------------------
+  [[params.sections]]
+    key = "zh"
+    name = "网志"
+    url = "/zh/"
+    description = "个人网志，纪录生活经历、个人感悟、阅读笔记等等。多为个人碎语，偶尔思考一番，收录个人文字，让文字见证存在。"
+    style = "calendar"
+    order = 10
+    nav = true
+    footer = true
+    home = true
+
+  [[params.sections]]
+    key = "bc"
+    name = "本草"
+    url = "/bc/"
+    description = "生于江南，寻觅本草江湖。"
+    style = "cards"
+    order = 20
+    nav = false
+    footer = true
+    home = true
+
+  [[params.sections]]
+    key = "yue"
+    name = "乐记"
+    url = "/yue/"
+    description = "《乐记》关于音、乐的描述，以及个人古琴曲的辑录。"
+    style = "cards"
+    order = 30
+    nav = false
+    footer = true
+    home = true
+
+  [[params.sections]]
+    key = "xy"
+    name = "习艺"
+    url = "/xy/"
+    description = "此处存放自己感兴趣的一些领域的内容，包括自己整理、思考的，别处摘录的，读书笔记、评论等等。希望给自己的人生找点乐子，多志于鸟兽虫鱼，此为个人兴趣与话题收集地。"
+    style = "plain"
+    order = 40
+    nav = false
+    footer = true
+    home = true
+    # 习艺是个导览页：_index.org 的正文已经把中医/古籍/太极/编程等话题
+    # 和链接写清楚了，下面再挂一串全部文章纯属重复，故不列文章列表。
+    hideList = true
+    # 正文里的话题标题多，给它单独挂一个右侧目录（默认只有单页才有）
+    toc = true
+
+  # 第 6 个栏目：只为演示「加一个分类」有多容易 ——
+  # 写一个 content/zj/ 目录 + 在导航里加下面 8 行，就这么简单。
+  [[params.sections]]
+    key = "zj"
+    name = "支教"
+    url = "/zj/"
+    description = "2010 年的支教旧文，早已不合时宜，留作存档。"
+    style = "grouped"
+    order = 50
+    nav = false
+    footer = true
+    home = true
+
+  # 普通页面也可以进导航（不是 section，只是链接）
+  [[params.sections]]
+    key = "about"
+    name = "关于"
+    url = "/about/"
+    order = 90
+    nav = true
+    footer = true
+    home = false
+
+  [[params.sections]]
+    key = "links"
+    name = "收藏"
+    url = "/links/"
+    order = 95
+    nav = false
+    footer = true
+    home = false
+
+  # -------------------------------------------------------------------------
+  # 主页 —— 积木式，顺序即从上到下的顺序
+  # 类型：hero | recent | list | sections | taxonomy | markdown | columns | html
+  # -------------------------------------------------------------------------
+  [params.home]
+    showContent = true     # 先渲染 content/_index.md 的正文
+    showTitle = false
+
+    [[params.home.blocks]]
+      # hero 是开场白，始终渲染在 content/_index.md 正文之上（即页面文字最顶端）。
+      # 想让它回到正文之后，加一行 position = "bottom"；
+      # 别的块想提到正文之上，加 position = "top"。
+      type = "hero"
+      title = "**欢迎！**"
+
+    [[params.home.blocks]]
+      type = "recent"
+      title = "最近更新"
+      count = 5
+      group = false
+      style = "grouped"
+      more = { name = "网志", url = "/zh/" }
+
+    [[params.home.blocks]]
+      type = "sections"
+      title = "栏目"
+      showCount = true
+      only = []
+      exclude = []
+
+    [[params.home.blocks]]
+      type = "list"
+      title = "往事如烟"
+      items = [
+        { text = "2010年：", name = "支教", url = "/zj/" },
+      ]
+
+    # [[params.home.blocks]]
+    #   type = "taxonomy"
+    #   title = "标签"
+    #   taxonomy = "keywords"    # 本站标签分类法（对外 /tags/）；filetags / categories 亦可
+    #   limit = 20
+    #   sort = "count"
+
+    # [[params.home.blocks]]
+    #   type = "columns"
+    #   title = "近来常做的三件事"
+    #   items = [
+    #     { title = "读书", content = "…" },
+    #     { title = "写字", content = "…" },
+    #     { title = "侍弄草木", content = "…" },
+    #   ]
+
+  # -------------------------------------------------------------------------
+  # 评论 —— provider 换成任意一个即可；也可用 template 指向自己的模板
+  #
+  # 当前启用 Twikoo。换引擎只改 provider 一行，下面各家的配置块都留着，
+  # 填好值随时能切回去。
+  # -------------------------------------------------------------------------
+  [params.comments]
+    enabled = true
+    provider = "twikoo"        # artalk | giscus | disqus | waline | twikoo | utterances | custom | none
+    title = "评论/留言"
+    showDivider = true
+    # template = "comments/my-provider.html"   # 自定义评论模板：写成 partial 路径
+    # customRaw = """<div id="mine"></div><script>…</script>"""
+
+    # -------------------------------------------------------------------
+    # Twikoo（当前启用）
+    #   envId  必填。Vercel / Netlify / Railway 自建实例的完整地址，
+    #          或腾讯云开发给出的环境 ID（形如 xxx-1a2b3c4d5e6f）。
+    #   cdn    可选，默认走 jsDelivr。国内访问不稳可换成
+    #          https://unpkg.com/twikoo@1.6.44/dist/twikoo.min.js
+    # -------------------------------------------------------------------
+    [params.comments.twikoo]
+      envId = "https://wejan.netlify.app"
+      lang = "zh-CN"
+      # cdn = "https://cdn.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.min.js"
+
+    # 下面几组是备选引擎，切换 provider 时把对应值填上即可。
+    [params.comments.artalk]
+      # 旧站（Org-Mode 导出版）页面上写的是 https://cmt.weiqiang.org；
+      # 评论数据在那台实例上。换成新实例前先别改这里，否则等于换了个空库。
+      server = "https://art.weiqiang.org"
+      site = "危墙"
+      locale = "zh-CN"
+      cdn = "https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1"
+      pageKey = ""        # 留空 = 用页面路径；填 "legacy" = 交给 Artalk 自己判断
+      # 评论按 key 存，旧站的 key 是当时的路径 /zh/xxx.html。漂亮 URL 之后页面
+      # 路径变成 /zh/xxx/，直接用新路径会查出 0 条评论。开着 legacyKeys，先按
+      # 旧 key 去取 —— 评论一条不少，只是 key 还写着旧地址。
+      # 等后端数据真的改完（见 scripts/artalk-migrate.py），把它改回 false 即可。
+      legacyKeys = true
+      darkMode = "auto"
+      showPV = true
+
+    # 下面几组是备选引擎的示例配置，切换 provider 时把对应值填上即可。
+    [params.comments.giscus]
+      repo = "your-name/your-repo"
+      repoId = "R_kgDOxxxxxxx"
+      category = "Announcements"
+      categoryId = "DIC_kwDOxxxxxxxx"
+      mapping = "pathname"
+      lang = "zh-CN"
+      lightTheme = "light"
+      darkTheme = "dark_dimmed"
+
+    [params.comments.disqus]
+      shortname = "your-shortname"
+
+    [params.comments.waline]
+      serverURL = "https://waline.example.org"
+      lang = "zh-CN"
+      pageview = false
+
+    [params.comments.utterances]
+      repo = "your-name/your-repo"
+      issueTerm = "pathname"
+
+  # -------------------------------------------------------------------------
+  # 其它
+  # -------------------------------------------------------------------------
+  [params.post]
+    # date | lastmod | section | categories | readingTime | wordCount
+    # （标签单独显示在正文末尾，见下方「标签」说明）
+    meta = ["date", "wordCount", "readingTime"]
+    # 文章末尾的「上一篇 / 下一篇」导航，不需要就设成 false
+    # 站点根目录下的独立页面（关于 / 收藏 / SiteLog）永远不会显示
+    showPrevNext = true
+    # 「相关文章」最多显示几篇；设为 0 可关闭，默认 5
+    relatedCount = 5
+    # 中文阅读速度（字/分钟），用于估算「阅读时间」，默认 400
+    wordsPerMinute = 400
+
+  [params.toc]
+    enabled = true
+    open = true
+    # 栏目/列表页默认没有右侧目录。想让某个栏目页单独挂一个，
+    # 在它的 _index 里写 `showToc: true`（Org 用 `#+SHOWTOC: true`）；
+    # 想全部栏目页都挂，把下面这行打开（逐页开关优先）。
+    # onListings = true
+
+  [params.pagination]
+    enabled = false     # 与原站一致：一页列全。改成 true 即分页。
+
+  [params.social]
+    rss = true
+
+  # -------------------------------------------------------------------------
+  # 分类页「calendar」样式 —— 年度折叠 + 日格热力图
+  #
+  # 热力图每一格是一天：横向是周（第 1 周…第 53 周），纵向是星期；颜色深浅
+  # 按当日发文篇数分档。悬停显示当天篇数与标题，点击跳到当天第一篇。
+  # 把 heatmap 关掉，就退化成「年份折叠 + MM/DD 行列表」。
+  #
+  # 主题自身有一份相同的默认值，这里展开写出来只是方便你直接改。整块删掉
+  # 也不影响运行。
+  # -------------------------------------------------------------------------
+  [params.listing.calendar]
+    heatmap = true          # 画不画年度日格
+    palette = "accent"      # accent（赭红，沿用本站配色）| ink（参考站的青灰）
+    weekStart = "monday"    # monday（中文日历习惯）| sunday（参考站原样）
+    levels = [1, 2, 4, 7]   # 当日达到几篇进入第 1/2/3/4 档；可增可减
+    monthAxis = true        # 月份轴（1月…12月）
+    weekdayAxis = true      # 星期轴（一/三/五）
+    openYears = 1           # 默认展开最近几年；-1 全部展开，0 全部折叠
+    dateFormat = "01/02"    # 行首日期，Go 写法
+    showCount = true        # 年份与页面标题后面跟「· N 篇」
+    maxTitles = 12          # 单元格悬浮提示里最多列几篇标题

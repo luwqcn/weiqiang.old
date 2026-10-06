@@ -1,0 +1,13 @@
+{{- /*
+  partials/components/entry-row.html — one "title ······ date" row.
+  Call with (dict "page" $p "showDesc" true)
+*/ -}}
+{{- $p := .page -}}
+{{- $showDesc := true -}}
+{{- if isset . "showdesc" }}{{ $showDesc = .showDesc }}{{ end -}}
+{{- $df := site.Params.dateFormat | default "2006-01-02" -}}
+<a class="entry" href="{{ $p.RelPermalink }}"{{ if and $showDesc $p.Description }} title="{{ $p.Description }}"{{ end }}>
+  <span class="entry-title">{{ if $p.Params.pinned }}<span class="entry-pin" aria-hidden="true">●</span>{{ end }}{{ $p.Title }}</span>
+  <span class="entry-dashed" aria-hidden="true"></span>
+  <time class="date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format $df }}</time>
+</a>

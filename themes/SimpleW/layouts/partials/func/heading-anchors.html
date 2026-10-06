@@ -1,0 +1,26 @@
+{{- /*
+  func/heading-anchors.html — 给一段正文里的 h2~h6 补上可点的 # 锚点。
+
+  用法：{{ $content = partial "func/heading-anchors.html" $content }}
+
+  为什么要自己补：Markdown 的内容由 `_markup/render-heading.html` 钩子负责，
+  但 **Org 内容不走那个钩子**（go-org 自己生成整棵标题树），所以 Org 页面
+  的标题上根本没有锚点。这里用正则补一遍。
+
+  两个限制：
+    · RE2 不支持反向引用，只能按级别各写一条，没法用 `h[2-6]` 一把梭。
+    · 标题必须自带 id（Org/Markdown 都会给，形如 id="headline-3"）；
+      没有 id 的标题匹配不到，也就不会加 #。
+
+  已经在正文里出现 heading-anchor 就跳过，避免重复加。
+  返回值过了 safeHTML：replaceRE 出来的是普通字符串，直接打印会被转义。
+*/ -}}
+{{- $c := . -}}
+{{- if not (in $c "heading-anchor") -}}
+  {{- $c = replaceRE `(<h2([^>]*\sid="([^"]+)"[^>]*)>)([\s\S]*?)(</h2>)` `$1$4<a class="heading-anchor" href="#$3" aria-label="链接到本节">#</a>$5` $c -}}
+  {{- $c = replaceRE `(<h3([^>]*\sid="([^"]+)"[^>]*)>)([\s\S]*?)(</h3>)` `$1$4<a class="heading-anchor" href="#$3" aria-label="链接到本节">#</a>$5` $c -}}
+  {{- $c = replaceRE `(<h4([^>]*\sid="([^"]+)"[^>]*)>)([\s\S]*?)(</h4>)` `$1$4<a class="heading-anchor" href="#$3" aria-label="链接到本节">#</a>$5` $c -}}
+  {{- $c = replaceRE `(<h5([^>]*\sid="([^"]+)"[^>]*)>)([\s\S]*?)(</h5>)` `$1$4<a class="heading-anchor" href="#$3" aria-label="链接到本节">#</a>$5` $c -}}
+  {{- $c = replaceRE `(<h6([^>]*\sid="([^"]+)"[^>]*)>)([\s\S]*?)(</h6>)` `$1$4<a class="heading-anchor" href="#$3" aria-label="链接到本节">#</a>$5` $c -}}
+{{- end -}}
+{{- return ($c | safeHTML) -}}

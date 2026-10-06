@@ -1,0 +1,37 @@
+{{- /*
+  partials/pagination.html — windowed pagination.
+
+  Call with a Paginator:  {{ partial "pagination.html" .Paginator }}
+*/ -}}
+{{- $p := . -}}
+{{- if gt $p.TotalPages 1 -}}
+{{- $window := 2 -}}
+<nav class="pagination" aria-label="{{ i18n "pagination" | default "分页导航" }}">
+  {{- if $p.HasPrev }}
+  <a href="{{ $p.Prev.URL }}" rel="prev">{{ i18n "prevPage" | default "上一页" }}</a>
+  {{- else }}
+  <span class="is-disabled" aria-disabled="true">{{ i18n "prevPage" | default "上一页" }}</span>
+  {{- end -}}
+
+  {{- $last := 0 -}}
+  {{- range $p.Pagers }}
+    {{- $n := .PageNumber -}}
+    {{- $show := or (eq $n 1) (eq $n $p.TotalPages) (and (ge $n (sub $p.PageNumber $window)) (le $n (add $p.PageNumber $window))) -}}
+    {{- if $show -}}
+      {{- if gt (sub $n $last) 1 }}<span class="is-gap" aria-hidden="true">…</span>{{ end -}}
+      {{- if eq $n $p.PageNumber -}}
+        <span class="is-current" aria-current="page">{{ $n }}</span>
+      {{- else -}}
+        <a href="{{ .URL }}">{{ $n }}</a>
+      {{- end -}}
+      {{- $last = $n -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $p.HasNext }}
+  <a href="{{ $p.Next.URL }}" rel="next">{{ i18n "nextPage" | default "下一页" }}</a>
+  {{- else }}
+  <span class="is-disabled" aria-disabled="true">{{ i18n "nextPage" | default "下一页" }}</span>
+  {{- end }}
+</nav>
+{{- end -}}

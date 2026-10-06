@@ -1,0 +1,20 @@
+#+STARTUP: showall
+#+OPTIONS: entrymeta:nil comment:nil author:nil
+#+LANGUAGE: zh-CN
+#+TITLE: 危墙
+#+AUTHOR: 陆伟强
+#+EMAIL: lu@weiqiang.org
+#+DATE: 2008-11-18
+#+OPTIONS: title:nil num:nil
+#+KEYWORDS: 危墙之下, 村野闲居, 桑下居, 行止齋, 中医, 传统文化, 手作, 围墙里
+#+DESCRIPTION: 耕读传家久，诗书继世长。采菊桑林下，江南半農夫。
+
+*危墙* 是互联网大宇宙中集中存放个人叙事的一粒小蜉蝣。最大的希望是在这个百年未有的新时代里，于虚拟宇宙中，留下些许痕迹。更新不定期，单篇内容或许长久失修，不足参考；或许偶有更新，且看心情。所有内容仅代表个人立场，与博主曾经及目前所在单位无关。
+
+为什么更名 *危墙* 呢？且等以后说明吧。
+
+# 说明：原先这里还有「最近更新」「往事如烟」两个小节，它们是通过
+# #+INCLUDE 引用旧站自动生成的 archives.org 得到的。迁到 Hugo 之后，
+# 主页的「最近更新」「栏目」「往事如烟」改由 hugo.toml 里的
+# [[params.home.blocks]] 自动生成，手工维护的归档表已经删掉——
+# 否则每发一篇新文章都要回来改一次，而且链接会失效。

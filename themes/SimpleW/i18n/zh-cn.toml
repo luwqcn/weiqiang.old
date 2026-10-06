@@ -1,0 +1,130 @@
+# SimpleW — 简体中文
+# 所有界面文案都可以在站点自己的 i18n/zh-cn.toml 里覆盖。
+
+[home]
+other = "首页"
+
+[skipToContent]
+other = "跳到正文"
+
+[mainNav]
+other = "主导航"
+
+[siteNav]
+other = "本站导航"
+
+[nav]
+other = "导航"
+
+[toTop]
+other = "顶部"
+
+[toggleTheme]
+other = "切换深浅色"
+
+[lastUpdated]
+other = "本页最后更新: {lastmod}."
+
+[recentPosts]
+other = "最近更新"
+
+[sections]
+other = "栏目"
+
+[moreLink]
+other = "更多可见："
+
+[postsUnit]
+other = "篇"
+
+[noPosts]
+other = "暂无内容。"
+
+[noTerms]
+other = "暂无内容。"
+
+[yearSuffix]
+other = " 年"
+
+[countSuffix]
+other = "（共 "
+
+[countUnit]
+other = " 篇）"
+
+[yearIndex]
+other = "年份导航"
+
+# 年度日格热力图（calendar 列表样式）的坐标轴标签，逗号分隔。
+# 月份标签在窄屏下会每三个显示一个；星期标签固定三个。
+[monthShort]
+other = "1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月"
+
+[weekdayShort]
+other = "一,三,五"
+
+[heatmapAria]
+other = "年发文热力图"
+
+[pagination]
+other = "分页导航"
+
+[prevPage]
+other = "上一页"
+
+[nextPage]
+other = "下一页"
+
+[toc]
+other = "目录"
+
+[postNav]
+other = "上一篇 / 下一篇"
+
+[relatedPosts]
+other = "相关文章"
+
+[readingTime]
+other = "约 1 分钟"
+
+[minutes]
+other = "分钟"
+
+[words]
+other = "字"
+
+[updated]
+other = "更新于"
+
+[comments]
+other = "评论/留言"
+
+[commentsDisabled]
+other = "评论功能未启用。"
+
+[commentTemplateMissing]
+other = "未找到评论模板"
+
+[commentProviderUnknown]
+other = "未知的评论提供方"
+
+[customCommentsHint]
+other = "这是自定义评论模板占位符。将本文件复制到你的站点 layouts/partials/comments/custom.html 后自行实现。"
+
+[needJS]
+other = "请启用 JavaScript 以查看评论。"
+
+[pageviews]
+other = "浏览量"
+
+[loading]
+other = "加载中..."
+
+[notFound]
+other = "页面不存在"
+
+[notFoundHint]
+other = "你要找的内容可能已被移动或删除。"
+
+[backHome]
+other = "返回首页"

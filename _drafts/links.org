@@ -1,0 +1,50 @@
+#+STARTUP: showall
+#+LANGUAGE: zh-CN
+#+OPTIONS: html-comment:nil html-pagenav:nil
+#+TITLE:       桑下汇
+#+SUBTITLE:    无名之名，无用之用
+#+EMAIL:       luplus.zju@gmail.com
+#+KEYWORDS:    桑下居, 行止齋, 中医, 传统文化, 手作, 行止斋, 桑菊饮
+#+DESCRIPTION: 耕读传家久，诗书继世长。采菊桑林下，南山在心中。这里收集自认为有用无用的各类网络资源，包括独立博客、有用网址、常逛网站等。
+
+* 博客
+
+向大佬们学习。同时，看他人肆意青春，激扬文字。排列不分先后，收集没有标准，录入方便自己浏览。如果有博客不希望被链接，请留言或邮件告知，我将删除链接。
+
+| 名称             | 备注                                           |
+|------------------+------------------------------------------------|
+| [[http://www.ruanyifeng.com/blog][阮一峰的网络日志]] | 阮一峰                                         |
+| [[https://www.yangzhiping.com][阳志平的网志]]     | 阳志平                                         |
+| [[https://yihui.org][谢益辉]]           | 谢益辉                                         |
+| [[https://www.yinwang.org][当然我在扯淡]]     | 王垠                                           |
+| [[https://byvoid.com/zht][Beyond the Void]]  | 郭家寶                                         |
+| [[http://versky.com][静水流渊]]         | 十多年前经常互动，如今满满的怀旧。             |
+| [[https://www.shaynez.com][山水寨]]           | 程序员、摄影师，居杭州，文字、影像，俱属上乘。 |
+| [[http://louishan.com][生活志]]           | 路易斯·韩的生活日志，十多年还在更新。          |
+| [[https://blog.x1986.com][86'blog]]          | 十多年，一直在记录，一直不曾变过。             |
+| [[http://www.qtwm.com][尺宅]]             | 文字很好，经常阅读。                           |
+| [[https://blog.fueis.com][当下]]             | 常看的博客。                                   |
+| [[https://xinsenz.com][Xinsenz茶話]]      | 树下呷茶，酒好花新。                           |
+| [[https://www.coolblood.cn][拾风]]             | 同龄人。                                       |
+| [[https://jubeny.com][渚碧]]             | 我欲種菜 亦植薔薇                              |
+| [[https://kqh.me][赫赫文王]]         | 柯棋瀚，北師大歷史學院碩士生                   |
+| [[https://houye.xyz][侯爷的博客]]       | Org mode生成的博客，参考过                     |
+| [[https://xiaoguo.net][小过的布拉格]]     | Org mode生成的博客，受过启发                   |
+| [[https://imzm.im][陈仓颉]]           | 以有涯随无涯                                   |
+| [[http://www.winature.com][一介大叔]]         | 文章很不错。                                   |
+| [[http://www.weibalu.com][纬八路生活随笔集]] | 生活随笔：做一件事将其记叙下来。               |
+| [[http://mingxin.life][明心阁]]           | 自明诚，自诚明。某些思考很有启发。             |
+| [[https://unee.wang][read and go]]      | 文章很不错。                                   |
+| [[https://lhcy.org][林海草原]]         | 常看的博客。                                   |
+| [[https://fxpai.com][非学·派]]          | 不与偏见和痼习为伍                             |
+| [[https://hiwannz.com][见字如面]]         | 抽离自我，冷眼旁观。值得一阅。                 |
+| [[http://elizen.me][Elizen]]           | 关注很多年的一个博客，值得一阅。               |
+| [[https://www.jiangyu.org][天一生水]]         | 君子向善，自比以水。                           |
+| [[http://scz.617.cn:8][青衣十三楼]]       | 飞花堂                                            |
+
+* 其他
+- [[http://www.stallman.org/][Richard Stallman]]: Richard Matthew Stallman, also known as RMS in the free software community, was born in New York in 1953. He is a physicist, computer scientist, philosopher, and a passionate champion for software freedom.[fn:1]
+
+* Footnotes
+
+[fn:1]: https://stallmansupport.org/who-is-richard-stallman.html 

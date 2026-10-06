@@ -1,0 +1,58 @@
+{{- /*
+  partials/comments/giscus.html — GitHub Discussions comments (no backend).
+
+  [params.comments.giscus]
+    repo              = "user/repo"       # required
+    repoId            = "R_xxxxx"         # required
+    category          = "Announcements"
+    categoryId        = "DIC_xxxxx"
+    mapping           = "pathname"        # pathname | url | title | og:title | specific
+    strict            = "0"
+    reactionsEnabled  = "1"
+    emitMetadata      = "0"
+    inputPosition     = "bottom"          # top | bottom
+    lang              = "zh-CN"
+    lightTheme        = "light"
+    darkTheme         = "dark_dimmed"
+*/ -}}
+{{- $g := site.Params.comments.giscus | default dict -}}
+{{- if not (and $g.repo $g.repoId) -}}
+<p class="comments-disabled">请在 config 中配置 <code>params.comments.giscus.repo</code> 与 <code>repoId</code> 后再启用 Giscus。</p>
+{{- else -}}
+<div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="{{ $g.repo }}"
+        data-repo-id="{{ $g.repoId }}"
+        data-category="{{ $g.category | default "Announcements" }}"
+        data-category-id="{{ $g.categoryId | default "" }}"
+        data-mapping="{{ $g.mapping | default "pathname" }}"
+        data-strict="{{ $g.strict | default "0" }}"
+        data-reactions-enabled="{{ $g.reactionsEnabled | default "1" }}"
+        data-emit-metadata="{{ $g.emitMetadata | default "0" }}"
+        data-input-position="{{ $g.inputPosition | default "bottom" }}"
+        data-theme="{{ $g.lightTheme | default "light" }}"
+        data-lang="{{ $g.lang | default "zh-CN" }}"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async></script>
+<script>
+/* Keep Giscus in step with the site's colour scheme. */
+(function () {
+  var light = {{ $g.lightTheme | default "light" | jsonify | safeJS }};
+  var dark = {{ $g.darkTheme | default "dark_dimmed" | jsonify | safeJS }};
+  function sync() {
+    var frame = document.querySelector("iframe.giscus-frame");
+    if (!frame || !frame.contentWindow) return;
+    frame.contentWindow.postMessage({
+      giscus: { setConfig: {
+        theme: document.documentElement.dataset.theme === "dark" ? dark : light
+      } }
+    }, "https://giscus.app");
+  }
+  window.addEventListener("load", sync);
+  new MutationObserver(sync).observe(document.documentElement, {
+    attributes: true, attributeFilter: ["data-theme"]
+  });
+})();
+</script>
+{{- end -}}

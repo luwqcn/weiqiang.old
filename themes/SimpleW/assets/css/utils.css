@@ -1,0 +1,242 @@
+/* ==========================================================================
+   SimpleW — utils.css
+   Colour-scheme activation, responsive breakpoints, print, reduced data.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Colour scheme
+
+   The theme ships light-only visuals, byte-identical to the original site.
+   Dark mode is opt-in via `params.colorScheme`:
+
+     "light"  → never dark (default, most faithful)
+     "dark"   → always dark
+     "auto"   → follows prefers-color-scheme, and offers a toggle button
+
+   When JS is available it resolves the scheme before first paint and writes
+   `data-theme`, so no flash occurs. The media query below is only the
+   no-JS fallback for `auto`.
+   -------------------------------------------------------------------------- */
+html {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        color-scheme: dark;
+
+        --bg-color: #16181c;
+        --bg-color-top: #1d2026;
+        --main-color: #d8dade;
+        --bq-color: #c3c7cf;
+        --link-color: #e8eaee;
+        --link-color-hover: #e88c85;
+        --bg-color-quote: #21242b;
+        --time-color: #9aa0aa;
+        --desc-color: #7f858f;
+
+        --rule-color: #2a2e36;
+        --rule-strong: #3a3f49;
+        --leader-color: #3a3f49;
+        --card-bg: #1d2026;
+        --card-bg-hover: #252932;
+        --accent: #e88c85;
+        --accent-soft: #3d4a52;
+        --selection-bg: #3a2c2b;
+
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 2px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Keep code blocks legible against dark surfaces */
+    :root:not([data-theme]) .org-src-container > pre:before,
+    :root[data-theme="dark"] .org-src-container > pre:before {
+        background-color: #3a3f49;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   2. Responsive — mirrors the original breakpoints (660px / 600px)
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 900px) {
+    #content {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media screen and (max-width: 660px) {
+    #content {
+        padding: 20px 10px 10px 10px;
+    }
+
+    #postamble {
+        padding: 10px;
+    }
+
+    .menu {
+        padding: 20px 10px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .menu {
+        padding: 20px 10px;
+        gap: 0 15px;
+    }
+
+    .menu a {
+        margin-left: 0;
+    }
+
+    .menu .nav-links {
+        justify-content: flex-start;
+        gap: 0 15px;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .menu > .brand {
+        margin-right: auto;
+    }
+
+    .index-title {
+        opacity: 1;
+    }
+
+    #content {
+        padding-right: 10px;
+        padding-left: 10px;
+        font-size: 1.8rem;
+        max-width: var(--pad-width);
+    }
+
+    #content p {
+        font-size: 1.85rem;
+    }
+
+    /* The dashed leader has no room to breathe on narrow screens */
+    span.entry-dashed {
+        display: none;
+    }
+
+    .entry {
+        gap: 1rem;
+        align-items: baseline;
+    }
+
+    .date {
+        min-width: 85px;
+        text-align: right;
+    }
+
+    img.profile {
+        margin-top: 30px;
+        width: 150px;
+    }
+
+    .notepage ul {
+        display: block;
+    }
+
+    img {
+        max-width: 100%;
+        padding-left: 0;
+        height: auto;
+    }
+
+    .section-cards {
+        grid-template-columns: 1fr;
+    }
+
+    /* Tables scroll horizontally instead of overflowing the column */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    blockquote {
+        font-size: 1.7rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .menu > .brand .brand-text {
+        display: none;
+    }
+}
+
+/* Wide viewports: give the content column a touch more breathing room */
+@media screen and (min-width: 1200px) {
+    :root {
+        --main-width: 900px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. Print
+   -------------------------------------------------------------------------- */
+@media print {
+    :root {
+        --main-color: #000;
+        --link-color: #000;
+        --desc-color: #333;
+        --bg-color: #fff;
+        --bg-color-quote: #f5f5f5;
+    }
+
+    body {
+        font-size: 11pt;
+        background: #fff;
+    }
+
+    #top,
+    #postamble,
+    .comments,
+    #comment,
+    .pagination,
+    nav.pagenav,
+    .toc,
+    .theme-toggle,
+    .skip-link {
+        display: none !important;
+    }
+
+    #content {
+        max-width: none;
+        padding: 0;
+    }
+
+    a {
+        border-bottom: none;
+        color: #000;
+    }
+
+    /* Expand the meaning of links for paper */
+    .post-body a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #555;
+        word-break: break-all;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. Forced colours (Windows high contrast)
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+    a {
+        border-bottom: 1px solid;
+    }
+    .chip,
+    .entry,
+    article.post-entry,
+    .section-card {
+        border: 1px solid;
+    }
+}

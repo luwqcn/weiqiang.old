@@ -1,0 +1,29 @@
+{{- /*
+  partials/comments/disqus.html
+
+  [params.comments.disqus]
+    shortname = "your-site"   # required
+    identifier = ""           # optional, defaults to the page path
+*/ -}}
+{{- $d := site.Params.comments.disqus | default dict -}}
+{{- $shortname := $d.shortname | default "" -}}
+{{- if not $shortname -}}
+<p class="comments-disabled">请在 config 中配置 <code>params.comments.disqus.shortname</code> 后再启用 Disqus。</p>
+{{- else -}}
+{{- $ident := $d.identifier | default .RelPermalink -}}
+<div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+  this.page.url = {{ .Permalink | jsonify | safeJS }};
+  this.page.identifier = {{ $ident | jsonify | safeJS }};
+  this.page.title = {{ .Title | jsonify | safeJS }};
+};
+(function () {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + {{ $shortname | jsonify | safeJS }} + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>{{ i18n "needJS" | default "请启用 JavaScript 以查看评论。" }}</noscript>
+{{- end -}}

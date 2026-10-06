@@ -1,0 +1,8 @@
+.hugo_build.lock
+.content-backup/
+_legacy/
+public/
+.DS_Store
+.env
+.o
+.log

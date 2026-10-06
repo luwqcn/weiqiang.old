@@ -1,0 +1,55 @@
+{{- /*
+  Block: taxonomy — a chip cloud for any taxonomy.
+
+  [[params.home.blocks]]
+    type     = "taxonomy"
+    title    = "标签"
+    taxonomy = "keywords"    # 分类法名（config [taxonomies] 里的 plural）
+    limit    = 30
+    sort     = "count"       # count | name
+    min      = 1             # hide terms used fewer than this many times
+
+  默认取 config 里注册的第一个分类法：本站的 #+KEYWORDS 注册成 keyword =
+  "keywords"（对外地址改写成 /tags/<词>/），而常见的 `tag = "tags"` 本站没注册，
+  写死 tags 会拿到一片空。
+*/ -}}
+{{- $b := .block -}}
+{{- $tax := $b.taxonomy -}}
+{{- if not $tax -}}
+  {{- /* 没指定就用 site.Taxonomies 里第一个；有 tags 就优先 tags。 */ -}}
+  {{- $first := "" -}}
+  {{- range $k, $v := site.Taxonomies -}}
+    {{- if not $first }}{{ $first = $k }}{{ end -}}
+  {{- end -}}
+  {{- $tax = $first -}}
+  {{- range $k, $v := site.Taxonomies -}}
+    {{- if eq $k "tags" }}{{ $tax = "tags" }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $limit := $b.limit | default 30 -}}
+{{- $min := $b.min | default 1 -}}
+{{- $sortBy := $b.sort | default "count" -}}
+{{- $terms := index site.Taxonomies $tax -}}
+
+{{- $items := slice -}}
+{{- range $name, $tp := $terms -}}
+  {{- if ge $tp.Count $min -}}
+    {{- $items = $items | append (dict "name" $tp.Page.Title "url" $tp.Page.RelPermalink "count" $tp.Count) -}}
+  {{- end -}}
+{{- end -}}
+{{- if eq $sortBy "name" -}}
+  {{- $items = sort $items "name" -}}
+{{- else -}}
+  {{- $items = sort $items "count" "desc" -}}
+{{- end -}}
+
+{{- if $items -}}
+<section class="home-block block-taxonomy">
+  {{- with $b.title }}<h2 class="block-title">{{ . }}</h2>{{ end }}
+  <div class="chips">
+  {{- range $items | first $limit }}
+    <a class="chip" href="{{ .url }}">{{ .name }} <span class="chip-count">{{ .count }}</span></a>
+  {{- end }}
+  </div>
+</section>
+{{- end -}}

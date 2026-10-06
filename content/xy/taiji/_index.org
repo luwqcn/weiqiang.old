@@ -1,0 +1,14 @@
+#+STARTUP: showall
+#+OPTIONS: num:t toc:nil
+#+OPTIONS: comment:nil pagenav:nil entrymeta:nil
+#+LANGUAGE: zh-CN
+#+TITLE: 太极拳学
+#+AUTHOR: 落为匠
+#+DATE: 2023-09-28 20:26:00
+#+DESCRIPTION: 收集整理太极拳的相关知识，记录学拳经历。
+#+KEYWORDS: 太极拳
+#+FILETAGS: 太极拳
+
+太极拳，仅以名称言，便极有深意。拳学流派也有多种，陈式、杨式、武式、孙式、叶传、郝传之类。我学习过的有陈式（108式小架，但没学完）、武式（郝传96式，邓传无手），目前以练习邓传武式63式为主。个人学拳只为养生，完全没有网络上流行的技击比武之心，因为经实践确有养生之效，但因从未学习过拳学的打法，根本不知怎么用，体弱也不敢用。
+
+# 注：原先是 #+INCLUDE 引用 ../index.org 的「太极拳」小节，改为内联正文。

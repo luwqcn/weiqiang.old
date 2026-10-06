@@ -1,0 +1,32 @@
+{{- /*
+  partials/toc.html — sticky table of contents for a single page.
+
+  Knobs (site config, overridable per page via front matter):
+    params.toc.enabled    bool   master switch (default true)
+    params.toc.open       bool   starts expanded (default true)
+    params.toc.title      string heading label
+    markup.tableOfContents.startLevel / endLevel  which headings to include
+*/ -}}
+{{- $t := site.Params.toc | default dict -}}
+{{- $enabled := true -}}
+{{- if isset $t "enabled" }}{{ $enabled = $t.enabled }}{{ end -}}
+{{- $open := true -}}
+{{- if isset $t "open" }}{{ $open = $t.open }}{{ end -}}
+
+{{- /* per-page override: `toc: false` or `toc: {enabled: false, open: true}` */ -}}
+{{- $pc := .Params.toc -}}
+{{- if or (eq (printf "%v" $pc) "false") (eq (printf "%v" $pc) "true") -}}
+  {{- $enabled = $pc -}}
+{{- else if reflect.IsMap $pc -}}
+  {{- if isset $pc "enabled" }}{{ $enabled = $pc.enabled }}{{ end -}}
+  {{- if isset $pc "open" }}{{ $open = $pc.open }}{{ end -}}
+{{- end -}}
+
+{{- if and $enabled .TableOfContents -}}
+<aside class="post-toc" aria-label="{{ $t.title | default (i18n "toc" | default "目录") }}" data-scrollspy>
+  <details class="toc"{{ if $open }} open{{ end }}>
+    <summary>{{ $t.title | default (i18n "toc" | default "目录") }}</summary>
+    {{ .TableOfContents }}
+  </details>
+</aside>
+{{- end -}}

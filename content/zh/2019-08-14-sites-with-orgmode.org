@@ -1,0 +1,104 @@
+#+STARTUP: showall
+#+OPTIONS: num:3
+#+TITLE: 使用 Emacs 和 Org Mode 生成的网站
+#+DATE: 2019-08-14
+#+AUTHOR: 落为匠
+#+EMAIL: luplus.zju@gmail.com
+#+keywords: orgmode, emacs, blog
+#+description: 收集使用 Emacs 和 Org Mode 生成的网站。
+
+本页面收集使用 Emacs 和 Org Mode 生成的网站，大多通过搜索所得。
+
+* 中文
+
+- Slegtank's Blog
+作者的一篇文章是非常好的参考：[[https://blog.slegetank.com/blog/20170108-blogWithEmacs.html][Blog With Emacs]]。
+
+- An Amateur Programmer's Blogs
+看这个博客会知道什么叫积累，简简单单却厚重无比。[[https://dirtysalt.github.io/html/blogs.html][An Amateur Programmer's Blogs]]
+
+- ZCL.SPACE
+通信博士，很多专业的内容。[[https://zlearning.netlify.com][ZCL.SPACE]]
+
+- cig01 Home Page
+好读书，肯下功夫，不仅读，还做笔记。专业人士。[[http://aandds.com/archives.html][Archives]]
+
+- 小过的部落格
+风格简洁，内容丰富。[[https://xiaoguo.net/][xiaoguo.net]]
+
+- V for Vendetta
+有一篇介绍博文：[[http://0x100.club/wiki_emacs/blog-test.html][Blog 的搭建及其特性]]
+
+- lu4nx@wiki(shellcodes.org)
+这篇博文将如何使用orgmode生成博客说明得很清楚了：[[https://www.shellcodes.org/Emacs/%E4%BD%BF%E7%94%A8Org-Mode%E7%94%9F%E6%88%90%E5%8D%9A%E5%AE%A2.html][使用 Org-Mode 生成博客]]。
+
+- 编码者言
+关于orgmode搭建静态博客的介绍：[[https://yuyang0.github.io/articles/org-mode-dropbox-blog.html][使用org-mode与dropbox搭建静态博客]]。
+
+- stardiviner
+[[https://stardiviner.github.io/][stardiviner's index page]] 
+
+- 珊瑚礁上的程序员
+https://blog.demokn.com/ 代码：[[https://github.com/demokn/blog][github]]
+
+- Mark Wallace's Wiki
+挺喜欢这个WIKI的简洁风格的，orgmode的确是搭建WIKI的利器。可以参考其中的文章：[[http://lotabout.me/orgwiki/how_wiki_is_built.html][本站是如何搭建的]]。（不可访问<2023-09-27 三>）
+
+- include-yy
+https://egh0bww1.com/ 内容很丰富，很多分析有参考价值。
+
+- JerryZhang's Blog
+https://www.zhangjiee.com/  内容丰富，特别喜欢作者的读书笔记和回忆录。
+
+- Siqing's Home
+https://smartisan.dev/  喜欢这个域名，回忆使用锤子手机的时光。
+
+- rgb-24bit's HomePage
+https://rgb-24bit.github.io/
+
+- Kumu's Page
+https://opskumu.com/
+
+* 英文
+
+- Nicolas Petton(nicolas.petton.fr)
+[[https://www.gnu.org/software/emacs/][GNU Emacs]]目前的主页出自他的手，他的主页正是我所欣赏的。最初搜索到的使用orgmode的org-publish导出html生成静态网站的正是他「[[https://nicolas.petton.fr/blog/blogging-with-org-mode.html][Blogging with orgmode]]」。
+
+- Stig Brautaset(www.brautaset.org)
+简洁而明快的主页，是我的想达到的，可惜他的说明看不懂。这是他关于orgmode构建博客的博文：[[https://www.brautaset.org/articles/2017/blogging-with-org-mode.html][Blogging with Org mode]]。
+
+- bastibe.de
+值得参考：[[https://bastibe.de/2013-11-13-blogging-with-emacs.html][Blogging with Emacs]]
+
+- Rasmus Pank Roulund(pank.eu)
+他的博文详细说明了使用orgmode和gitlab ci自动构建博客的过程，还给出了示例，gitlab上orgmode的page也是以他的示例为原型的。博文：[[https://pank.eu/blog/blog-setup.html][Blogging with Org]]。
+
+- loomcom.com
+作者对博客页作了很多hack，包括分页（pagination），很实用，可惜我仍然没看懂。参考：[[https://loomcom.com/blog/0110_emacs_blogging_for_fun_and_profit.html][Emacs Blogging for Fun and Profit]]。（已经不再使用 Org Mode 导出。<2023-09-27 三>）
+
+- ogbe.net
+值得参考，也被很多人引用的一篇介绍博文：[[https://ogbe.net/blog/blogging_with_org.html][Blogging using org-mode (and nothing else)]]。
+
+* 其他可参考
+
+- [[https://caolan.org/dotfiles/emacs.html][caolan.org]]
+- [[https://justin.abrah.ms/emacs/orgmode_static_site_generator.html][orgmode static site genterator]]
+- [[https://ambrevar.xyz/blog-architecture/][A blog in pure Org/Lisp]] 文中也列了一此使用orgmode的网站。（网站内容似乎不可见了。<2023-09-27 三>）
+- [[https://diego.codes/post/blogging-with-org/][Blogging with Emacs, and Emacs only]]
+- [[https://www.john2x.com/blog/blogging-with-orgmode.html][Blogging with Orgmode]]
+- [[https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html][Personal website in org]]
+- [[https://jgkamat.gitlab.io/blog/website1.html][Creating A Blog in Org Mode]] 抄了文中关于 prev/next 的代码。
+- [[https://vicarie.in/posts/blogging-with-org.html][Blogging with org]]
+- [[https://m13o.net/201901052018.html][m13o.net]] 这篇是日文的，介绍了使用orgmode和netlify构建博客的过程。（不可访问。<2023-09-27 三>）
+- [[https://taingram.org/index.html][Thomas Ingram]]
+- [[https://archive.casouri.co.uk/note/2018/blog-with-only-org-mode/index.html][Blog with only Org Mode]]
+- [[https://writepermission.com/][rw-r--r--]] 看不出来是使用orgmode生成的。
+- [[https://writequit.org/][:wq - Writequit]]
+- [[https://notes.alex-miller.co/][Alex's Slip-box]]: Orgmode + JS
+- [[https://systemcrafters.net/][System Crafters]]: 定制的导出模板
+- https://justin.abrah.ms/ 自定义的模板
+- http://alhassy.com/AlBasmala 有点复杂
+- [[https://nicolasknoebber.com/][Nicolas Knoebber]]: 非常羡慕这位的生活。
+- [[https://gnu.re/][MATTHIAS DAVID]]: 法文？[[https://github.com/DarkBuffalo/org-easy-blog/blob/main/org-easy-blog.el][publish.el]]
+- [[https://www.venikx.com/][Kevin De Baerdemaeker]]
+- [[https://blog.sulami.xyz/][Robin Schroer]]: [[https://github.com/sulami/blog/blob/develop/config.el][config]]

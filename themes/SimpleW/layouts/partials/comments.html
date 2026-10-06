@@ -1,0 +1,85 @@
+{{- /*
+  partials/comments.html — provider-agnostic comment shell.
+
+  This is the "自由定义评论模板" entry point. Three ways to customise:
+
+  1. Pick a shipped provider in config:
+         [params.comments]
+           provider = "artalk"   # artalk | giscus | disqus | waline | twikoo | utterances | none
+  2. Point at your own template (site-level or per page):
+         [params.comments]
+           template = "comments/my-provider.html"
+       …and drop that file in layouts/partials/. Anything the theme ships can be
+       overridden the same way, because site templates win over theme templates.
+  3. Inject raw markup with no template at all:
+         [params.comments]
+           customRaw = """<div id="my-comments"></div><script>…</script>"""
+
+  Per-page overrides in front matter:
+         comments: false                      # switch off for this page
+         comments:
+           enabled: true
+           provider: giscus
+           template: comments/mine.html
+*/ -}}
+{{- $page := . -}}
+{{- $c := site.Params.comments | default dict -}}
+
+{{- $enabled := true -}}
+{{- if isset $c "enabled" }}{{ $enabled = $c.enabled }}{{ end -}}
+{{- $provider := $c.provider | default "none" -}}
+{{- $template := $c.template | default "" -}}
+{{- $customRaw := $c.customRaw | default "" -}}
+{{- $title := $c.title | default (i18n "comments" | default "评论/留言") -}}
+{{- $divider := true -}}
+{{- if isset $c "showdivider" }}{{ $divider = $c.showDivider }}{{ end -}}
+
+{{- /* ---- front matter wins ---- */ -}}
+{{- $pc := $page.Params.comments -}}
+{{- if eq (printf "%v" $pc) "false" -}}
+  {{- $enabled = false -}}
+{{- else if reflect.IsMap $pc -}}
+  {{- if isset $pc "enabled" }}{{ $enabled = $pc.enabled }}{{ end -}}
+  {{- with $pc.provider }}{{ $provider = . }}{{ end -}}
+  {{- with $pc.template }}{{ $template = . }}{{ end -}}
+  {{- with $pc.title }}{{ $title = . }}{{ end -}}
+  {{- with $pc.raw }}{{ $customRaw = . }}{{ end -}}
+{{- end -}}
+
+{{- if $enabled -}}
+<div id="comment" class="comments" data-provider="{{ $provider }}">
+  {{- if $divider }}<hr>{{ end }}
+  <div class="pl">
+    <h4>{{ $title }}</h4>
+    {{- if eq $provider "artalk" -}}
+      {{- $a := $c.artalk | default dict -}}
+      {{- $showPV := true -}}
+      {{- if isset $a "showpv" }}{{ $showPV = $a.showPV }}{{ end -}}
+      {{- if $showPV -}}
+      <div class="tj">{{ i18n "pageviews" | default "浏览量" }}：<span class="artalk-pv-count">{{ i18n "loading" | default "加载中..." }}</span></div>
+      {{- end -}}
+    {{- end }}
+  </div>
+
+  <div class="comments-provider">
+  {{- if $template -}}
+    {{- if templates.Exists (printf "partials/%s" $template) -}}
+      {{ partial $template $page }}
+    {{- else -}}
+      <p class="comments-disabled">{{ i18n "commentTemplateMissing" | default "未找到评论模板" }}：{{ $template }}</p>
+    {{- end -}}
+  {{- else if $customRaw -}}
+    {{ $customRaw | safeHTML }}
+  {{- else if eq $provider "none" -}}
+    <p class="comments-disabled">{{ i18n "commentsDisabled" | default "评论功能未启用。" }}</p>
+  {{- else -}}
+    {{- $path := printf "comments/%s.html" $provider -}}
+    {{- if templates.Exists (printf "partials/%s" $path) -}}
+      {{ partial $path $page }}
+    {{- else -}}
+      <p class="comments-disabled">{{ i18n "commentProviderUnknown" | default "未知的评论提供方" }}：{{ $provider }}</p>
+    {{- end -}}
+  {{- end }}
+  </div>
+</div>
+{{- end -}}

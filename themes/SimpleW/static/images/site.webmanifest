@@ -1,0 +1,18 @@
+{
+  "name": "危墙",
+  "short_name": "危墙",
+  "description": "纪录个人感悟、生活经历等等，拒绝道听途说。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fcfcfd",
+  "theme_color": "#fcfcfd",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

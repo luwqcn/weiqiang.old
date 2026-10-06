@@ -1,0 +1,45 @@
+{{- /*
+  partials/comments/custom.html — YOUR template.
+
+  Copy this file to `layouts/partials/comments/custom.html` inside your own
+  site and write whatever you like in it. Site templates take precedence over
+  theme templates, so no theme file needs to be touched. Then set:
+
+      [params.comments]
+        provider = "custom"
+
+  You may also point `params.comments.template` at any partial path, which
+  lets you keep several comment templates side by side and pick one per page:
+
+      # config
+      [params.comments]
+        template = "comments/my-provider.html"
+
+      # front matter
+      comments:
+        template: comments/other-provider.html
+
+  Available in this context: the Page (.). Handy values:
+      .RelPermalink   stable per-page identifier
+      .Permalink      absolute URL
+      .Title          page title
+      .File.Path      source path, if you want a stable non-URL key
+      .Params.*       anything from front matter
+*/ -}}
+<div id="custom-comments"></div>
+<p class="comments-disabled">
+  {{ i18n "customCommentsHint" | default "这是自定义评论模板占位符。将本文件复制到你的站点 layouts/partials/comments/custom.html 后自行实现。" }}
+</p>
+<script>
+(function () {
+  var el = document.getElementById("custom-comments");
+  if (!el) return;
+  el.dataset.pageKey = {{ .RelPermalink | jsonify | safeJS }};
+  el.dataset.pageTitle = {{ .Title | jsonify | safeJS }};
+  /* 在这里初始化你自己的评论服务，例如远程加载一个脚本：
+     var s = document.createElement("script");
+     s.src = "https://your-comment-service/embed.js";
+     document.body.appendChild(s);
+  */
+})();
+</script>

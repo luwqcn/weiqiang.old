@@ -1,0 +1,167 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil toc:nil
+#+OPTIONS: comment:nil pagenav:nil
+#+LANGUAGE: zh-CN
+#+TITLE: 正氣歌 [宋]文天祥
+#+AUTHOR: 半農敬录
+#+DATE: 2022-01-23
+#+DESCRIPTION: 文文山（文天祥）正氣歌
+#+KEYWORDS: 正氣歌
+
+* 原文
+
+/余囚北庭，坐一土室。室廣八尺，深可四尋。單扉低小，白間短窄，汙下而幽暗。當此夏日，諸氣萃然：
+雨潦四集，浮動床幾，時則為水氣；塗泥半朝，蒸漚曆瀾，時則為土氣；乍晴暴熱，風道四塞，時則為日氣；簷陰薪爨，助長炎虐，時則為火氣；倉腐寄頓，陳陳逼人，時則為米氣；駢肩雜遝，腥臊汗垢，時則為人氣；或圊溷、或毀屍、或腐鼠，惡氣雜出，時則為穢氣。疊是數氣，當之者鮮不為厲。而予以孱弱，俯仰其間，於茲二年矣，幸而無恙，是殆有養緻然爾。然亦安知所養何哉？孟子曰：「吾善養吾浩然之氣。」彼氣有七，吾氣有一，以一敵七，吾何患焉！況浩然者，乃天地之正氣也，作正氣歌一首。/
+
+天地有正氣，雜然賦流形。
+下則為河嶽，上則為日星。
+於人曰浩然，沛乎塞蒼冥。
+皇路當清夷，含和吐明庭。
+時窮節乃見，一一垂丹青。
+在齊太史簡，在晉董狐筆。
+在秦張良椎，在漢蘇武節。
+為嚴將軍頭，為嵇侍中血。
+為張睢陽齒，為顔常山舌。
+或為遼東帽，清操厲冰雪。
+或為出師錶，鬼神泣壯烈。
+或為渡江楫，慷慨吞胡羯。
+或為擊賊笏，逆豎頭破裂。
+是氣所磅礴，凜烈萬古存。
+當其貫日月，生死安足論。
+地維賴以立，天柱賴以尊。
+三綱實係命，道義為之根。
+嗟予遘陽九，隸也實不力。
+楚囚纓其冠，傳車送窮北。
+鼎鑊甘如飴，求之不可得。
+陰房闐鬼火，春院閟天黑。
+牛驥同一皂，雞棲鳳凰食。
+一朝蒙霧露，分作溝中瘠。
+如此再寒暑，百沴自辟易。
+嗟哉沮洳場，為我安樂國。
+豈有他繆巧，陰陽不能賊。
+顧此耿耿在，仰視浮雲白。
+悠悠我心悲，蒼天曷有極。
+哲人日已遠，典刑在夙昔。
+風簷展書讀，古道照顔色。
+
+* 简体加拼音
+
+tiān dì yǒu zhèng qì ，zá rán fù liú xíng
+
+天地有正气，杂然赋流形。
+
+xià zé wéi hé yuè ，shàng zé wéi rì xīng
+
+下则为河岳，上则为日星。
+
+yú rén yuē hào rán ，pèi hū sè cāng míng
+
+于人曰浩然，沛乎塞苍冥。
+
+huáng lù dāng qīng yí ，hán hé tǔ míng tíng
+
+皇路当清夷，含和吐明庭。
+
+shí qióng jiē nǎi xiàn ，yī yī chuí dān qīng
+
+时穷节乃见，一一垂丹青。
+
+zài qí tài shǐ jiǎn ，zài jìn dǒng hú bǐ
+
+在齐太史简，在晋董狐笔。
+
+zài qín zhāng liáng zhuī ，zài hàn sū wǔ jiē
+
+在秦张良椎，在汉苏武节。
+
+wéi yán jiāng jun1 tóu ，wéi jī shì zhōng xuè
+
+为严将军头，为嵇侍中血。
+
+wéi zhāng suī yáng chǐ ，wéi yán cháng shān shé
+
+为张睢阳齿，为颜常山舌。
+
+huò wéi liáo dōng mào ，qīng cāo lì bīng xuě
+
+或为辽东帽，清操厉冰雪。
+
+huò wéi chū shī biǎo ，guǐ shén qì zhuàng liè
+
+或为出师表，鬼神泣壮烈。
+
+huò wéi dù jiāng jí ，kāng kǎi tūn hú jié
+
+或为渡江楫，慷慨吞胡羯。
+
+huò wéi jī zéi hù ，nì shù tóu pò liè
+
+或为击贼笏，逆竖头破裂。
+
+shì qì suǒ páng bó ，lǐn liè wàn gǔ cún
+
+是气所磅礴，凛烈万古存。
+
+dāng qí guàn rì yuè ，shēng sǐ ān zú lùn
+
+当其贯日月，生死安足论。
+
+dì wéi lài yǐ lì ，tiān zhù lài yǐ zūn
+
+地维赖以立，天柱赖以尊。
+
+sān gāng shí xì mìng ，dào yì wéi zhī gēn
+
+三纲实系命，道义为之根。
+
+jiē yǔ gòu yáng jiǔ ，lì yě shí bú lì
+
+嗟予遘阳九，隶也实不力。
+
+chǔ qiú yīng qí guàn ，chuán chē sòng qióng běi
+
+楚囚缨其冠，传车送穷北。
+
+dǐng huò gān rú yí ，qiú zhī bú kě dé
+
+鼎镬甘如饴，求之不可得。
+
+yīn fáng tián guǐ huǒ ，chūn yuàn bì tiān hēi
+
+阴房阗鬼火，春院閟天黑。
+
+niú jì tóng yī zào ，jī qī fèng huáng shí
+
+牛骥同一皂，鸡栖凤凰食。
+
+yī cháo méng wù lù ，fèn zuò gōu zhōng jí
+
+一朝蒙雾露，分作沟中瘠。
+
+rú cǐ zài hán shǔ ，bǎi lì zì pì yì
+
+如此再寒暑，百沴自辟易。
+
+jiē zāi jǔ rù chǎng ，wéi wǒ ān lè guó
+
+嗟哉沮洳场，为我安乐国。
+
+qǐ yǒu tā miù qiǎo ，yīn yáng bú néng zéi
+
+岂有他缪巧，阴阳不能贼。
+
+gù cǐ gěng gěng zài ，yǎng shì fú yún bái
+
+顾此耿耿在，仰视浮云白。
+
+yōu yōu wǒ xīn bēi ，cāng tiān hé yǒu jí
+
+悠悠我心悲，苍天曷有极。
+
+zhé rén rì yǐ yuǎn ，diǎn xíng zài sù xī
+
+哲人日已远，典刑在夙昔。
+
+fēng yán zhǎn shū dú ，gǔ dào zhào yán sè
+
+风檐展书读，古道照颜色。

@@ -1,0 +1,144 @@
+{{- /*
+  func/sections.html — the 栏目 (category) registry.
+
+  Builds the single ordered list that drives: the top menu, the footer nav,
+  the homepage "sections" block, and the per-section listing styles.
+
+  Call with the site:   {{ $sections := partial "func/sections.html" . }}
+
+  Returns: []map with keys
+    key         string   stable identifier (also matches a Hugo section dir)
+    name        string   display name
+    subtitle    string   secondary name (e.g. a 斋号)
+    url         string   link target
+    description string   short blurb (markdown-ish, rendered as-is)
+    style       string   grouped | cards | plain
+    order       int      sort weight (lower = earlier)
+    nav         bool     show in the top menu
+    footer      bool     show in the footer nav
+    home        bool     show in the homepage section grid
+    external    bool     opens in a new tab
+    count       int      number of regular pages (0 for plain links)
+    page        Page     the Hugo section page, if one exists
+
+  Categories are added/removed by editing `[[params.sections]]` in the site
+  config — no template changes required. Anything not listed there is still
+  discovered automatically while `params.sectionsAuto` is true (default),
+  so a brand new content/<dir>/ shows up on its own.
+*/ -}}
+
+{{- $site := . -}}
+{{- $registry := $site.Params.sections | default slice -}}
+{{- $auto := true -}}
+{{- if isset $site.Params "sectionsauto" -}}
+  {{- $auto = $site.Params.sectionsAuto -}}
+{{- end -}}
+{{- $defaultStyle := $site.Params.sectionStyle | default "grouped" -}}
+{{- $defaultOrder := $site.Params.sectionOrder | default 100 -}}
+
+{{- $out := slice -}}
+{{- $seen := slice -}}
+
+{{- /* ---- 1. explicit registry (config order is irrelevant: we sort) ---- */ -}}
+{{- range $registry -}}
+  {{- $key := "" -}}
+  {{- with .key }}{{ $key = . }}{{ end -}}
+  {{- if $key -}}
+    {{- $name := $key -}}
+    {{- with .name }}{{ $name = . }}{{ end -}}
+    {{- $url := printf "/%s/" $key -}}
+    {{- with .url }}{{ $url = . }}{{ end -}}
+    {{- $style := $defaultStyle -}}
+    {{- with .style }}{{ $style = . }}{{ end -}}
+    {{- $order := $defaultOrder -}}
+    {{- if isset . "order" }}{{ $order = .order }}{{ end -}}
+    {{- $nav := true -}}
+    {{- if isset . "nav" }}{{ $nav = .nav }}{{ end -}}
+    {{- $footer := true -}}
+    {{- if isset . "footer" }}{{ $footer = .footer }}{{ end -}}
+    {{- $home := true -}}
+    {{- if isset . "home" }}{{ $home = .home }}{{ end -}}
+    {{- $external := false -}}
+    {{- if isset . "external" }}{{ $external = .external }}{{ end -}}
+
+    {{- $page := $site.GetPage (printf "/%s" $key) -}}
+    {{- $subtitle := "" -}}
+    {{- with .subtitle }}{{ $subtitle = . }}{{ end -}}
+    {{- $description := "" -}}
+    {{- with .description }}{{ $description = . }}{{ end -}}
+    {{- $count := 0 -}}
+
+    {{- with $page -}}
+      {{- /* content front matter wins over the registry for title/desc */ -}}
+      {{- with .Params.subtitle }}{{ $subtitle = . }}{{ end -}}
+      {{- if not $description -}}
+        {{- with .Description }}{{ $description = . }}{{ end -}}
+      {{- end -}}
+      {{- if not .IsSection -}}
+        {{- $page = $page -}}
+      {{- end -}}
+      {{- $count = len .RegularPagesRecursive -}}
+    {{- end -}}
+
+    {{- $out = $out | append (dict
+        "key" $key
+        "name" $name
+        "subtitle" $subtitle
+        "url" $url
+        "description" $description
+        "style" $style
+        "order" $order
+        "nav" $nav
+        "footer" $footer
+        "home" $home
+        "external" $external
+        "count" $count
+        "page" $page) -}}
+    {{- $seen = $seen | append $key -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* ---- 2. auto-discovery of top-level sections ---- */ -}}
+{{- /* Taxonomies also show up in $site.Sections; they are not 栏目. */ -}}
+{{- $taxNames := slice -}}
+{{- range $k, $v := $site.Taxonomies -}}
+  {{- $taxNames = $taxNames | append $k -}}
+{{- end -}}
+{{- if $auto -}}
+  {{- range $site.Sections -}}
+    {{- $key := .Section -}}
+    {{- if not $key -}}
+      {{- with .File }}{{ $key = .BaseFileName }}{{ end -}}
+    {{- end -}}
+    {{- if and $key (not (in $taxNames $key)) (not (in $seen $key)) -}}
+      {{- $style := $defaultStyle -}}
+      {{- with .Params.style }}{{ $style = . }}{{ end -}}
+      {{- $order := $defaultOrder -}}
+      {{- if isset .Params "order" }}{{ $order = .Params.order }}{{ end -}}
+      {{- $nav := true -}}
+      {{- if isset .Params "nav" }}{{ $nav = .Params.nav }}{{ end -}}
+      {{- $footer := true -}}
+      {{- if isset .Params "footer" }}{{ $footer = .Params.footer }}{{ end -}}
+      {{- $home := true -}}
+      {{- if isset .Params "home" }}{{ $home = .Params.home }}{{ end -}}
+      {{- $out = $out | append (dict
+          "key" $key
+          "name" .Title
+          "subtitle" (.Params.subtitle | default "")
+          "url" .RelPermalink
+          "description" (.Description | default "")
+          "style" $style
+          "order" $order
+          "nav" $nav
+          "footer" $footer
+          "home" $home
+          "external" false
+          "count" (len .RegularPagesRecursive)
+          "page" .) -}}
+      {{- $seen = $seen | append $key -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* ---- 3. sort by order, then by name ---- */ -}}
+{{- return (sort (sort $out "name") "order") -}}
