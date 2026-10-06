@@ -21,6 +21,15 @@
 {{- if not $envId -}}
 <p class="comments-disabled">请在 config 中配置 <code>params.comments.twikoo.envId</code> 后再启用 Twikoo。</p>
 {{- else -}}
+{{- /*
+  envId 的写法取决于部署在哪：
+    Netlify → https://<域名>/.netlify/functions/twikoo   （必须带函数路径）
+    Vercel  → https://<域名>                              （根路径即可）
+    腾讯云开发 → 环境 ID，形如 xxx-1a2b3c4d5e6f
+  Netlify 上只填域名的话，请求会落到站点首页（404 的 HTML，不带 CORS 头），
+  浏览器报「请求被跨域策略拦截、status 0」——看着像跨域问题，其实是地址填短了。
+  这里不做自动判断：Vercel 的正常地址同样是「只有域名」，拦了会误伤。
+*/ -}}
 {{- $cdn := $t.cdn | default "https://cdn.jsdelivr.net/npm/twikoo@2.0.12/dist/twikoo.min.js" -}}
 {{- $path := .RelPermalink -}}
 {{- if eq ($t.path | default "") "legacy" }}{{ $path = printf "%s.html" (strings.TrimSuffix "/" .RelPermalink) }}{{ end -}}

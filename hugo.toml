@@ -372,7 +372,11 @@ uglyURLs = false
     #          https://unpkg.com/twikoo@1.6.44/dist/twikoo.min.js
     # -------------------------------------------------------------------
     [params.comments.twikoo]
-      envId = "https://wejan.netlify.app"
+      # envId 必须写「完整地址」，Netlify 部署一定要带上函数路径。
+      # 只写 https://cmt.weiqiang.org 的话，Twikoo 会去请求站点首页，
+      # Netlify 返回 404 的 HTML（不带 CORS 头），浏览器就报
+      # 「请求被跨域策略拦截、status 0」——看着像跨域问题，其实是地址填短了。
+      envId = "https://cmt.weiqiang.org/.netlify/functions/twikoo"
       lang = "zh-CN"
       cdn = "https://cdn.jsdelivr.net/npm/twikoo@2.0.12/dist/twikoo.min.js"
 

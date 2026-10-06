@@ -1,10 +1,19 @@
-#+SLUG: {{ replaceRE `^\d{4}-\d{2}-\d{2}-` "" .File.ContentBaseName }}
-#+TITLE: {{ replaceRE `^\d{4}-\d{2}-\d{2}-` "" .File.ContentBaseName | replace "-" " " | title }}
-#+DATE: {{ .Date.Format "2006-01-02 15:04:05" }}
+{{- /*
+  新建 .org 内容的原型（`hugo new zh/2026-07-05-xxx.org`）。
+
+  第一行的 SLUG 摘掉文件名前面的日期，配合 [permalinks] 得到 /zh/2026/xxx/；
+  不写 slug 的话 Hugo 会拿中文标题当地址。
+
+  两个坑：
+  - 文件名带日期前缀时 Hugo 的 .Date 是字符串，不能 .Date.Format，
+    直接输出即可（Org 认得 ISO 8601）。
+  - replace 的参数顺序是「INPUT OLD NEW」，管道里少写一个参数会输出错东西，
+    所以先把 base 存进变量，再格式化标题。
+*/ -}}
+{{- $base := replaceRE `^\d{4}-\d{2}-\d{2}-` "" .File.ContentBaseName -}}
+#+SLUG: {{ $base }}
+#+TITLE: {{ replace $base "-" " " | title }}
+#+DATE: {{ .Date }}
 #+DRAFT: true
 
-新建 .org 内容时的原型（`hugo new zh/2026-07-05-xxx.org`）。
-
-第一行的 SLUG 会把文件名前面的日期摘掉，配合 [permalinks] 得到
-/zh/2026/xxx/ 这样的地址 —— 不写 slug 的话 Hugo 会拿中文标题当地址。
-DRAFT 记得写完文章后删掉或改成 false，否则正式构建里看不到这篇。
+写完记得把 DRAFT 删掉或改成 false，否则正式构建里看不到这篇。
