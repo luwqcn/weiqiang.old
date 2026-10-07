@@ -85,21 +85,34 @@ html {
 
 @media screen and (max-width: 600px) {
     .menu {
-        padding: 20px 10px;
-        gap: 0 15px;
+        padding: 18px 10px;
+        gap: 0 12px;
+        /* 关键：brand 与导航块必须在同一行。留着 flex-wrap:wrap 的话，
+           只要两者宽度之和差一点点，浏览器就会把整块导航甩到第二行 ——
+           手机上是「站名一行、链接一行」的元凶。改成 nowrap 之后，
+           空间不够时由 .nav-links 自己内部折行，brand 始终在左边。 */
+        flex-wrap: nowrap;
     }
 
     .menu a {
         margin-left: 0;
+        /* 17px → 16px：CJK 全宽字符，每省 1px 四项就是 8px，
+           窄屏这点余量很关键 */
+        font-size: 1.6rem;
+        padding-top: 8px;
     }
 
-    /* 导航项本来就不多（首页/网志/关于/订阅/导航↓），窄屏完全塞得进
-       brand 那一行，别再整块挤到第二行 —— 原来这里写了 width:100%，
-       等于强行独占一行。留着 min-width:0，真放不下时由 nav-links
-       自己的 flex-wrap 折成两行，而不是把整块甩下去。 */
+    .menu .theme-toggle {
+        font-size: 1.6rem;
+    }
+
+    /* 允许收缩（min-width:0 才放得下），并让它优先占用剩余空间。
+       flex-wrap:wrap 保留 —— 万一以后栏目变多，是链接内部折行，
+       而不是整块掉下去。 */
     .menu .nav-links {
+        flex: 1 1 auto;
         justify-content: flex-end;
-        gap: 4px 12px;
+        gap: 4px 10px;
         width: auto;
         margin-top: 0;
         margin-left: auto;
@@ -107,7 +120,9 @@ html {
     }
 
     .menu > .brand {
-        margin-right: auto;
+        /* 站标不参与收缩，免得窄屏被压变形 */
+        flex: 0 0 auto;
+        margin-right: 0;
     }
 
     .index-title {
@@ -171,20 +186,41 @@ html {
     }
 }
 
-/* 极窄屏（小屏手机，或将来导航项变多）确实挤不下了，才让导航整块
-   换到第二行。绝大多数手机（≥380px）一律与 brand 同一行。 */
-@media screen and (max-width: 380px) {
+/* 站名文字在窄屏先让位给导航（站标图标仍留着） */
+@media screen and (max-width: 480px) {
+    .menu > .brand .brand-text {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .menu a,
+    .menu .theme-toggle {
+        font-size: 1.55rem;
+    }
+
+    .menu .nav-links {
+        gap: 4px 8px;
+    }
+
+    /* 「导航 ↓」是跳到页脚导航的快捷方式，手机上往下滚两下就到页脚，
+       占着近 60px 不划算 —— 让位给真正常用的入口。 */
+    .menu .nav-anchor {
+        display: none;
+    }
+}
+
+/* 兜底：真到了 340px 以下的老设备（iPhone SE 一代之类），才允许导航
+   整块换到第二行，免得挤成一团。 */
+@media screen and (max-width: 340px) {
+    .menu {
+        flex-wrap: wrap;
+    }
+
     .menu .nav-links {
         width: 100%;
         justify-content: flex-start;
         margin-top: 8px;
-    }
-}
-
-
-@media screen and (max-width: 400px) {
-    .menu > .brand .brand-text {
-        display: none;
     }
 }
 
