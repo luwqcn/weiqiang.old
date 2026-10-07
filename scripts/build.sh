@@ -15,6 +15,13 @@ cd "$(dirname "$0")/.."
 
 python3 scripts/gen-slugs.py --apply
 
+# Markdown 文章习惯写 tags，本站标签分类法却叫 keywords，不同步就一个标签
+# 都显示不出来
+python3 scripts/sync-tags.py --apply
+
+# 页脚「本页最近更新」要用的日期表：从 git 里挑出真正改过正文的提交
+python3 scripts/gen-lastmod.py
+
 # 改过 permalinks 之后旧目录不会自己消失，清空再生成最省心
 rm -rf public
 

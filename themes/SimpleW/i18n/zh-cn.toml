@@ -23,7 +23,7 @@ other = "顶部"
 other = "切换深浅色"
 
 [lastUpdated]
-other = "本页最后更新: {lastmod}."
+other = "本页最近更新：{lastmod}"
 
 [recentPosts]
 other = "最近更新"
@@ -128,3 +128,9 @@ other = "你要找的内容可能已被移动或删除。"
 
 [backHome]
 other = "返回首页"
+
+[wordCountText]
+other = "共 {count} 字"
+
+[readingTimeText]
+other = "阅读约需 {minutes} 分钟"

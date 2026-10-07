@@ -128,3 +128,9 @@ other = "The page you were looking for may have moved or been deleted."
 
 [backHome]
 other = "Back home"
+
+[wordCountText]
+other = "{count} words"
+
+[readingTimeText]
+other = "about {minutes} min read"

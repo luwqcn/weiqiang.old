@@ -62,7 +62,10 @@ def sections_from_config():
 
 DATED = re.compile(r"^(\d{4})-(\d{2})-(\d{2})-(.+)$")
 ORG_SLUG = re.compile(r"^#\+SLUG:", re.IGNORECASE | re.MULTILINE)
-MD_SLUG = re.compile(r"^slug:", re.IGNORECASE | re.MULTILINE)
+# Markdown 的 slug 有两种写法：YAML 头是 `slug: x`，TOML 头是 `slug = "x"`。
+# 只认前一种的话，TOML 的文章会被当成「没写 slug」，再往 +++ 里塞一行 YAML
+# 语法的 `slug: x`，Hugo 直接报 "expected '=' after key"，整站构建失败。
+MD_SLUG = re.compile(r"^slug\s*[:=]", re.IGNORECASE | re.MULTILINE)
 ORG_DATE = re.compile(r"^#\+DATE:\s*(\d{4})-\d{2}-\d{2}", re.IGNORECASE | re.MULTILINE)
 MD_DATE = re.compile(r"^date\s*=\s*['\"]?(\d{4})-\d{2}-\d{2}", re.IGNORECASE | re.MULTILINE)
 
@@ -154,12 +157,16 @@ def main():
 
     for path, kind, slug in todo:
         text = open(path, encoding="utf-8").read()
-        line = f"#+SLUG: {slug}\n" if kind == "org" else f"slug: {slug}\n"
         if kind == "md" and text.startswith("+++"):
-            # TOML front matter 的 slug 得写在 +++ 之间
+            # TOML front matter：写在 +++ 之间，语法也得是 TOML 的
+            line = f'slug = "{slug}"\n'
             end = text.find("+++", 3)
             text = text[:end].rstrip("\n") + f"\n{line}" + text[end:]
+        elif kind == "md":
+            line = f"slug: {slug}\n"
+            text = line + text
         else:
+            line = f"#+SLUG: {slug}\n"
             text = line + text
         open(path, "w", encoding="utf-8").write(text)
 
