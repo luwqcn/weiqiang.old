@@ -1,0 +1,68 @@
+{{- /*
+  partials/components/listing-cover.html — "cover" 栏目样式的通栏大卡。
+
+  调用：{{ partial "components/listing-cover.html" (dict "pages" $pages) }}
+
+  一张卡占满正文宽度（不分列），底图铺满作背景，日期 / 标题 / 描述压在
+  图的下半部，底下垫一层向上渐深的暗色遮罩保证白字读得清。排版顺序照
+  lepture.com：先时间、再题目、后一句摘要。
+
+  底图按 func/page-cover.html 的顺序找：
+
+      文章自己的 cover / #+COVER:  →  正文首图
+      →  栏目默认底图（hugo.toml 里 [[params.sections]] 的 cover）
+      →  都没有：铺一块赭红底、压一个栏目首字的占位图
+*/ -}}
+{{- $pages := .pages -}}
+{{- $df := site.Params.dateFormat | default "2006-01-02" -}}
+
+{{- /* 本栏目在注册表里的条目：拿默认底图和栏目名（占位字用） */ -}}
+{{- $secKey := "" -}}
+{{- with $pages }}{{ $secKey = (index . 0).Section }}{{ end -}}
+{{- $secCover := "" -}}
+{{- $secGlyph := "" -}}
+{{- range site.Params.sections -}}
+  {{- if and $secKey (eq (.key | default "") $secKey) -}}
+    {{- with .cover }}{{ $secCover = . }}{{ end -}}
+    {{- /* 占位块上那个大字：注册表里可写 coverGlyph 指定（如 樂），
+            没写就用栏目名第一个字。用 slicestr 而不是 split "" ——
+            split "" 在新版 Hugo 里取不到首字（返回空）。 */ -}}
+    {{- with .coverGlyph }}{{ $secGlyph = . }}{{ end -}}
+    {{- if not $secGlyph }}{{ with .name }}{{ $secGlyph = slicestr . 0 1 }}{{ end }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+
+<div class="cover-grid">
+{{- range $pages }}
+  {{- $p := . -}}
+  {{- $img := partial "func/page-cover.html" $p -}}
+  {{- if and (not $img) $secCover }}{{ $img = $secCover }}{{ end -}}
+  {{- $glyph := $secGlyph -}}
+  {{- if not $glyph }}{{ $glyph = slicestr $p.Title 0 1 }}{{ end -}}
+  <article class="cover-card">
+    <a class="cc-link" href="{{ $p.RelPermalink }}"{{ with $p.Description }} title="{{ . }}"{{ end }}>
+      <div class="cc-media{{ if not $img }} cc-media-ph{{ end }}">
+        {{- if $img }}
+        <img class="cc-img" src="{{ $img | relURL }}" alt="" loading="lazy" decoding="async">
+        {{- else }}
+        <span class="cc-ph" aria-hidden="true">{{ $glyph }}</span>
+        {{- end }}
+        {{- /*
+          标题就压在旁边，图在这里是纯背景，alt 留空免得读屏重复念一遍。
+        */ -}}
+        <div class="cc-scrim" aria-hidden="true"></div>
+        <div class="cc-body">
+          <time class="cc-date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format $df }}</time>
+          <h3 class="cc-title">{{ if $p.Params.pinned }}<span class="entry-pin" aria-hidden="true">●</span>{{ end }}{{ $p.Title }}</h3>
+          {{- $desc := $p.Description -}}
+          {{- if not $desc }}{{ $desc = $p.Summary }}{{ end -}}
+          {{- $desc = $desc | plainify | strings.TrimSpace -}}
+          {{- with $desc }}
+          <p class="cc-desc">{{ . | truncate 100 }}</p>
+          {{- end }}
+        </div>
+      </div>
+    </a>
+  </article>
+{{- end }}
+</div>

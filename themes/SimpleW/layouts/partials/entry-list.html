@@ -10,6 +10,7 @@
 
   grouped  → the original layout: title, dashed leader, right-aligned date
   calendar → one collapsible block per year: day-grid heatmap + MM/DD rows
+  cover    → responsive card grid: cover image, date, title, description
   cards    → bordered cards with a summary line
   plain    → a compact link list
 */ -}}
@@ -25,6 +26,9 @@
 
 {{- else if eq $style "calendar" -}}
   {{- partial "components/listing-calendar.html" (dict "pages" $pages) -}}
+
+{{- else if eq $style "cover" -}}
+  {{- partial "components/listing-cover.html" (dict "pages" $pages) -}}
 
 {{- else if eq $style "cards" -}}
   {{- range $pages }}

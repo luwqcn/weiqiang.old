@@ -4,12 +4,15 @@
 #+TITLE: 序言：村里的草木，随时光枯荣
 #+AUTHOR: 陆伟强
 #+DATE: 2025-10-02 19:56:00
-# 原站这里写的是 #+TAGS: /images/sunshine.jpg —— 既不是标签，文件也不存在
-# （static/images 下只有 201104/ 与 201110/ 两处 sunshine.jpeg）。
-# 按旧站 000-xuyan 卡片上用的默认配图，改为 default.jpg，作为分享配图。
 #+COVER: /images/default.jpg
 #+DESCRIPTION: 从村里来，到村里去。人活一世，只为留下点什么。从今而后，为村里的草木留下点简单文字。
 #+KEYWORDS: 序言
+# 注：文件头里的 #+XXX: 键必须连成一片，中间插一条 # 注释，
+# go-org 会把注释之后的键全部丢掉（本文件原先就是这样，导致
+# #+COVER/#+DESCRIPTION/#+KEYWORDS 三个都没生效），所以注释挪到键位之后。
+# 原站这里写的是 #+TAGS: /images/sunshine.jpg —— 既不是标签，文件也不存在
+# （static/images 下只有 201104/ 与 201110/ 两处 sunshine.jpeg）。
+# 按旧站 000-xuyan 卡片上用的默认配图，改为 default.jpg，作为分享配图。
 
 很小的时候，跟着父母在村里干活，田地里野草不多，因为都割了给村里的湖羊吃草。但是生点小病或腿脚弄伤时，村里的老人都会往地里找些野草，或捣碎或蒸煮，用以处理，往往都有效果。那时，母亲也会告诉我，那叫什么草，那叫什么花。
 

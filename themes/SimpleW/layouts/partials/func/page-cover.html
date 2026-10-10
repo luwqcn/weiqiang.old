@@ -1,0 +1,32 @@
+{{- /*
+  partials/func/page-cover.html — 找出一篇内容的「底图」地址。
+
+  调用：{{ $img := partial "func/page-cover.html" $p }}   → 字符串，找不到返回 ""
+
+  取值顺序：
+    1. front matter 的 cover          （Markdown：cover: /images/x.jpg）
+    2. Org 文件头的 #+COVER:          —— go-org 只把 author/date/description/
+       filetags/keywords/options 这类固定键放进 .Params，自定义的 #+COVER
+       读不到 Params，只能回到 RawContent 上正则摘。
+    3. front matter 的 images[0]
+    4. 正文里出现的第一张图
+    5. 都没有 → 返回空串，由调用方决定画占位块还是用栏目默认底图
+*/ -}}
+{{- $p := . -}}
+{{- $img := "" -}}
+{{- with $p.Params.cover }}{{ $img = . }}{{ end -}}
+{{- if not $img -}}
+  {{- $m := findRE `(?m)^#\+COVER:\s*(.+)$` $p.RawContent 1 -}}
+  {{- with $m -}}
+    {{- $img = replaceRE `(?m)^#\+COVER:\s*` "" (index . 0) | strings.TrimSpace -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $img }}{{ with $p.Params.images }}{{ $img = index . 0 }}{{ end }}{{ end -}}
+{{- if not $img -}}
+  {{- $m := findRE `<img[^>]+src="[^"]+"` $p.Content 1 -}}
+  {{- with $m -}}
+    {{- $img = index (findRE `src="[^"]+"` (index . 0) 1) 0 -}}
+    {{- $img = replaceRE `^src="` "" $img | replaceRE `"$` "" $img -}}
+  {{- end -}}
+{{- end -}}
+{{- return ($img | strings.TrimSpace) -}}

@@ -207,7 +207,11 @@ uglyURLs = false
   #   subtitle    副标题（如斋号）
   #   description 分类页简介
   #   style       calendar（按年折叠+日格热力图）| grouped（按年分组）
-  #               | cards（卡片）| plain（纯链接）；不写则用全局 sectionStyle
+  #               | cover（通栏大卡：底图做背景，日期/标题/描述压在图上，
+  #                 一栏一篇，不分列）
+  #               | cards（带摘要的方框卡片）| plain（纯链接）；不写则用全局 sectionStyle
+  #   cover       cover 样式专用的默认底图：文章自己没写 cover / #+COVER:
+  #               正文里也没图时，整栏统一用这张。不写则画一块带栏目首字的占位图。
   #   order       越小越靠前
   #   nav         是否出现在顶部导航
   #   footer      是否出现在页脚导航
@@ -241,7 +245,8 @@ uglyURLs = false
     name = "本草"
     url = "/bc/"
     description = "生于江南，寻觅本草江湖。"
-    style = "cards"
+    style = "cover"
+    cover = "/images/default.jpg"
     order = 20
     nav = false
     footer = true
@@ -252,7 +257,13 @@ uglyURLs = false
     name = "乐记"
     url = "/yue/"
     description = "《乐记》关于音、乐的描述，以及个人古琴曲的辑录。"
-    style = "cards"
+    style = "cover"
+    # 乐记的栏目默认底图：竹林七贤（阮籍《酒狂》）水墨意境图，
+    # 1536×591（2.6:1，与卡片比例一致），刻意让画面主体集中在中上部、
+    # 下方留出可压白字的空间。换图直接改这里，或单篇写 #+COVER:。
+    cover = "/images/yue-jiukuang.jpg"
+    # 万一有文章既没自己的底图、又赶上这张图不合适，占位块用这个字
+    coverGlyph = "樂"
     order = 30
     nav = false
     footer = true
