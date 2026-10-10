@@ -25,13 +25,11 @@
   单篇改：front matter 里写 headingNumbers = true。
   键的大小写在 Hugo 的 params 里不总一致，两种写法都查一遍。
 */ -}}
-{{- $numHeadings := false -}}
-{{- range $k := slice "headingNumbers" "headingnumbers" -}}
-  {{- if isset $meta $k }}{{ $numHeadings = index $meta $k }}{{ end -}}
-{{- end -}}
-{{- range $k := slice "headingNumbers" "headingnumbers" -}}
-  {{- if isset $.Params $k }}{{ $numHeadings = index $.Params $k }}{{ end -}}
-{{- end -}}
+{{- $numHeadings := partial "func/flag.html" (dict
+      "page" .
+      "keys" (slice "headingNumbers" "headingnumbers")
+      "default" false
+      "group" "post") -}}
 
 <article class="post{{ if $numHeadings }} num-headings{{ end }}{{ with .Params.bodyClass }} {{ . }}{{ end }}">
 {{- /*
@@ -201,15 +199,11 @@
     · 单篇    —— front matter 写 showPrevNext = false
   键的大小写在 Hugo 的 params 里不总一致，两种写法都查一遍。
 */ -}}
-{{- $showNav := $isPost -}}
-{{- range $k := slice "showprevnext" "showPrevNext" -}}
-  {{- if isset $meta $k }}{{ $showNav = index $meta $k }}{{ end -}}
-{{- end -}}
-{{- $navFlag := partial "func/section-flag.html" (dict "page" . "keys" (slice "prevnext" "prevNext" "showPrevNext")) -}}
-{{- if eq $navFlag "true" }}{{ $showNav = true }}{{ else if eq $navFlag "false" }}{{ $showNav = false }}{{ end -}}
-{{- range $k := slice "showprevnext" "showPrevNext" -}}
-  {{- if isset $.Params $k }}{{ $showNav = index $.Params $k }}{{ end -}}
-{{- end -}}
+{{- $showNav := partial "func/flag.html" (dict
+      "page" .
+      "keys" (slice "showPrevNext" "showprevnext" "prevNext" "prevnext")
+      "default" $isPost
+      "group" "post") -}}
 {{- /*
   本栏目内按日期升序排，所以 Prev = 更早发布的那一篇，Next = 之后发布的。
   左「←」放上一篇（更早）、右「→」放下一篇（更晚），跟阅读的时间顺序一致。
@@ -219,8 +213,9 @@
   {{- $next := .NextInSection -}}
   {{- if or $prev $next }}
 <nav class="pagenav" aria-label="{{ i18n "postNav" | default "上一篇 / 下一篇" }}">
-  <span class="pageleft">{{ with $prev }}&larr; <a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}</span>
-  <span class="pageright">{{ with $next }}<a href="{{ .RelPermalink }}">{{ .Title }}</a> &rarr;{{ end }}</span>
+  {{- /* 到头了就把空位填上，别留一片空白让人以为没加载出来 */ -}}
+  <span class="pageleft">{{ with $prev }}&larr; <a href="{{ .RelPermalink }}" data-nav="{{ i18n "prevPost" | default "上一篇" }}">{{ .Title }}</a>{{ else }}<span class="pagenav-end">&larr; {{ i18n "navOldest" | default "已经是最早的了" }}</span>{{ end }}</span>
+  <span class="pageright">{{ with $next }}<a href="{{ .RelPermalink }}" data-nav="{{ i18n "nextPost" | default "下一篇" }}">{{ .Title }}</a> &rarr;{{ else }}<span class="pagenav-end">{{ i18n "navNewest" | default "已经是最新的了" }} &rarr;</span>{{ end }}</span>
 </nav>
   {{- end -}}
 {{- end }}
@@ -232,15 +227,18 @@
     · 按栏目  —— [[params.sections]] 那条写 related = false
     · 单篇    —— front matter 写 related = false（或 relatedCount = 0）
 */ -}}
-{{- $showRelated := $isPost -}}
-{{- range $k := slice "related" "Related" "showRelated" -}}
-  {{- if isset $meta $k }}{{ $showRelated = index $meta $k }}{{ end -}}
+{{- $showRelated := partial "func/flag.html" (dict
+      "page" .
+      "keys" (slice "related" "Related" "showRelated")
+      "default" $isPost
+      "group" "post") -}}
+{{- /* relatedCount = 0 也算关掉 */ -}}
+{{- $relCount := 5 -}}
+{{- range $k := slice "relatedCount" "relatedcount" -}}
+  {{- if isset $meta $k }}{{ $relCount = int (index $meta $k) }}{{ end -}}
+  {{- if isset $.Params $k }}{{ $relCount = int (index $.Params $k) }}{{ end -}}
 {{- end -}}
-{{- $relFlag := partial "func/section-flag.html" (dict "page" . "keys" (slice "related" "Related" "showRelated")) -}}
-{{- if eq $relFlag "true" }}{{ $showRelated = true }}{{ else if eq $relFlag "false" }}{{ $showRelated = false }}{{ end -}}
-{{- range $k := slice "related" "Related" "showRelated" -}}
-  {{- if isset $.Params $k }}{{ $showRelated = index $.Params $k }}{{ end -}}
-{{- end -}}
+{{- if le $relCount 0 }}{{ $showRelated = false }}{{ end -}}
 {{- if $showRelated }}{{ partial "related.html" . }}{{ end }}
 
 {{- /*
@@ -248,26 +246,18 @@
   头信息里写 `comments: true` 可以给某篇独立页面单独打开；
   `comments: false` 则在哪类页面都能关掉。
 */ -}}
-{{- $showComments := $isPost -}}
+{{- $showComments := partial "func/flag.html" (dict
+      "page" .
+      "keys" (slice "comments" "Comments")
+      "default" $isPost
+      "group" "post") -}}
 {{- /*
-  按栏目整体开/关：配置里该栏目那条写 `comments = false`，整个栏目的文章
-  就都不挂评论框；写 `comments = true` 则整个栏目都开（含 Org 写的文章）。
-  具体怎么配见 partials/func/section-comments.html 顶部说明。
+  页面自己的 front matter 优先级最高。布尔写法 flag.html 已经处理过，
+  这里只补 map 写法：`comments = { enabled = false }`。
 */ -}}
-{{- $secComments := partial "func/section-comments.html" . -}}
-{{- if eq $secComments "true" -}}
-  {{- $showComments = true -}}
-{{- else if eq $secComments "false" -}}
-  {{- $showComments = false -}}
-{{- end -}}
-{{- /* 页面自己的 front matter 优先级最高，放在最后 */ -}}
 {{- if isset .Params "comments" -}}
   {{- $pc := .Params.comments -}}
-  {{- if eq (printf "%v" $pc) "false" -}}
-    {{- $showComments = false -}}
-  {{- else if eq (printf "%v" $pc) "true" -}}
-    {{- $showComments = true -}}
-  {{- else if reflect.IsMap $pc -}}
+  {{- if reflect.IsMap $pc -}}
     {{- if isset $pc "enabled" }}{{ $showComments = $pc.enabled }}{{ end -}}
   {{- end -}}
 {{- end -}}

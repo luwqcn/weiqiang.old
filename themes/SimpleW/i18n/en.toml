@@ -81,6 +81,18 @@ other = "Contents"
 [postNav]
 other = "Previous / next post"
 
+[prevPost]
+other = "Previous"
+
+[nextPost]
+other = "Next"
+
+[navNewest]
+other = "You're all caught up"
+
+[navOldest]
+other = "This is the first one"
+
 [relatedPosts]
 other = "Related posts"
 

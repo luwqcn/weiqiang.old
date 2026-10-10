@@ -108,15 +108,15 @@
 .menu > .brand svg,
 .menu > .brand img {
     display: block;
-    width: 24px;
-    height: 24px;
+    width: var(--nav-logo-size);
+    height: var(--nav-logo-size);
     margin: 0;
     padding: 0;
 }
 
 .menu > .brand .brand-text {
     margin-left: 8px;
-    font-size: 1.7rem;
+    font-size: var(--nav-font-size);
     font-weight: 700;
     letter-spacing: 0.04em;
 }
@@ -125,7 +125,7 @@
     padding-top: 10px;
     margin-left: 0;
     font-weight: 400;
-    font-size: 1.7rem;
+    font-size: var(--nav-font-size);
     border-bottom: none;
     white-space: nowrap;
 }
@@ -166,7 +166,7 @@
 
 #content p {
     margin: 20px 0;
-    font-size: 1.9rem;
+    font-size: var(--body-font-size);
 }
 
 #content > :first-child {

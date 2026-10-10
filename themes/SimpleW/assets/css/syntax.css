@@ -1,0 +1,66 @@
+/* ==========================================================================
+   SimpleW — syntax.css
+   Chroma / Hugo highlight container. Loaded on demand together with
+   chroma.css — see partials/head.html.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   10. Hugo / Chroma syntax highlighting wrapper
+   -------------------------------------------------------------------------- */
+.highlight {
+    position: relative;
+    margin: 1.4em auto;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg-color-quote);
+    border: 1px solid var(--rule-color);
+}
+
+.highlight pre,
+.chroma {
+    margin: 0;
+    border-radius: 0;
+    /* The palette comes from chroma.css; the surface follows the design tokens. */
+    background-color: var(--bg-color-quote) !important;
+    -webkit-text-size-adjust: none;
+    font-size: 1.55rem;
+}
+
+.highlight pre {
+    padding: 1.1rem 1.3rem;
+}
+
+/* A bare <pre> that is not a highlight block (e.g. indented markdown) */
+#content > pre,
+.post-body > pre {
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--rule-color);
+    padding: 1.1rem 1.3rem;
+}
+
+/* Chroma line numbers */
+.chroma .lntable {
+    border: 0;
+    display: table;
+    width: 100%;
+}
+
+.chroma .lntable td {
+    border: 0;
+    padding: 0;
+}
+
+.chroma .lntd:first-child {
+    width: 1%;
+}
+
+.chroma .ln {
+    color: var(--desc-color);
+    padding-right: 1em;
+    user-select: none;
+}
+
+.chroma .hl {
+    background: rgba(var(--accent-rgb), 0.1);
+    display: block;
+}

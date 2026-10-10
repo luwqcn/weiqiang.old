@@ -30,15 +30,50 @@
 {{- if not $keywords }}{{ with .Params.tags }}{{ $keywords = . }}{{ end }}{{ end -}}
 {{- if not $keywords }}{{ with site.Params.keywords }}{{ $keywords = . }}{{ end }}{{ end -}}
 
-{{- /* ---------- CSS bundle ---------- */ -}}
-{{- $sheetNames := slice "css/base.css" "css/layout.css" "css/components.css" "css/listing.css" "css/extras.css" "css/utils.css" "css/chroma.css" -}}
+{{- /*
+  ---------- CSS bundles ----------
+
+  拆成两份，按需加载：
+
+    simplew.bundle.css   版面与组件，每个页面都要
+    simplew.syntax.css   代码高亮（syntax.css + chroma.css，约 20 KB）
+
+  语法高亮只在正文里真有代码块时才给 —— 本站六百多个页面里用到的只有个
+  位数，白送 20 KB 不划算。判断见 partials/func/has-code.html。
+  万一漏判，最坏也只是代码没配色（<pre> 的基础样式在 base.css 里），
+  不会把版面弄坏。
+*/ -}}
+{{- $sheetNames := slice
+    "css/base.css"
+    "css/layout.css"
+    "css/components.css"
+    "css/cover.css"
+    "css/org.css"
+    "css/listing.css"
+    "css/extras.css"
+    "css/utils.css" -}}
 {{- $sheets := slice -}}
 {{- range $sheetNames -}}
   {{- with resources.Get . }}{{ $sheets = $sheets | append . }}{{ end -}}
 {{- end -}}
+{{- /* 评论引擎的样式修正，用了哪家才加载哪家的 */ -}}
+{{- if eq (site.Params.comments.provider | default "none") "twikoo" -}}
+  {{- with resources.Get "css/twikoo.css" }}{{ $sheets = $sheets | append . }}{{ end -}}
+{{- end -}}
 {{- /* Drop in a site-level assets/css/custom.css to append your own rules. */ -}}
 {{- with resources.Get "css/custom.css" }}{{ $sheets = $sheets | append . }}{{ end -}}
 {{- $css := $sheets | resources.Concat "css/simplew.bundle.css" | minify | fingerprint -}}
+
+{{- $syntax := "" -}}
+{{- if partial "func/has-code.html" . -}}
+  {{- $syntaxSheets := slice -}}
+  {{- range (slice "css/syntax.css" "css/chroma.css") -}}
+    {{- with resources.Get . }}{{ $syntaxSheets = $syntaxSheets | append . }}{{ end -}}
+  {{- end -}}
+  {{- with $syntaxSheets -}}
+    {{- $syntax = . | resources.Concat "css/simplew.syntax.css" | minify | fingerprint -}}
+  {{- end -}}
+{{- end -}}
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -84,6 +119,27 @@
 </script>
 
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+{{- with $syntax }}
+<link rel="stylesheet" href="{{ .RelPermalink }}">
+{{- end -}}
+
+{{- /*
+  ---------- 第三方域名的预连接 ----------
+  评论脚本是 defer 的，用户在页面底部才会用到它。提前把 DNS 和 TLS 握
+  手做掉，滚到评论区时脚本能立刻开始下载，省掉几百毫秒的等待。
+  只预热 host，不预下载任何东西，开销可以忽略。
+*/ -}}
+{{- $cdn := "" -}}
+{{- if eq (site.Params.comments.provider | default "none") "twikoo" -}}
+  {{- with site.Params.comments.twikoo }}{{ $cdn = .cdn | default "" }}{{ end -}}
+{{- end -}}
+{{- with $cdn -}}
+  {{- with urls.Parse . -}}
+    {{- if and .Scheme .Host }}
+<link rel="preconnect" href="{{ printf "%s://%s" .Scheme .Host }}" crossorigin>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 
 {{- /* ---------- icons / manifest ---------- */ -}}
 {{- with site.Params.favicon }}

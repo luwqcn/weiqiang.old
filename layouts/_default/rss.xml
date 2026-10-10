@@ -1,0 +1,71 @@
+{{- /*
+  layouts/_default/rss.xml — 覆盖 Hugo 内置的 RSS 模板。
+
+  自带的那个把全站文章连正文一股脑输出，本站 400+ 篇下来 index.xml 有
+  1.8 MB，订阅器每次抓都要拉这么一大坨。这里只输出最近若干篇：
+
+      [params.rss]
+        limit = 50        # 首页 RSS 的条数，默认 50
+        fullText = true   # true 输出全文（默认），false 只给摘要
+
+  栏目自己的 /zh/index.xml 同理，只是条数取 params.rss.sectionLimit
+  （默认给栏目留得多些，100 条）。
+*/ -}}
+{{- $rss := site.Params.rss | default dict -}}
+{{- $fullText := true -}}
+{{- if isset $rss "fulltext" }}{{ $fullText = $rss.fullText }}{{ end -}}
+{{- if isset $rss "fullText" }}{{ $fullText = $rss.fullText }}{{ end -}}
+
+{{- $limit := 50 -}}
+{{- if .IsHome -}}
+  {{- with $rss.limit }}{{ $limit = . }}{{ end -}}
+{{- else -}}
+  {{- $limit = 100 -}}
+  {{- with $rss.sectionLimit }}{{ $limit = . }}{{ end -}}
+{{- end -}}
+
+{{- $pages := .RegularPages -}}
+{{- if .IsHome }}{{ $pages = site.RegularPages }}{{ end -}}
+{{- $pages = first $limit ($pages.ByDate.Reverse) -}}
+
+{{- /*
+  lastBuildDate 不能用 .Date：首页 / 栏目页的 .Date 是 Hugo 自己推的，
+  实测会落到全站最早那篇（本站是 2008-11-18），读起来像十几年没更新。
+  取列表里最新一篇的日期才对。
+*/ -}}
+{{- $lastDate := .Date -}}
+{{- with index $pages 0 }}{{ $lastDate = .Date }}{{ end -}}
+
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description | default site.Title }}{{ end }}</description>
+    <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
+    {{- with site.Params.author }}<managingEditor>{{ . }}</managingEditor>{{ end }}
+    <generator>Hugo {{ hugo.Version }}</generator>
+    {{- with site.Params.since }}<copyright>{{ . }} {{ site.Params.author | default site.Title }}</copyright>{{ end }}
+    {{- if not $lastDate.IsZero }}<lastBuildDate>{{ $lastDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
+    <atom:link href="{{ .Permalink }}index.xml" rel="self" type="application/rss+xml" />
+    {{- range $pages }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      <guid>{{ .Permalink }}</guid>
+      {{- with .Params.author | default site.Params.author }}
+      <author>{{ . }}</author>
+      {{- end }}
+      {{- with .Description }}
+      <description>{{ . | plainify | htmlEscape }}</description>
+      {{- else }}
+      <description>{{ .Summary | plainify | htmlEscape }}</description>
+      {{- end }}
+      {{- if $fullText }}
+      <content:encoded>{{ printf "<![CDATA[%s]]>" .Content | safeHTML }}</content:encoded>
+      {{- end }}
+    </item>
+    {{- end }}
+  </channel>
+</rss>

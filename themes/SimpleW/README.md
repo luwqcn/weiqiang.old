@@ -20,13 +20,24 @@ Hugo 主题本体。安装说明、配置总览、写作与迁移指南都在仓
 | 标题锚点（悬停出现 #） | 有目录的页面自动加；样式在 `assets/css/extras.css` 的 `.heading-anchor` |
 | 评论框开关 | 文章默认显示；站点根目录的独立页面默认不显示；`[[params.sections]]` 该栏目那条写 `comments = false` 可整栏关闭（子栏目再单列一条 `key = "xy/dian"` 可覆盖）；单篇头信息 `comments: true/false` 优先级最高 |
 | 栏目页不列文章 / 挂右侧目录 | `[[params.sections]]` 的 `hideList`（如 /xy/ 只作导览）与 `toc`（页面自身没标题时不会出现空框） |
-| 配色 / 字体 / 栏宽 | 站点 `assets/css/custom.css` 里的 `:root` 变量 |
+| 配色 / 字体 / 栏宽 | 主题 `assets/css/base.css` 的 `:root` 色板（深浅两套字面值各写一次，见下）；想只覆盖几条就放站点 `assets/css/custom.css` |
 | 任何模板 | 在站点同名路径放一份文件即可遮挡主题版本 |
 
 主题源码布局：
 
 ```
-assets/css/     base(令牌·排版) layout(骨架) components(组件) extras(新增件) utils(响应式·打印) chroma(高亮)
+assets/css/          每个文件管一件事，改样式先按名字找文件
+  base.css            设计令牌（色板 / 间距 / 圆角 / 动效）+ reset + 元素基础排版
+  layout.css          骨架：跳转链接、顶栏、正文列、页脚
+  components.css      组件：标题块、索引列表、卡片、标签、分页、目录、主页积木、评论外壳
+  cover.css           "cover" 列表风格：通栏大卡，底图 + 由下而上渐深的压字遮罩
+  listing.css         "calendar" 列表风格：年度折叠 + 日格热力图
+  org.css             Org-Mode 导出遗留：脚注、TODO/DONE、org-ul/ol、src 块徽章
+  syntax.css          代码块容器（与 chroma.css 一起按需加载）
+  chroma.css          代码高亮配色（GitHub 风，深浅各一套）
+  twikoo.css          Twikoo 评论框的尺寸修正（只在 provider = twikoo 时加载）
+  extras.css          站内小增强：标题锚点、callout、正文标题层级
+  utils.css           深浅色激活规则、响应式断点、打印、强制颜色
 assets/js/      main.js —— 主题切换、目录高亮、少量增强（目录吸顶是纯 CSS）
 layouts/
   baseof.html                      文档外壳
@@ -37,7 +48,11 @@ layouts/
   partials/
     func/sections.html             栏目注册表（增删分类的核心）
     func/section-meta.html         单个列表页的元信息解析
-    func/section-comments.html     按栏目解析评论开关
+    func/flag.html                 三级布尔开关（全站 → 按栏目 → 单篇），
+                                   上下篇 / 相关文章 / 评论 / 标题编号都走它
+    func/section-flag.html         只读「按栏目」那一层，返回 "true"/"false"/""
+    func/section-comments.html     按栏目解析评论开关（flag.html 的薄封装）
+    func/has-code.html             判断正文里有没有代码块，决定要不要加载高亮 CSS
     blocks/                        主页积木
     comments/                      评论引擎 + 自定义模板入口
     components/entry-row.html      索引行
@@ -47,5 +62,11 @@ layouts/
   shortcodes/callout.html
 i18n/          zh-cn.toml en.toml
 ```
+
+配色怎么改：`base.css` 的 `:root` 里，字面值分成 `--c-*`（浅）和 `--c-*-dark`（深）
+两组，**每个颜色只写一次**；下面的 `--bg-color` 之类语义令牌只是指到某个字面值上。
+深色由 `:root[data-theme="dark"]` 和无 JS 兜底的两条规则改指向。
+所以加一个新颜色 = 在 `--c-*` 加一条、在两处映射里各加一行，不会出现
+「改了浅色忘了深色」。
 
 许可：MIT。

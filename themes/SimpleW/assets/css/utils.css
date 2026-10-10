@@ -28,36 +28,11 @@ html {
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
         color-scheme: dark;
-
-        --bg-color: #16181c;
-        --bg-color-top: #1d2026;
-        --main-color: #d8dade;
-        --bq-color: #c3c7cf;
-        --link-color: #e8eaee;
-        --link-color-hover: #e88c85;
-        --bg-color-quote: #21242b;
-        --time-color: #9aa0aa;
-        --desc-color: #7f858f;
-
-        --rule-color: #2a2e36;
-        --rule-strong: #3a3f49;
-        --leader-color: #3a3f49;
-        --card-bg: #1d2026;
-        --card-bg-hover: #252932;
-        --accent: #e88c85;
-        --accent-soft: #3d4a52;
-        --selection-bg: #3a2c2b;
-
-        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 2px 14px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Keep code blocks legible against dark surfaces */
-    :root:not([data-theme]) .org-src-container > pre:before,
-    :root[data-theme="dark"] .org-src-container > pre:before {
-        background-color: #3a3f49;
     }
 }
+
+/* 色值本身不在这里 —— 深浅两套 token 统一在 base.css 里定义，
+   这里只负责「什么时候算深色」。 */
 
 /* --------------------------------------------------------------------------
    2. Responsive — mirrors the original breakpoints (660px / 600px)
@@ -96,15 +71,15 @@ html {
 
     .menu a {
         margin-left: 0;
-        /* 手机屏离眼睛近、又是触摸操作，导航字号反过来要比桌面更醒目：
-           17px → 18px。代价是整块变宽，所以 gap 同步从 10px 收到 6px，
-           再把「导航 ↓」在窄屏藏起来腾地方（见下面 480px 那条）。 */
-        font-size: 1.8rem;
+        /* 跟桌面同一个变量，手机上不缩水。代价是整块变宽，所以 gap 同步
+           从 10px 收到 6px，再把「导航 ↓」在窄屏藏起来腾地方
+           （见下面 480px 那条）。 */
+        font-size: var(--nav-font-size);
         padding-top: 8px;
     }
 
     .menu .theme-toggle {
-        font-size: 1.8rem;
+        font-size: var(--nav-font-size);
     }
 
     /* 允许收缩（min-width:0 才放得下），并让它优先占用剩余空间。
@@ -200,7 +175,9 @@ html {
     }
 }
 
-/* 极窄屏再收一点点，保证大字号下仍是一行 */
+/* 极窄屏再收一点点，保证大字号下仍是一行。
+   这里是兜底，故意写死不跟随 --nav-font-size —— 变量调大的话，
+   420px 的屏上四个入口就会挤成两行。 */
 @media screen and (max-width: 420px) {
     .menu a,
     .menu .theme-toggle {

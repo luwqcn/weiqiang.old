@@ -81,6 +81,20 @@ other = "目录"
 [postNav]
 other = "上一篇 / 下一篇"
 
+# 鼠标移到上一篇/下一篇上时浮出的方向标签
+[prevPost]
+other = "上一篇"
+
+[nextPost]
+other = "下一篇"
+
+# 已经翻到栏目头/尾时，另一侧空位上放的提示
+[navNewest]
+other = "已经是最新的了"
+
+[navOldest]
+other = "已经是最早的了"
+
 [relatedPosts]
 other = "相关文章"
 

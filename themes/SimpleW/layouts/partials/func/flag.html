@@ -1,0 +1,58 @@
+{{- /*
+  partials/func/flag.html — 三级布尔开关：全局 → 按栏目 → 单篇，后写的赢。
+
+  page.html 里「上一篇/下一篇」「相关文章」「评论」「标题编号」走的都是
+  同一套优先级，以前各写一遍（连 keys 的大小写变体都要重复列举），
+  加一个开关就得改三处。这里收成一个：
+
+      {{ $show := partial "func/flag.html" (dict
+          "page" .
+          "keys" (slice "showPrevNext" "showprevnext" "prevNext" "prevnext")
+          "default" $isPost          ; 什么都没配时的值
+          "group" "post"             ; 可选：读 site.Params.<group>，如 [params.post]
+      ) }}
+
+  返回布尔。
+
+  keys 要把同一开关的各种写法都列上：
+    · Hugo 的 params 键大小写不总一致（TOML 里写 showPrevNext，取的时候
+      用 showprevnext 也常常能取到，但反过来不行）
+    · 全局 / 栏目 / 单篇三层的习惯写法也不一样（全站叫 showPrevNext，
+      栏目注册表里习惯写 prevNext）
+
+  归一化：字符串 "false" / "0" / "" 一律当假 —— 模板里非空字符串都是真值，
+  不归一化的话 front matter 写 `showPrevNext: false` 会被当成「开」。
+*/ -}}
+{{- $page := index . "page" -}}
+{{- $keys := index . "keys" | default slice -}}
+{{- $default := index . "default" | default false -}}
+{{- $group := index . "group" | default "" -}}
+
+{{- $v := $default -}}
+
+{{- /* 1. 全局配置段，如 [params.post] / [params.toc] */ -}}
+{{- with $group -}}
+  {{- with index $page.Site.Params $group -}}
+    {{- $cfg := . -}}
+    {{- range $keys }}{{ if isset $cfg . }}{{ $v = index $cfg . }}{{ end }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 2. 按栏目（[[params.sections]] 里该栏目那条 + 栏目 _index 的 front matter） */ -}}
+{{- $secFlag := partial "func/section-flag.html" (dict "page" $page "keys" $keys) -}}
+{{- if eq $secFlag "true" -}}
+  {{- $v = true -}}
+{{- else if eq $secFlag "false" -}}
+  {{- $v = false -}}
+{{- end -}}
+
+{{- /* 3. 单篇自己的 front matter，优先级最高 */ -}}
+{{- range $keys }}{{ if isset $page.Params . }}{{ $v = index $page.Params . }}{{ end }}{{ end -}}
+
+{{- /* 4. 归一化 */ -}}
+{{- $s := printf "%v" $v -}}
+{{- if or (eq $s "false") (eq $s "0") (eq $s "") (eq $s "<nil>") -}}
+  {{- $v = false -}}
+{{- end -}}
+
+{{- return (not (not $v)) -}}

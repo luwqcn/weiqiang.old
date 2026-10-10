@@ -26,68 +26,183 @@
     /* 目录与正文之间的呼吸距离 */
     --toc-gap: 3.2rem;
 
-    /* Palette — light (default, matches the original site exactly) */
-    --bg-color: #fcfcfd;
-    --bg-color-top: #f2f4f6;
-    --main-color: #333;
-    --bq-color: #444;
-    --link-color: #000;
-    --link-color-hover: #ab4f49;
-    --bg-color-quote: #f5f7ff;
-    --time-color: #666;
-    --desc-color: #999;
+    /* ------------------------------------------------------------------
+       Palette — raw values, each written exactly once.
+
+       改配色 = 改这里。下面「语义 token」只是把名字指到某个字面值上，
+       深浅两套共用一个字面值表，不会出现「改了浅色忘了深色」的漏改。
+       ------------------------------------------------------------------ */
+    /* light（默认，与原站逐像素一致） */
+    --c-bg: #fcfcfd;
+    --c-bg-top: #f2f4f6;
+    --c-main: #333;
+    --c-bq: #444;
+    --c-link: #000;
+    --c-link-hover: #ab4f49;
+    --c-quote: #f5f7ff;
+    --c-time: #666;
+    --c-desc: #999;
+    --c-rule: #eee;
+    --c-rule-strong: #ccc;
+    --c-card: #fff;
+    --c-card-hover: #eee;
+    --c-accent: #ab4f49;
+    --c-accent-soft: #cde;
+    --c-selection: #f6dedc;
+    --c-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --c-shadow-md: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+    /* 强调色的三种变体：渐变深端、透明底（行高亮）、行号字色 */
+    --c-accent-deep: #6f3330;
+    --c-accent-rgb: 171, 79, 73;
+    --c-linenum: #4c666c;
+    /* Org 的 TODO / DONE 关键字：白字配底，深浅色下都不变 */
+    --c-todo-bg: #c0392b;
+    --c-done-bg: #2e7d32;
+
+    /* dark */
+    --c-bg-dark: #16181c;
+    --c-bg-top-dark: #1d2026;
+    --c-main-dark: #d8dade;
+    --c-bq-dark: #c3c7cf;
+    --c-link-dark: #e8eaee;
+    --c-link-hover-dark: #e88c85;
+    --c-quote-dark: #21242b;
+    --c-time-dark: #9aa0aa;
+    --c-desc-dark: #7f858f;
+    --c-rule-dark: #2a2e36;
+    --c-rule-strong-dark: #3a3f49;
+    --c-card-dark: #1d2026;
+    --c-card-hover-dark: #252932;
+    --c-accent-dark: #e88c85;
+    --c-accent-soft-dark: #3d4a52;
+    --c-selection-dark: #3a2c2b;
+    --c-shadow-sm-dark: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --c-shadow-md-dark: 0 2px 14px rgba(0, 0, 0, 0.4);
+
+    --c-accent-deep-dark: #8f5b57;
+    --c-accent-rgb-dark: 232, 140, 133;
+    --c-linenum-dark: #93a8ae;
+
+    /* ------------------------------------------------------------------
+       Semantic tokens — what the rest of the CSS actually uses.
+       默认指向 light；深色由下面两条规则整体改指向。
+       ------------------------------------------------------------------ */
+    --bg-color: var(--c-bg);
+    --bg-color-top: var(--c-bg-top);
+    --main-color: var(--c-main);
+    --bq-color: var(--c-bq);
+    --link-color: var(--c-link);
+    --link-color-hover: var(--c-link-hover);
+    --bg-color-quote: var(--c-quote);
+    --time-color: var(--c-time);
+    --desc-color: var(--c-desc);
 
     /* Derived surfaces */
-    --rule-color: #eee;
-    --rule-strong: #ccc;
-    --leader-color: #ccc;
-    --card-bg: #fff;
-    --card-bg-hover: #eee;
-    --accent: #ab4f49;
-    --accent-soft: #cde;
-    --selection-bg: #f6dedc;
+    --rule-color: var(--c-rule);
+    --rule-strong: var(--c-rule-strong);
+    --leader-color: var(--c-rule-strong);
+    --card-bg: var(--c-card);
+    --card-bg-hover: var(--c-card-hover);
+    --accent: var(--c-accent);
+    --accent-soft: var(--c-accent-soft);
+    --selection-bg: var(--c-selection);
+    --accent-deep: var(--c-accent-deep);
+    --accent-rgb: var(--c-accent-rgb);
+    --linenum-color: var(--c-linenum);
+    --todo-bg: var(--c-todo-bg);
+    --done-bg: var(--c-done-bg);
+
+    /* Body copy. The nav below points at this on purpose: when you retune
+       the reading size, the top bar follows instead of drifting apart. */
+    --body-font-size: 1.9rem;
+
+    /* Top bar (site mark + nav links) */
+    --nav-font-size: var(--body-font-size);
+    --nav-logo-size: 26px;
 
     /* Radius / elevation */
     --radius-sm: 0.5rem;
     --radius-md: 1rem;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 2px 12px rgba(0, 0, 0, 0.06);
+    --shadow-sm: var(--c-shadow-sm);
+    --shadow-md: var(--c-shadow-md);
 
     /* Motion */
     --ease: cubic-bezier(0.2, 0, 0.2, 1);
     --dur: 160ms;
 }
 
-/* Dark scheme tokens. Activated by:
-   - explicit choice  → <html data-theme="dark">
-   - system preference → <html data-theme="auto"> + prefers-color-scheme: dark
-   See utils.css for the activation rules. */
+/*
+   深色：只把语义 token 改指到 -dark 那套字面值上，颜色本身不再重复一遍。
+
+   两条激活路径，改的时候要一起动（CSS 没法把 media query 和属性选择器
+   合成一条规则）：
+     · 明确选了深色 → <html data-theme="dark">（head.html 的内联脚本写）
+     · 跟随系统     → 无 JS 时的兜底，见 utils.css
+*/
 :root[data-theme="dark"] {
-    --bg-color: #16181c;
-    --bg-color-top: #1d2026;
-    --main-color: #d8dade;
-    --bq-color: #c3c7cf;
-    --link-color: #e8eaee;
-    --link-color-hover: #e88c85;
-    --bg-color-quote: #21242b;
-    --time-color: #9aa0aa;
-    --desc-color: #7f858f;
+    --bg-color: var(--c-bg-dark);
+    --bg-color-top: var(--c-bg-top-dark);
+    --main-color: var(--c-main-dark);
+    --bq-color: var(--c-bq-dark);
+    --link-color: var(--c-link-dark);
+    --link-color-hover: var(--c-link-hover-dark);
+    --bg-color-quote: var(--c-quote-dark);
+    --time-color: var(--c-time-dark);
+    --desc-color: var(--c-desc-dark);
 
-    --rule-color: #2a2e36;
-    --rule-strong: #3a3f49;
-    --leader-color: #3a3f49;
-    --card-bg: #1d2026;
-    --card-bg-hover: #252932;
-    --accent: #e88c85;
-    --accent-soft: #3d4a52;
-    --selection-bg: #3a2c2b;
+    --rule-color: var(--c-rule-dark);
+    --rule-strong: var(--c-rule-strong-dark);
+    --leader-color: var(--c-rule-strong-dark);
+    --card-bg: var(--c-card-dark);
+    --card-bg-hover: var(--c-card-hover-dark);
+    --accent: var(--c-accent-dark);
+    --accent-soft: var(--c-accent-soft-dark);
+    --selection-bg: var(--c-selection-dark);
+    --accent-deep: var(--c-accent-deep-dark);
+    --accent-rgb: var(--c-accent-rgb-dark);
+    --linenum-color: var(--c-linenum-dark);
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 2px 14px rgba(0, 0, 0, 0.4);
+    --shadow-sm: var(--c-shadow-sm-dark);
+    --shadow-md: var(--c-shadow-md-dark);
+}
+
+/* 跟随系统的兜底（JS 被禁用时 head.html 的脚本写不上 data-theme）。
+   与上面那段一一对应，加颜色时记得两边同步。 */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --bg-color: var(--c-bg-dark);
+        --bg-color-top: var(--c-bg-top-dark);
+        --main-color: var(--c-main-dark);
+        --bq-color: var(--c-bq-dark);
+        --link-color: var(--c-link-dark);
+        --link-color-hover: var(--c-link-hover-dark);
+        --bg-color-quote: var(--c-quote-dark);
+        --time-color: var(--c-time-dark);
+        --desc-color: var(--c-desc-dark);
+
+        --rule-color: var(--c-rule-dark);
+        --rule-strong: var(--c-rule-strong-dark);
+        --leader-color: var(--c-rule-strong-dark);
+        --card-bg: var(--c-card-dark);
+        --card-bg-hover: var(--c-card-hover-dark);
+        --accent: var(--c-accent-dark);
+        --accent-soft: var(--c-accent-soft-dark);
+        --selection-bg: var(--c-selection-dark);
+        --accent-deep: var(--c-accent-deep-dark);
+        --accent-rgb: var(--c-accent-rgb-dark);
+        --linenum-color: var(--c-linenum-dark);
+
+        --shadow-sm: var(--c-shadow-sm-dark);
+        --shadow-md: var(--c-shadow-md-dark);
+    }
 }
 
 /* --------------------------------------------------------------------------
    2. Reset
+
+   单位约定：间距一律用 rem（1rem = 10px），跟着浏览器的字号设置缩放；
+   1px / 2px 的边框和圆角保持 px —— 那是发丝级的东西，不该被放大。
    -------------------------------------------------------------------------- */
 *,
 *::before,
@@ -163,20 +278,20 @@ h4 img {
 
 h1 {
     font-size: clamp(2.6rem, 2rem + 1.7vw, 3rem);
-    margin: 16px 0;
+    margin: 1.6rem 0;
     font-weight: 900;
     letter-spacing: 0.02em;
 }
 
 h2 {
-    margin: 10px 0;
+    margin: 1rem 0;
     font-size: clamp(2.1rem, 1.85rem + 0.9vw, 2.4rem);
     font-weight: 700;
 }
 
 h3 {
     font-size: clamp(2rem, 1.85rem + 0.7vw, 2.3rem);
-    margin: 5px 0;
+    margin: 0.5rem 0;
     font-weight: 700;
 }
 
@@ -184,7 +299,7 @@ h4,
 h5,
 h6 {
     font-size: 2rem;
-    margin: 5px 0;
+    margin: 0.5rem 0;
     font-weight: 700;
 }
 
@@ -267,7 +382,7 @@ kbd {
    -------------------------------------------------------------------------- */
 blockquote {
     margin: 0;
-    padding: 10px 14px;
+    padding: 1rem 1.4rem;
     font-family: var(--bq-fonts);
     font-size: 1.8rem;
     border: 1px solid var(--bg-color-quote);
@@ -277,7 +392,7 @@ blockquote {
 }
 
 blockquote p {
-    margin: 5px 0 !important;
+    margin: 0.5rem 0 !important;
 }
 
 blockquote blockquote {
@@ -339,7 +454,7 @@ figure {
 }
 
 figcaption {
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
     margin-top: 0.3em;
     text-align: center;
     font-size: 1.5rem;
@@ -348,13 +463,13 @@ figcaption {
 
 img.profile {
     border-radius: 50%;
-    margin-top: 60px;
-    margin-bottom: 30px;
-    width: 200px;
+    margin-top: 6rem;
+    margin-bottom: 3rem;
+    width: 20rem;
 }
 
 time {
-    padding-right: 3px;
+    padding-right: 0.3rem;
 }
 
 /* --------------------------------------------------------------------------

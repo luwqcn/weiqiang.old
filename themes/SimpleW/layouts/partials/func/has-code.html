@@ -1,0 +1,33 @@
+{{- /*
+  partials/func/has-code.html — does this page actually contain a code block?
+
+  Used to decide whether to ship `syntax.css` + `chroma.css` (≈20 KB).
+  On this site only a couple of pages out of 600+ have any code, so paying
+  that on every page view is a waste.
+
+  It reads `.RawContent` (the source file, not the rendered HTML) so the
+  answer does not force the page to be rendered early.
+
+  Recognised block openers:
+    Org        #+begin_src / #+begin_example
+    Markdown   ``` fenced blocks   （写成 [\x60]{3}，避开模板的 raw string）
+    直接写的 HTML  class="highlight" / class="src src-"
+
+  Usage:  {{ if partial "func/has-code.html" . }} … {{ end }}
+*/ -}}
+{{- /*
+  列表页 / 首页只列标题和摘要，正文里的代码块根本不会渲染出来，
+  直接短路 —— 也省掉六百多个页面的正则扫描。
+*/ -}}
+{{- if not .IsPage -}}{{ return false }}{{ end -}}
+
+{{- $found := false -}}
+{{- with .RawContent -}}
+  {{- if findRE `(?im)^\s{0,3}(#\+begin_(src|example)|[\x60]{3})` . 1 -}}
+    {{- $found = true -}}
+  {{- end -}}
+  {{- if not $found -}}
+    {{- if findRE `class="(highlight|src src-)"` . 1 -}}{{ $found = true }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $found -}}

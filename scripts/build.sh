@@ -22,7 +22,21 @@ python3 scripts/sync-tags.py --apply
 # 页脚「本页最近更新」要用的日期表：从 git 里挑出真正改过正文的提交
 python3 scripts/gen-lastmod.py
 
-# 改过 permalinks 之后旧目录不会自己消失，清空再生成最省心
-rm -rf public
+# 图片瘦身：给 static/images 下的原图各配一张 webp（原图不动）。
+# webp 落在 .cache/webp/ —— 不进仓库，也不塞进 static/ 让 hugo 拷。
+python3 scripts/optimize-assets.py --skip-html --no-publish
 
-hugo --minify --ignoreCache "$@"
+# 改过 permalinks 之后旧目录不会自己消失，清空再生成最省心。
+# 用 Hugo 自带的 --cleanDestinationDir 而不是 `rm -rf public`：
+#   · 不依赖 shell，Windows / CI 上一样能跑
+#   · 只删 Hugo 自己写过的东西，不会误伤 public/ 里放的手工文件
+hugo --minify --ignoreCache --cleanDestinationDir "$@"
+
+# 冷启动（--ignoreCache）时 Hugo 偶尔会把一个还没填好的资源先发布出去，
+# 产物里就多一个 0 字节的 css/js（没有任何页面引用它，纯粹是脏东西）。
+# -print 让它删了什么说一声，真出问题也看得见。
+find public -type f \( -name '*.css' -o -name '*.js' \) -size 0 -print -delete
+
+# 生成完了再回头改 HTML：给 <img> 补 width/height/loading，套上 webp。
+# Org 走的不是 Hugo 的 render hook，图片只能在产出后这一步收拾。
+python3 scripts/optimize-assets.py --skip-webp

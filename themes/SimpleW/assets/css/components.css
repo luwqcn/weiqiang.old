@@ -316,6 +316,66 @@ span.pageright {
     margin-left: auto;
 }
 
+/* 到头了（没有上一篇 / 下一篇）时占位的提示文字。
+   比正文淡一档、字号小一点，一眼能看出「这里本来就没有」，而不是漏渲染了。 */
+.pagenav-end {
+    color: var(--desc-color);
+    font-size: 0.9em;
+    white-space: nowrap;
+    cursor: default;
+}
+
+/* 鼠标移上去时浮出「上一篇 / 下一篇」。
+   标题本身就看得见，这个标签只是说明箭头指的那一侧是更早还是更晚。
+   用伪元素而不是 title 属性：title 要等一两秒才弹，样式还是系统给的，
+   深浅色切换时会露出一截白底。
+   左右各贴自己那一头，这样标题长短不同，标签也不会漂移。 */
+.pagenav [data-nav] {
+    position: relative;
+}
+
+.pagenav [data-nav]::after {
+    content: attr(data-nav);
+    position: absolute;
+    bottom: calc(100% + 0.6rem);
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-sm);
+    background: var(--main-color);
+    color: var(--bg-color);
+    font-size: 1.3rem;
+    line-height: 1.5;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+    /* 压过紧邻的标签行和相关文章块 */
+    z-index: 1;
+    /* 不挡鼠标，免得 tooltip 自己把 hover 打断 */
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(0.4rem);
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+.pagenav .pageleft [data-nav]::after {
+    left: 0;
+}
+
+.pagenav .pageright [data-nav]::after {
+    right: 0;
+}
+
+.pagenav [data-nav]:hover::after,
+.pagenav [data-nav]:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (hover: none) {
+    /* 触屏没有 hover，浮标永远出不来，索性不生成 */
+    .pagenav [data-nav]::after {
+        content: none;
+    }
+}
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -492,7 +552,7 @@ span.pageright {
 }
 
 /* --------------------------------------------------------------------------
-   7. Home page blocks — the pluggable homepage system
+   8. Home page blocks — the pluggable homepage system
    -------------------------------------------------------------------------- */
 .home-block {
     margin: 2.4rem auto;
@@ -598,7 +658,7 @@ span.pageright {
 }
 
 /* --------------------------------------------------------------------------
-   8. Comments — provider-agnostic shell
+   9. Comments — provider-agnostic shell
    -------------------------------------------------------------------------- */
 #comment,
 .comments {
@@ -677,265 +737,9 @@ span.pageright {
     border-top: 0;
 }
 
-/* --------------------------------------------------------------------------
-   9. Footnotes & Org leftovers
-   -------------------------------------------------------------------------- */
-.footnum {
-    font-size: 1.8rem;
-}
-
-.footdef sup {
-    font-size: 1.2rem;
-    line-height: 1;
-    top: 0.4em;
-}
-
-.footpara {
-    display: inline;
-    font-size: 1.5rem;
-    font-weight: 400;
-}
-
-.footpara a {
-    word-break: break-all;
-}
-
-#footnotes {
-    margin-top: 3rem;
-    font-size: 1.6rem;
-    color: var(--bq-color);
-}
-
-#footnotes h2 {
-    font-size: 1.8rem;
-}
-
-.todo {
-    background-color: #c0392b;
-    color: #fff;
-    padding: 0.1em 0.3em;
-    border-radius: 3px;
-    background-clip: padding-box;
-    font-size: 1em;
-    font-family: var(--mono-fonts);
-    line-height: 1;
-}
-
-.done {
-    background-color: #2e7d32;
-    color: #fff;
-    padding: 0.1em 0.3em;
-    border-radius: 3px;
-    background-clip: padding-box;
-    font-size: 1em;
-    font-family: var(--mono-fonts);
-    line-height: 1;
-}
-
-.priority {
-    color: orange;
-    font-family: var(--mono-fonts);
-}
-
-ul.org-ul {
-    margin-left: 20px;
-    padding-left: 0;
-}
-
-ul.org-ul li {
-    padding: 5px 0;
-    font-size: 1.8rem;
-}
-
-ul.org-ul li a {
-    margin-left: 10px;
-}
-
-ol.org-ol {
-    margin-left: 20px;
-    padding-left: 10px;
-}
-
-ol.org-ol li {
-    font-size: 1.8rem;
-}
-
-#zhijiao ol.org-ol {
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-}
-
-#zhijiao ol.org-ol li {
-    display: inline-flex;
-    margin-right: 1.5em;
-    width: 45%;
-}
-
-ol.linenums {
-    color: #4c666c;
-    margin: 0 0 0 40px;
-}
-
-ol.linenums li {
-    line-height: 18px;
-    padding-left: 12px;
-}
-
-/* Org src blocks with the language badge in the corner */
-.org-src-container {
-    border: 1px solid var(--rule-strong);
-    box-shadow: 3px 3px 3px var(--rule-color);
-    font-family: var(--mono-fonts);
-    font-size: 1em;
-    margin: 1em auto;
-    padding: 0.1em 0.5em;
-    position: relative;
-    border-radius: var(--radius-sm);
-}
-
-.org-src-container > pre {
-    overflow: auto;
-}
-
-.org-src-container > pre:before {
-    display: block;
-    position: absolute;
-    background-color: #b3b3b3;
-    top: 0;
-    right: 0;
-    padding: 0 0.5em;
-    border-bottom-left-radius: 8px;
-    border: 0;
-    color: #fff;
-    font-size: 0.8em;
-}
-
-/* Language badge labels. Extend freely — add
-   `.org-src-container > pre.src-<lang>:before { content: '<label>'; }` */
-.org-src-container > pre.src-sh:before { content: "sh"; }
-.org-src-container > pre.src-bash:before { content: "bash"; }
-.org-src-container > pre.src-shell:before { content: "shell"; }
-.org-src-container > pre.src-zsh:before { content: "zsh"; }
-.org-src-container > pre.src-emacs-lisp:before { content: "Emacs Lisp"; }
-.org-src-container > pre.src-lisp:before { content: "Lisp"; }
-.org-src-container > pre.src-scheme:before { content: "Scheme"; }
-.org-src-container > pre.src-clojure:before { content: "Clojure"; }
-.org-src-container > pre.src-org:before { content: "Org"; }
-.org-src-container > pre.src-python:before { content: "Python"; }
-.org-src-container > pre.src-ipython:before { content: "iPython"; }
-.org-src-container > pre.src-R:before { content: "R"; }
-.org-src-container > pre.src-julia:before { content: "Julia"; }
-.org-src-container > pre.src-perl:before { content: "Perl"; }
-.org-src-container > pre.src-ruby:before { content: "Ruby"; }
-.org-src-container > pre.src-php:before { content: "PHP"; }
-.org-src-container > pre.src-java:before { content: "Java"; }
-.org-src-container > pre.src-kotlin:before { content: "Kotlin"; }
-.org-src-container > pre.src-scala:before { content: "Scala"; }
-.org-src-container > pre.src-c:before,
-.org-src-container > pre.src-C:before { content: "C"; }
-.org-src-container > pre.src-cpp:before { content: "C++"; }
-.org-src-container > pre.src-csharp:before { content: "C#"; }
-.org-src-container > pre.src-rust:before { content: "Rust"; }
-.org-src-container > pre.src-go:before { content: "Go"; }
-.org-src-container > pre.src-js:before,
-.org-src-container > pre.src-javascript:before { content: "Javascript"; }
-.org-src-container > pre.src-typescript:before { content: "Typescript"; }
-.org-src-container > pre.src-html:before,
-.org-src-container > pre.src-browser:before { content: "HTML"; }
-.org-src-container > pre.src-css:before { content: "CSS"; }
-.org-src-container > pre.src-scss:before { content: "SCSS"; }
-.org-src-container > pre.src-sass:before { content: "Sass"; }
-.org-src-container > pre.src-less:before { content: "Less"; }
-.org-src-container > pre.src-json:before { content: "JSON"; }
-.org-src-container > pre.src-yaml:before { content: "YAML"; }
-.org-src-container > pre.src-toml:before { content: "TOML"; }
-.org-src-container > pre.src-xml:before { content: "XML"; }
-.org-src-container > pre.src-sql:before { content: "SQL"; }
-.org-src-container > pre.src-sqlite:before { content: "SQLite"; }
-.org-src-container > pre.src-mysql:before { content: "MySQL"; }
-.org-src-container > pre.src-makefile:before { content: "Make"; }
-.org-src-container > pre.src-docker:before { content: "Dockerfile"; }
-.org-src-container > pre.src-nginx:before { content: "nginx"; }
-.org-src-container > pre.src-latex:before { content: "LaTeX"; }
-.org-src-container > pre.src-markdown:before { content: "Markdown"; }
-.org-src-container > pre.src-matlab:before { content: "Matlab"; }
-.org-src-container > pre.src-haskell:before { content: "Haskell"; }
-.org-src-container > pre.src-swift:before { content: "Swift"; }
-.org-src-container > pre.src-dart:before { content: "Dart"; }
-.org-src-container > pre.src-elixir:before { content: "Elixir"; }
-.org-src-container > pre.src-erlang:before { content: "Erlang"; }
-.org-src-container > pre.src-nix:before { content: "Nix"; }
-.org-src-container > pre.src-awk:before { content: "Awk"; }
-.org-src-container > pre.src-sed:before { content: "Sed"; }
-.org-src-container > pre.src-dot:before { content: "Dot"; }
-.org-src-container > pre.src-plantuml:before { content: "PlantUML"; }
-.org-src-container > pre.src-gnuplot:before { content: "Gnuplot"; }
-.org-src-container > pre.src-ditaa:before { content: "Ditaa"; }
-.org-src-container > pre.src-text:before { content: "text"; }
 
 /* --------------------------------------------------------------------------
-   10. Hugo / Chroma syntax highlighting wrapper
-   -------------------------------------------------------------------------- */
-.highlight {
-    position: relative;
-    margin: 1.4em auto;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    background: var(--bg-color-quote);
-    border: 1px solid var(--rule-color);
-}
-
-.highlight pre,
-.chroma {
-    margin: 0;
-    border-radius: 0;
-    /* The palette comes from chroma.css; the surface follows the design tokens. */
-    background-color: var(--bg-color-quote) !important;
-    -webkit-text-size-adjust: none;
-    font-size: 1.55rem;
-}
-
-.highlight pre {
-    padding: 1.1rem 1.3rem;
-}
-
-/* A bare <pre> that is not a highlight block (e.g. indented markdown) */
-#content > pre,
-.post-body > pre {
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--rule-color);
-    padding: 1.1rem 1.3rem;
-}
-
-/* Chroma line numbers */
-.chroma .lntable {
-    border: 0;
-    display: table;
-    width: 100%;
-}
-
-.chroma .lntable td {
-    border: 0;
-    padding: 0;
-}
-
-.chroma .lntd:first-child {
-    width: 1%;
-}
-
-.chroma .ln {
-    color: var(--desc-color);
-    padding-right: 1em;
-    user-select: none;
-}
-
-.chroma .hl {
-    background: rgba(171, 79, 73, 0.1);
-    display: block;
-}
-
-/* --------------------------------------------------------------------------
-   11. Theme switch button (opt-in)
+   10. Theme switch button (opt-in)
    -------------------------------------------------------------------------- */
 .theme-toggle {
     appearance: none;
@@ -944,7 +748,8 @@ ol.linenums li {
     border-radius: var(--radius-sm);
     color: var(--bq-color);
     cursor: pointer;
-    font-size: 1.7rem;
+    /* 跟导航链接同字号，否则一排里就它小一号 */
+    font-size: var(--nav-font-size);
     line-height: 1;
     padding: 0.2em 0.45em;
     font-family: inherit;
@@ -956,7 +761,7 @@ ol.linenums li {
 }
 
 /* --------------------------------------------------------------------------
-   12. 404
+   11. 404
    -------------------------------------------------------------------------- */
 .notfound {
     text-align: center;
