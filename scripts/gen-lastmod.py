@@ -66,6 +66,22 @@ def is_mechanical(text):
     return False
 
 
+def current_path(rel):
+    """把 git 历史里的路径换成今天真实存在的那个。
+
+    内容从 .org 转成 .md 之后，git 里记录的还是 content/x.org，磁盘上却只剩
+    content/x.md。不做这一步，页脚的「本页最近更新」会全部退回发布日期
+    （实测 about 页会从 2026-10-06 变成 2008-11-18）。
+    """
+    if os.path.exists(os.path.join(ROOT, PREFIX, rel)):
+        return rel
+    if rel.endswith(".org"):
+        alt = rel[: -len(".org")] + ".md"
+        if os.path.exists(os.path.join(ROOT, PREFIX, alt)):
+            return alt
+    return None
+
+
 def parse_diff(raw):
     """把一次提交的 diff 拆成 {文件路径: 是否动了正文}。"""
     files, path, real, is_new = {}, None, False, False
@@ -122,7 +138,8 @@ def main():
         else:
             picked = list(changed)
         for rel in picked:
-            if not os.path.exists(os.path.join(ROOT, PREFIX, rel)):
+            rel = current_path(rel)
+            if rel is None:
                 continue
             table.setdefault(rel, date)               # 提交从新到旧，先到先得
 

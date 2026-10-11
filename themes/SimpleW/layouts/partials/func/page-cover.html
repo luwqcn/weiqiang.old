@@ -6,7 +6,7 @@
   取值顺序：
     1. front matter 的 cover          （Markdown：cover: /images/x.jpg）
     2. Org 文件头的 #+COVER:          —— go-org 只把 author/date/description/
-       filetags/keywords/options 这类固定键放进 .Params，自定义的 #+COVER
+       tags/options 这类固定键放进 .Params，自定义的 #+COVER
        读不到 Params，只能回到 RawContent 上正则摘。
     3. front matter 的 images[0]
     4. 正文里出现的第一张图

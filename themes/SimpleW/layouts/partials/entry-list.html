@@ -30,6 +30,9 @@
 {{- else if eq $style "cover" -}}
   {{- partial "components/listing-cover.html" (dict "pages" $pages) -}}
 
+{{- else if eq $style "series" -}}
+  {{- partial "components/listing-series.html" (dict "pages" $pages "reverse" false) -}}
+
 {{- else if eq $style "cards" -}}
   {{- range $pages }}
   <article class="post-entry">

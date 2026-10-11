@@ -26,8 +26,8 @@ summaryLength = 60
 # 同样的结果，少一处配置就少一处要维护的地方。若个别栏目想换路径，再单独加
 # [permalinks] 覆盖即可（注意别在 pattern 里写 .html）。
 #
-# 例外：/zh/ 网志、/zj/ 支教这两个按日期命名的栏目，走下面 [permalinks] 的
-# 「栏目/年份/slug/」，地址里不再挂那串日期。
+# 例外：/zh/ 网志按日期命名，走下面 [permalinks] 的「栏目/年份/slug/」，
+# 地址里不再挂那串日期。（原 /zj/ 支教目录已取消并入 /zh/，见下面结集说明。）
 #
 # 从 /zh/xxx.html 迁过来时，站外反链会 404 —— 需要在服务器（nginx / Cloudflare
 # 等）配 rewrite 把 .html 请求 301 到去掉后缀的路径，或保留旧路径做重定向页。
@@ -35,17 +35,13 @@ summaryLength = 60
 uglyURLs = false
 
 # ---------------------------------------------------------------------------
-# 安全策略 —— 必须开启，否则整站无法构建
+# 生产输出
 #
-# Hugo 0.167 默认把 text/org（和 text/html）挡在内容白名单之外，.org 源文件
-# 会直接报 "access denied: text/org is not whitelisted"。本站内容全部是
-# Org-Mode，所以这里显式放行。markdown 一并保留，日后混用也不会踩坑。
-#
-# 摆放位置有讲究：TOML 里 [table] 之后的裸键值对都归该表所有，所以这段必须
-# 放在所有顶层标量（uglyURLs 等）之后，否则 uglyURLs 会被吃进 [security]。
+# 压缩开关写进配置而不只放在 scripts/build.sh：换到 CI、Cloudflare Pages
+# 或别的机器直接运行 `hugo`，HTML / CSS / JS / XML 仍会自动压缩。
 # ---------------------------------------------------------------------------
-[security]
-  allowContent = ['^text/org$', '^text/markdown$']
+[minify]
+  minifyOutput = true
 
 [outputs]
   home = ["HTML", "RSS"]
@@ -54,27 +50,25 @@ uglyURLs = false
   term = ["HTML"]
 
 [taxonomies]
-  # 本站标签的实际来源是 Org 的 #+FILETAGS 和 #+KEYWORDS，没有内容用 front
-  # matter 的 `tags`。为了让标签地址统一是 /tags/<词>/，这里不再注册
-  # `tag = "tags"` —— 那个位置让给 keywords（见下方 [permalinks]）。
-  filetag = "filetags"
-  # Org 的 #+KEYWORDS 是本站文章标签的最大来源，注册成分类法后文章页的
-  # 标签胶囊才能点开对应归档页。
-  # 注意：Hugo 用它原始解析到的值建词条，因此 #+KEYWORDS 必须一个词一项、
-  # 用逗号或空格分隔，不要塞进长句。
-  keyword = "keywords"
+  # 标签就用 Hugo 惯例的 tags。Org 时代的 #+FILETAGS 与 #+KEYWORDS 已经在
+  # 迁移时合并成 front matter 里的 `tags`（scripts/org-to-md.py），
+  # 所以这里不再注册 filetags / keywords 两套。
+  tag = "tags"
   category = "categories"
+  # 结集（series）：文章 front matter 里写 `series = "ws"` 即归入该结集。
+  # 与栏目（/zh/ /bc/ …）是两条线：栏目管「放哪儿」，结集管「属于哪一堆」。
+  # 老的 /zj/ 支教目录已并入 /zh/，靠 series = "zj" 重新聚起来。
+  series = "series"
 
 # ---------------------------------------------------------------------------
 # 标签地址统一成 /tags/<词>/
 #
-# keywords 是分类法名（front matter 键），但对外不想暴露成 /keywords/。
-# Hugo 的 permalinks 可以按分类法逐条指定，于是词条页落到 /tags/<词>/，
-# 列表页由 content/keywords/_index.md 的 url 指到 /tags/。
-# filetags、categories 因为没在这里覆盖，仍走各自的 /filetags/、/categories/。
+# tags 分类法默认就落在 /tags/，本来不用写；这里显式指定是为了防止以后改
+# 配置时地址漂移，也让「对外地址是 /tags/ 而不是别的」这件事有个书面的地方。
+# 列表页由 content/tags/_index.md 提供。categories 走默认的 /categories/。
 # ---------------------------------------------------------------------------
 [permalinks]
-  keywords = "/tags/:slug/"
+  tags = "/tags/:slug/"
   # 网志类栏目：栏目 / 年份 / slug
   #   2026-07-05-rensheng-yiyi.org  →  /zh/2026/rensheng-yiyi/
   # 年份取文章的 #+DATE:，slug 取文件名去掉「YYYY-MM-DD-」那一段。
@@ -82,11 +76,13 @@ uglyURLs = false
   # ⚠️ :slug 的坑：文章没写 slug 时，Hugo 会拿 **中文标题** 顶上，地址会变成
   #    /zh/2026/人生无意义/。所以凡是走 permalinks 的栏目，每篇都必须有
   #    #+SLUG:（Org）/ slug:（Markdown）—— scripts/gen-slugs.py 就是干这个的，
-  #    新文章用 hugo new 建会自动带上（见 archetypes/default.org）。
+  #    新文章用 hugo new 建会自动带上（见 archetypes/default.md）。
   #    不想挂年份的栏目（/xy/ /bc/ /yue/）不用管，它们不在下面这张表里，
   #    仍按默认规则取文件名。
   zh = "/zh/:year/:slug/"
-  zj = "/zj/:year/:slug/"
+  # 结集页不要在这里写 [permalinks]：`:slug` 会取 _index.md 的标题（往事如烟），
+  # 地址变成 /series/往事如烟/。不写就是 Hugo 默认的 /series/<key>/（/series/ws/），
+  # 与文章 front matter 里的 series = "ws" 对得上。
 
 # ---------------------------------------------------------------------------
 # Markdown 渲染 —— 这两项必须写在站点配置里
@@ -100,11 +96,21 @@ uglyURLs = false
 #   noClasses = false    Chroma 输出 class 而非内联样式，主题的 chroma.css
 #                        才能跟随深浅色。代码块（```…```）由主题的 render
 #                        hook 强制处理，这一项是为了 {{< highlight >}} shortcode。
+#
+#   attribute = true     内容已从 Org 转成 Markdown（scripts/org-to-md.py），
+#                        标题写成 `## 标题 {#headline-3}` 才能沿用 go-org 原来
+#                        的 id —— 目录、#锚点、外链不会因为换格式而失效。
+#                        不开这一项，{#…} 会被当成标题文字印在页面上。
 # ---------------------------------------------------------------------------
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+    [markup.goldmark.parser]
+      attribute = true
+  [markup.goldmark.table]
+    # 表格语法（Org 的 |---+---| 表格转成这个）
+    enabled = true
   [markup.highlight]
     noClasses = false
     lineNos = false
@@ -120,18 +126,11 @@ uglyURLs = false
   includeNewer = true
   toLower = true
   [[related.indices]]
-    name = "filetags"
-    weight = 110
-  [[related.indices]]
     name = "tags"
-    weight = 100
+    weight = 110
   [[related.indices]]
     name = "categories"
     weight = 80
-  [[related.indices]]
-    # org 的 #+KEYWORDS，多数文章只有这一项标签来源
-    name = "keywords"
-    weight = 60
   [[related.indices]]
     name = "date"
     weight = 10
@@ -146,6 +145,12 @@ uglyURLs = false
   description = "耕读传家久，诗书继世长。采菊桑林下，江南半農夫。"
   keywords = ["危墙之下", "村野闲居", "桑下居", "行止齋", "中医", "传统文化", "手作", "围墙里"]
   dateFormat = "2006-01-02"
+
+  # 浏览器与分享卡片的站点级兜底。单篇写 cover/images 时仍优先用单篇图。
+  themeColor = "#9f4942"
+  ogImage = "/images/default.jpg"
+  webmanifest = "/images/site.webmanifest"
+  appleTouchIcon = "/images/apple-touch-icon.png"
 
   # 列表页（分类页）默认风格：
   #   calendar  按年折叠 + 年度日格热力图 + 「MM/DD 标题」紧凑行
@@ -231,14 +236,14 @@ uglyURLs = false
   # -------------------------------------------------------------------------
   [[params.sections]]
     key = "zh"
-    name = "网志"
+    name = "手记"
     url = "/zh/"
     description = "个人网志，纪录生活经历、个人感悟、阅读笔记等等。多为个人碎语，偶尔思考一番，收录个人文字，让文字见证存在。"
     style = "calendar"
     order = 10
     nav = true
     footer = true
-    home = true
+    home = false
 
   [[params.sections]]
     key = "bc"
@@ -290,18 +295,23 @@ uglyURLs = false
     related = false
     prevNext = false
 
-  # 第 6 个栏目：只为演示「加一个分类」有多容易 ——
-  # 写一个 content/zj/ 目录 + 在导航里加下面 8 行，就这么简单。
+  # -------------------------------------------------------------------------
+  # 结集（series）—— 不是栏目，是「同一堆文章」的横向聚合
+  #
+  # 支教目录 /zj/ 已经取消：那些文章搬进 /zh/，靠 front matter 里的
+  # `series = "zj"` 重新聚起来。三条结集的标题、简介、状态徽章、排序都写在
+  # content/series/<key>/_index.md 里（Hugo 原生做法），主页的结集区块和
+  # /series/ 索引页都从那里读。
+  # 这里只留一个「进页脚导航」的入口：
+  # -------------------------------------------------------------------------
   [[params.sections]]
-    key = "zj"
-    name = "支教"
-    url = "/zj/"
-    description = "2010 年的支教旧文，早已不合时宜，留作存档。"
-    style = "grouped"
+    key = "series"
+    name = "结集"
+    url = "/series/"
     order = 50
     nav = false
     footer = true
-    home = true
+    home = false
 
   # 普通页面也可以进导航（不是 section，只是链接）
   [[params.sections]]
@@ -343,7 +353,7 @@ uglyURLs = false
       count = 5
       group = false
       style = "grouped"
-      more = { name = "网志", url = "/zh/" }
+      #more = { name = "网志", url = "/zh/" }
 
     [[params.home.blocks]]
       type = "sections"
@@ -353,16 +363,20 @@ uglyURLs = false
       exclude = []
 
     [[params.home.blocks]]
-      type = "list"
-      title = "往事如烟"
-      items = [
-        { text = "2010年：", name = "支教", url = "/zj/" },
-      ]
+      # 结集：/series/ 下那几堆文章（往事如烟 / 桑下書集 / 支教）。
+      # 老的 /zj/ 支教目录已经取消，改由 series = "zj" 聚拢，故从「栏目」里
+      # 撤下、在这儿单独列。内容与排序读 content/series/<key>/_index.md。
+      type = "series"
+      title = "结集"
+      showCount = true
+      showDesc = true
+      # only    = ["ws", "shuji"]   # 只列这几条
+      # exclude = ["zj"]            # 或者排除这几条
 
     # [[params.home.blocks]]
     #   type = "taxonomy"
     #   title = "标签"
-    #   taxonomy = "keywords"    # 本站标签分类法（对外 /tags/）；filetags / categories 亦可
+    #   taxonomy = "tags"        # 本站标签分类法（对外 /tags/）；categories 亦可
     #   limit = 20
     #   sort = "count"
 
@@ -451,8 +465,9 @@ uglyURLs = false
   [params.post]
     # date | lastmod | section | categories | readingTime | wordCount
     # （标签单独显示在正文末尾，见下方「标签」说明）
-    # 排出来是这样：2026-10-07 · 共 640 字 · 阅读约需 2 分钟
-    meta = ["date", "wordCount", "readingTime"]
+    # 排出来是这样：2026-10-07 · 往事如烟 · 共 640 字 · 阅读约需 2 分钟
+    # （series 那一项只在文章写了 series = "…" 时才出现，不想显示就删掉它）
+    meta = ["date", "series", "wordCount", "readingTime"]
     # 文章末尾的「上一篇 / 下一篇」导航，不需要就设成 false
     # 站点根目录下的独立页面（关于 / 收藏 / SiteLog）永远不会显示
     # 按栏目关：[[params.sections]] 那条写 prevNext = false
@@ -506,3 +521,55 @@ uglyURLs = false
     dateFormat = "01/02"    # 行首日期，Go 写法
     showCount = true        # 年份与页面标题后面跟「· N 篇」
     maxTitles = 12          # 单元格悬浮提示里最多列几篇标题
+
+  # -------------------------------------------------------------------------
+  # 结集（series）—— /series/ 索引页与各结集页的开关
+  #
+  # 每一条的「名字 / 简介 / 状态徽章 / 排序 / 封面字」写在
+  # content/series/<key>/_index.md 的 front matter 里：
+  #
+  #     title = "往事如烟"
+  #     description = "2016 年前网志存档，不再更新。"
+  #     status = "已归档"
+  #     glyph = "烟"
+  #     order = 10
+  #
+  # 下面这张表只是兜底：某个 key 一时没有 _index.md，才从这里取名和简介。
+  #
+  # ⚠️ 排序要改 content/series/<key>/_index.md 里的 order：那份 front matter
+  #    优先级高于这里（见 func/series-meta.html），改这里对已有 _index.md 的
+  #    结集不起作用——order、name、description、status、glyph 都是如此。
+  #
+  #   status  徽章文案（已归档 / 进行中 …），留空就不显示徽章
+  #   glyph   结集封面上的那个字，取名字里最有代表性的一字
+  #   order   越小越靠前（生效位置见上面那条警告）
+  #   style   series（编号卷次，默认）| grouped | calendar | cards | plain
+  # -------------------------------------------------------------------------
+  [params.series]
+    style = "series"        # 结集页默认列表样式
+    showCount = true        # 索引页卡片上显示「N 篇」
+    showSpan = true         # 显示时间跨度（2008 – 2016）
+
+    [[params.series.items]]
+      key = "ws"
+      name = "往事如烟"
+      description = "2016 年前网志存档，不再更新。"
+      status = "已归档"
+      glyph = "烟"
+      order = 10
+
+    [[params.series.items]]
+      key = "zj"
+      name = "支教"
+      description = "2010 年的支教旧文，留作存档。"
+      status = "已归档"
+      glyph = "教"
+      order = 20
+
+    [[params.series.items]]
+      key = "shuji"
+      name = "桑下書集"
+      description = "桑下書集相关，记录書集进展。"
+      status = "进行中"
+      glyph = "書"
+      order = 30

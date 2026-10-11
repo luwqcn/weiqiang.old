@@ -1,0 +1,41 @@
+{{- /*
+  Block: series — 主页上的结集卡片阵列。
+
+  [[params.home.blocks]]
+    type      = "series"
+    title     = "结集"
+    showCount = true      # 卡片上显示「N 篇」
+    showSpan  = true      # 显示时间跨度
+    showDesc  = true      # 显示一句话简介
+    only      = ["ws"]    # 只列这几条（留空 = 全列）
+    exclude   = ["zj"]    # 或排除这几条
+*/ -}}
+{{- $b := .block -}}
+{{- $list := partial "func/series-list.html" site -}}
+{{- $only := $b.only | default slice -}}
+{{- $exclude := $b.exclude | default slice -}}
+{{- $showCount := true -}}
+{{- if isset $b "showcount" }}{{ $showCount = $b.showCount }}{{ end -}}
+{{- $showSpan := true -}}
+{{- if isset $b "showspan" }}{{ $showSpan = $b.showSpan }}{{ end -}}
+{{- $showDesc := true -}}
+{{- if isset $b "showdesc" }}{{ $showDesc = $b.showDesc }}{{ end -}}
+
+{{- $filtered := slice -}}
+{{- range $list -}}
+  {{- if and (not (and $only (not (in $only .key)))) (not (in $exclude .key)) -}}
+    {{- $filtered = $filtered | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $filtered }}
+<section class="home-block block-series">
+{{- with $b.title }}<h2 class="block-title">{{ . }}</h2>{{ end }}
+{{- partial "components/series-cards.html" (dict
+      "list" $filtered
+      "showCount" $showCount
+      "showSpan" $showSpan
+      "showDesc" $showDesc
+      "class" "series-cards is-compact") -}}
+</section>
+{{- end -}}

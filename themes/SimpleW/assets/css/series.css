@@ -1,0 +1,349 @@
+/* ==========================================================================
+   SimpleW — series.css
+   结集（series）：
+     1. 封面字（印章）
+     2. /series/ 索引页与主页的卡片阵列
+     3. 状态徽章
+     4. 结集页头卡（series-hero）
+     5. 编号卷次列表（series-entries）
+     6. 结集间跳转（series-more）
+   根字号 62.5%，下面所有 rem 按 1rem = 10px 读。
+   注意：正文列有 `#content p { font-size:1.9rem; margin:20px 0 }`（优先级带
+   id），凡是 <p> 的自定义字号都要用 `#content .xxx` 级别才能盖回来。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. 封面字 —— 取结集名里最有代表性的一字，做一枚朱文印
+   -------------------------------------------------------------------------- */
+.series-seal {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 5.2rem;
+    height: 5.2rem;
+    border-radius: 0.6rem;
+    /* 斜向渐变的赭红，配一圈内描边，像盖在纸上的印 */
+    background: linear-gradient(160deg, var(--accent) 0%, var(--accent-deep) 100%);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22), var(--shadow-sm);
+    color: #fff;
+    font-family: var(--bq-fonts);
+    font-size: 2.8rem;
+    line-height: 1;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+    user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   2. 卡片阵列 —— /series/ 与主页共用
+   -------------------------------------------------------------------------- */
+.series-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+    margin: 1.6rem 0;
+}
+
+.series-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.4rem;
+    padding: 1.4rem 1.6rem;
+    border: 1px solid var(--rule-color);
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+    /* 卡片只过渡颜色和阴影；属性分开写，压缩后仍清晰稳定。 */
+    transition-property: border-color, box-shadow, background-color;
+    transition-duration: var(--dur);
+    transition-timing-function: var(--ease);
+}
+
+.series-card:hover,
+.series-card:focus-visible {
+    border-color: var(--accent);
+    /* 必须整套写回来：全局 a:hover 的 `border-bottom:1px solid;
+       padding-bottom:2px` 优先级更高，不写回 padding-bottom 卡片会往上缩。 */
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1.4rem;
+    box-shadow: var(--shadow-md);
+}
+
+.series-card .sc-body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.series-card .sc-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--main-color);
+}
+
+.series-card .sc-desc {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1.65;
+    color: var(--desc-color);
+}
+
+.series-card .sc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.7rem;
+    font-family: var(--mono-fonts);
+    font-size: 1.3rem;
+    color: var(--time-color);
+}
+
+.series-card .sc-arrow {
+    flex: 0 0 auto;
+    font-size: 2.4rem;
+    line-height: 1.15;
+    color: var(--rule-strong);
+    transition: color var(--dur) linear;
+}
+
+.series-card:hover .sc-arrow,
+.series-card:focus-visible .sc-arrow {
+    color: var(--accent);
+}
+
+/* 主页上稍紧一点，别抢「栏目」那块的风头 */
+.series-cards.is-compact .series-card {
+    padding: 1.2rem 1.4rem;
+}
+
+.series-cards.is-compact .series-card:hover,
+.series-cards.is-compact .series-card:focus-visible {
+    padding-bottom: 1.2rem;
+}
+
+.series-cards.is-compact .series-seal {
+    width: 4.4rem;
+    height: 4.4rem;
+    font-size: 2.4rem;
+}
+
+.series-cards.is-compact .sc-desc {
+    font-size: 1.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. 状态徽章 —— 已归档 / 进行中
+   -------------------------------------------------------------------------- */
+.series-badge {
+    display: inline-block;
+    padding: 0.1rem 0.8rem;
+    border: 1px solid rgba(var(--accent-rgb), 0.35);
+    border-radius: 999px;
+    background: rgba(var(--accent-rgb), 0.07);
+    color: var(--accent);
+    font-family: var(--cjk-sans);
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.9;
+    white-space: nowrap;
+}
+
+/* 还在写的结集用统一的成功色，与「已归档」的赭红区分开 */
+.series-badge.badge-live {
+    border-color: color-mix(in srgb, var(--success-color) 38%, transparent);
+    background: color-mix(in srgb, var(--success-color) 9%, transparent);
+    color: var(--success-color);
+}
+
+/* --------------------------------------------------------------------------
+   4. 结集页头卡
+   -------------------------------------------------------------------------- */
+.series-crumb {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: var(--time-color);
+}
+
+.series-crumb .sep {
+    margin: 0 0.6rem;
+    color: var(--rule-strong);
+}
+
+.series-hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.8rem;
+    margin: 0 0 1.6rem;
+    padding: 1.8rem 2rem;
+    border: 1px solid var(--rule-color);
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+    box-shadow: var(--shadow-sm);
+}
+
+.series-hero .series-seal {
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 0.8rem;
+    font-size: 3.4rem;
+}
+
+.series-hero-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.series-hero .title {
+    margin: 0;
+    font-size: 2.8rem;
+    line-height: 1.35;
+}
+
+#content .series-desc {
+    margin: 0.6rem 0 0;
+    font-size: 1.7rem;
+    line-height: 1.7;
+    color: var(--desc-color);
+}
+
+#content .series-stats {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.1rem 0 0;
+}
+
+.series-stats .ss-item {
+    font-family: var(--mono-fonts);
+    font-size: 1.4rem;
+    color: var(--time-color);
+}
+
+#content .series-hint {
+    margin: 1.8rem 0 0.2rem;
+    font-size: 1.4rem;
+    color: var(--desc-color);
+}
+
+/* --------------------------------------------------------------------------
+   5. 编号卷次列表
+   -------------------------------------------------------------------------- */
+.series-entries {
+    list-style: none;
+    margin: 0.8rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--rule-color);
+}
+
+.series-entry {
+    display: grid;
+    grid-template-columns: 4.6rem minmax(0, 1fr) auto;
+    gap: 0 1.2rem;
+    align-items: baseline;
+    padding: 1rem 0.6rem;
+    border-bottom: 1px solid var(--rule-color);
+    transition: background var(--dur) linear;
+}
+
+.series-entry:hover {
+    background: rgba(var(--accent-rgb), 0.04);
+}
+
+.series-entry .se-no {
+    font-family: var(--mono-fonts);
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    /* 没有目录、没有右侧浮动元素时，序号靠左顶格，视觉上就是一条竖列 */
+    text-align: left;
+}
+
+.series-entry .se-main {
+    min-width: 0;
+}
+
+.series-entry .se-title {
+    margin: 0;
+    font-size: 1.9rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.series-entry .se-title a {
+    color: var(--link-color);
+}
+
+.series-entry .se-title a:hover {
+    color: var(--link-color-hover);
+}
+
+#content .series-entry .se-sum {
+    margin: 0.2rem 0 0;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: var(--desc-color);
+}
+
+.series-entry .se-date {
+    font-family: var(--mono-fonts);
+    font-size: 1.4rem;
+    color: var(--time-color);
+    white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   6. 结集间跳转
+   -------------------------------------------------------------------------- */
+.series-more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 2.4rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule-color);
+}
+
+.series-more .timestamp {
+    color: var(--time-color);
+}
+
+/* --------------------------------------------------------------------------
+   7. 窄屏
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+    .series-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .series-hero {
+        gap: 1.2rem;
+        padding: 1.4rem 1.4rem;
+    }
+
+    .series-hero .series-seal {
+        width: 5.2rem;
+        height: 5.2rem;
+        font-size: 2.8rem;
+    }
+
+    .series-hero .title {
+        font-size: 2.4rem;
+    }
+
+    .series-entry {
+        grid-template-columns: 3.6rem minmax(0, 1fr);
+        gap: 0 1rem;
+    }
+
+    /* 日期落到第二行，与标题同一列，序号那一列空着 */
+    .series-entry .se-date {
+        grid-column: 2;
+        margin-top: 0.2rem;
+    }
+}

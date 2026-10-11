@@ -79,19 +79,19 @@ h6:hover > .heading-anchor,
 }
 
 .callout-note {
-    border-left-color: #6b8cae;
+    border-left-color: var(--info-color);
 }
 
 .callout-tip {
-    border-left-color: #4c8c6b;
+    border-left-color: var(--success-color);
 }
 
 .callout-warn {
-    border-left-color: #b98a2e;
+    border-left-color: var(--warning-color);
 }
 
 .callout-danger {
-    border-left-color: #a94442;
+    border-left-color: var(--danger-color);
 }
 
 .callout-quote {
@@ -112,7 +112,7 @@ h6:hover > .heading-anchor,
 }
 
 /* --------------------------------------------------------------------------
-   5. Tables wrapped by JS + the year jump bar
+   5. Optional table wrapper and the year jump bar
    -------------------------------------------------------------------------- */
 .table-wrap {
     margin: 1.6em auto;
@@ -137,10 +137,6 @@ h6:hover > .heading-anchor,
 /* --------------------------------------------------------------------------
    6. Section page listing refinements
    -------------------------------------------------------------------------- */
-.page-header {
-    margin-top: 0;
-}
-
 .page-header .title {
     margin-top: 0;
 }

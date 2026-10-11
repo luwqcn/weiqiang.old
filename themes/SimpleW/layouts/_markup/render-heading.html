@@ -1,14 +1,19 @@
 {{- /*
   _markup/render-heading.html — heading render hook.
 
-  Gives every heading a stable id and an invisible anchor link you can click
-  to copy the URL. Purely additive: the class is styled in components.css,
-  and the visual output is identical to the default renderer.
+  只做一件事：把 goldmark 自动生成的 id 换成 front matter / 属性里指定的那个
+  （内容由 Org 转来，标题写成 `## 标题 {#headline-3}`，要沿用原来的 id）。
+
+  锚点链接 **不在这里加**，交给 partials/func/heading-anchors.html 统一补：
+    · Org 内容不走这个钩子（go-org 自己生成标题），锚点本来就是那个 partial
+      补的；钩子再补一次，两边输出就不一样了。
+    · 更重要的是钩子补的 `#` 会算进 .WordCount —— 同一篇文章在 Org 时代显示
+      「共 255 字」，转成 Markdown 就变成「共 259 字」。partial 是在模板层
+      面上改字符串，不参与字数统计，所以交给它才和原来一致。
 */ -}}
 {{- $level := .Level -}}
 {{- $id := .Anchor -}}
 {{- $text := .Text -}}
 <h{{ $level }} id="{{ $id }}">
-  {{- $text | safeHTML -}}
-  <a class="heading-anchor" href="#{{ $id }}" aria-label="链接到本节">#</a>
+  {{- $text | safeHTML }}
 </h{{ $level }}>

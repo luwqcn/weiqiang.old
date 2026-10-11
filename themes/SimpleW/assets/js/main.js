@@ -63,30 +63,12 @@
 
   paint(currentScheme());
 
-  /* ----------------------------------------------------------------------
-     2. Wrap wide tables so they scroll instead of breaking the column
-     ---------------------------------------------------------------------- */
-  document.querySelectorAll(".post-body > table, #content > table").forEach(function (t) {
-    if (t.parentElement.classList.contains("table-wrap")) return;
-    var wrap = document.createElement("div");
-    wrap.className = "table-wrap";
-    wrap.style.overflowX = "auto";
-    t.parentNode.insertBefore(wrap, t);
-    wrap.appendChild(t);
-  });
+  /* Wide tables and external-link attributes are handled in CSS / render hooks.
+     Keeping those concerns out of JavaScript makes the page usable before this
+     file loads and avoids two implementations drifting apart. */
 
   /* ----------------------------------------------------------------------
-     3. Open external links in the body in a new tab, safely
-     ---------------------------------------------------------------------- */
-  document.querySelectorAll(".post-body a[href^='http']").forEach(function (a) {
-    if (a.hostname && a.hostname !== window.location.hostname) {
-      a.setAttribute("target", "_blank");
-      a.setAttribute("rel", "noopener noreferrer");
-    }
-  });
-
-  /* ----------------------------------------------------------------------
-     4. Article TOC scrollspy
+     2. Article TOC scrollspy
      Keep the right-hand directory focused on the heading nearest the top.
      ---------------------------------------------------------------------- */
   document.querySelectorAll("[data-scrollspy]").forEach(function (toc) {
@@ -196,8 +178,7 @@
     updateActiveHeading();
   });
 
-  /* ----------------------------------------------------------------------
-     5. 目录跟随 —— 交给 CSS：
+  /* TOC positioning stays in CSS:
         .post-toc 是铺满整篇文章高度的绝对定位浮层，里面的 .toc 用
         position:sticky 吸在 --toc-offset（顶栏下方）。滚动时目录到顶
         就不再动，一直跟到文章末尾。脚本不再插手，避免两套定位逻辑
@@ -205,14 +186,21 @@
      ---------------------------------------------------------------------- */
 
   /* ----------------------------------------------------------------------
-     6. Calendar heatmap — clicking a day jumps to that day's first post.
-     Purely an extra: the cells carry no tabindex, and the row list right
-     below already offers the same links in a keyboard-reachable form.
+     3. Calendar heatmap — mouse and keyboard activate the selected day.
+     The compact row list remains the complete text alternative below it.
      ---------------------------------------------------------------------- */
   document.querySelectorAll(".listing-calendar .heat-day[data-href]").forEach(function (cell) {
-    cell.addEventListener("click", function () {
+    function openDay() {
       var href = cell.getAttribute("data-href");
       if (href) window.location.href = href;
+    }
+
+    cell.addEventListener("click", openDay);
+    cell.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter" || ev.key === " ") {
+        ev.preventDefault();
+        openDay();
+      }
     });
   });
 })();

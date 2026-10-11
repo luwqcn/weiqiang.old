@@ -1,8 +1,8 @@
 /* ==========================================================================
    SimpleW — org.css
-   Leftovers from Emacs Org-Mode export: footnotes, TODO/DONE keywords,
-   org-ul / org-ol lists, and the src-block container with its language badge.
-   Delete this file if your site is pure Markdown.
+   Compatibility styles kept for HTML fragments migrated from Org-Mode:
+   footnotes, TODO/DONE keywords, org-ul / org-ol lists and line numbers.
+   New Markdown content should not add more selectors here.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -61,7 +61,7 @@
 }
 
 .priority {
-    color: orange;
+    color: var(--warning-color);
     font-family: var(--mono-fonts);
 }
 
@@ -88,17 +88,8 @@ ol.org-ol li {
     font-size: 1.8rem;
 }
 
-#zhijiao ol.org-ol {
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-}
-
-#zhijiao ol.org-ol li {
-    display: inline-flex;
-    margin-right: 1.5em;
-    width: 45%;
-}
-
+/* 纯 Markdown 站点只保留迁移正文仍会用到的脚注、任务状态、列表和行号。
+   旧 #zhijiao 专用排版与 .org-src-container 语言角标已经没有对应标记。 */
 ol.linenums {
     color: var(--linenum-color);
     margin: 0 0 0 40px;
@@ -109,94 +100,18 @@ ol.linenums li {
     padding-left: 12px;
 }
 
-/* Org src blocks with the language badge in the corner */
-.org-src-container {
-    border: 1px solid var(--rule-strong);
-    box-shadow: 3px 3px 3px var(--rule-color);
-    font-family: var(--mono-fonts);
-    font-size: 1em;
-    margin: 1em auto;
-    padding: 0.1em 0.5em;
-    position: relative;
-    border-radius: var(--radius-sm);
-}
+/* ---------------------------------------------------------------------------
+   表格：让 Markdown 的表头和 Org 时代的表格看起来一样
 
-.org-src-container > pre {
-    overflow: auto;
-}
+   go-org 输出表格时，Org 的 |---+---| 分隔线会把每一行切成独立的 <tbody>，
+   整张表没有表头概念，全是 <td>。Markdown 表格则是 <thead><th> —— 浏览器
+   默认给 <th> 加粗居中，同一张表迁移前后就长得不一样了。
 
-.org-src-container > pre:before {
-    display: block;
-    position: absolute;
-    background-color: var(--rule-strong);
-    top: 0;
-    right: 0;
-    padding: 0 0.5em;
-    border-bottom-left-radius: 8px;
-    border: 0;
-    color: #fff;
-    font-size: 0.8em;
+   这里让正文表格的 <th> 沿用 <td> 的观感。想要表头加粗居中的默认样式，
+   把这段删掉即可。
+   --------------------------------------------------------------------------- */
+#content table th,
+.markdown table th {
+  font-weight: inherit;
+  text-align: inherit;
 }
-
-/* Language badge labels. Extend freely — add
-   `.org-src-container > pre.src-<lang>:before { content: '<label>'; }` */
-.org-src-container > pre.src-sh:before { content: "sh"; }
-.org-src-container > pre.src-bash:before { content: "bash"; }
-.org-src-container > pre.src-shell:before { content: "shell"; }
-.org-src-container > pre.src-zsh:before { content: "zsh"; }
-.org-src-container > pre.src-emacs-lisp:before { content: "Emacs Lisp"; }
-.org-src-container > pre.src-lisp:before { content: "Lisp"; }
-.org-src-container > pre.src-scheme:before { content: "Scheme"; }
-.org-src-container > pre.src-clojure:before { content: "Clojure"; }
-.org-src-container > pre.src-org:before { content: "Org"; }
-.org-src-container > pre.src-python:before { content: "Python"; }
-.org-src-container > pre.src-ipython:before { content: "iPython"; }
-.org-src-container > pre.src-R:before { content: "R"; }
-.org-src-container > pre.src-julia:before { content: "Julia"; }
-.org-src-container > pre.src-perl:before { content: "Perl"; }
-.org-src-container > pre.src-ruby:before { content: "Ruby"; }
-.org-src-container > pre.src-php:before { content: "PHP"; }
-.org-src-container > pre.src-java:before { content: "Java"; }
-.org-src-container > pre.src-kotlin:before { content: "Kotlin"; }
-.org-src-container > pre.src-scala:before { content: "Scala"; }
-.org-src-container > pre.src-c:before,
-.org-src-container > pre.src-C:before { content: "C"; }
-.org-src-container > pre.src-cpp:before { content: "C++"; }
-.org-src-container > pre.src-csharp:before { content: "C#"; }
-.org-src-container > pre.src-rust:before { content: "Rust"; }
-.org-src-container > pre.src-go:before { content: "Go"; }
-.org-src-container > pre.src-js:before,
-.org-src-container > pre.src-javascript:before { content: "Javascript"; }
-.org-src-container > pre.src-typescript:before { content: "Typescript"; }
-.org-src-container > pre.src-html:before,
-.org-src-container > pre.src-browser:before { content: "HTML"; }
-.org-src-container > pre.src-css:before { content: "CSS"; }
-.org-src-container > pre.src-scss:before { content: "SCSS"; }
-.org-src-container > pre.src-sass:before { content: "Sass"; }
-.org-src-container > pre.src-less:before { content: "Less"; }
-.org-src-container > pre.src-json:before { content: "JSON"; }
-.org-src-container > pre.src-yaml:before { content: "YAML"; }
-.org-src-container > pre.src-toml:before { content: "TOML"; }
-.org-src-container > pre.src-xml:before { content: "XML"; }
-.org-src-container > pre.src-sql:before { content: "SQL"; }
-.org-src-container > pre.src-sqlite:before { content: "SQLite"; }
-.org-src-container > pre.src-mysql:before { content: "MySQL"; }
-.org-src-container > pre.src-makefile:before { content: "Make"; }
-.org-src-container > pre.src-docker:before { content: "Dockerfile"; }
-.org-src-container > pre.src-nginx:before { content: "nginx"; }
-.org-src-container > pre.src-latex:before { content: "LaTeX"; }
-.org-src-container > pre.src-markdown:before { content: "Markdown"; }
-.org-src-container > pre.src-matlab:before { content: "Matlab"; }
-.org-src-container > pre.src-haskell:before { content: "Haskell"; }
-.org-src-container > pre.src-swift:before { content: "Swift"; }
-.org-src-container > pre.src-dart:before { content: "Dart"; }
-.org-src-container > pre.src-elixir:before { content: "Elixir"; }
-.org-src-container > pre.src-erlang:before { content: "Erlang"; }
-.org-src-container > pre.src-nix:before { content: "Nix"; }
-.org-src-container > pre.src-awk:before { content: "Awk"; }
-.org-src-container > pre.src-sed:before { content: "Sed"; }
-.org-src-container > pre.src-dot:before { content: "Dot"; }
-.org-src-container > pre.src-plantuml:before { content: "PlantUML"; }
-.org-src-container > pre.src-gnuplot:before { content: "Gnuplot"; }
-.org-src-container > pre.src-ditaa:before { content: "Ditaa"; }
-.org-src-container > pre.src-text:before { content: "text"; }

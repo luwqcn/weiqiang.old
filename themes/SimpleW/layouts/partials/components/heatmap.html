@@ -84,7 +84,8 @@
   <rect class="heat-day heat-l{{ $lvl }}"
         x="{{ mul $col $pitch }}" y="{{ mul $row $pitch }}"
         width="{{ $cell }}" height="{{ $cell }}" rx="{{ $rx }}"
-        aria-label="{{ .Key }}：{{ $n }} {{ $unit }}"
+        aria-label="{{ .Key }}：{{ $n }} {{ $unit }}，打开当天首篇文章"
+        role="link" tabindex="0"
         data-href="{{ (index .Pages.ByDate.Reverse 0).RelPermalink }}"><title>{{ $tip }}</title></rect>
   {{- end }}
 </svg>

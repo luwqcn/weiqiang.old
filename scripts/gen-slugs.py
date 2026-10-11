@@ -35,11 +35,12 @@ except ImportError:  # pragma: no cover
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "content")
 CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "hugo.toml")
 
-# 兜底范围：只有按日期命名的网志类栏目才需要处理（/zh/ 网志、/zj/ 支教）。
+# 兜底范围：只有按日期命名的网志类栏目才需要处理（/zh/ 网志）。
 # /xy/ 习艺、/bc/ 本草、/yue/ 乐记 是导览/专题型内容，文件名本就没有日期，
 # 保持原地址更合适。正常情况下不用改这里 —— 脚本会读 hugo.toml 的
 # [permalinks] 自动决定范围，以后给新栏目加 permalinks 会自己跟上。
-FALLBACK_SECTIONS = ("zh", "zj")
+# （/zj/ 支教已并入 /zh/，见 content/series/zj/_index.md）
+FALLBACK_SECTIONS = ("zh",)
 
 
 def sections_from_config():

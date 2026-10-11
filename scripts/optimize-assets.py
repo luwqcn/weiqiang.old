@@ -234,14 +234,18 @@ def rewrite_html(path: Path, seen: dict) -> tuple[int, int]:
                 attrs["width"], attrs["height"] = str(size[0]), str(size[1])
 
         # ---- 懒加载 / 异步解码 ----
-        if "loading" not in attrs:
-            attrs["loading"] = "lazy" if not first[0] else "eager"
+        # 首张图通常参与 LCP：即使模板先写了 loading="lazy"，生产构建也要
+        # 覆盖成 eager；其余图片默认懒加载。
+        attrs["loading"] = "eager" if first[0] else attrs.get("loading", "lazy")
         if "decoding" not in attrs:
             attrs["decoding"] = "async"
-        if first[0] and "fetchpriority" not in attrs:
+        if first[0]:
             attrs["fetchpriority"] = "high"
 
         # ---- Org 导出会把路径写进 alt / title，清掉 ----
+        # 旧文没有替代文字时显式写空 alt，至少避免读屏器念出文件名路径。
+        if "alt" not in attrs:
+            attrs["alt"] = ""
         if attrs.get("alt", "").lstrip("/") == src.lstrip("/"):
             attrs["alt"] = ""
         if attrs.get("title") == src:

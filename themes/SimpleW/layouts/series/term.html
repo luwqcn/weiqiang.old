@@ -1,0 +1,60 @@
+{{- /*
+  series/term.html — 单个结集页，如 /series/ws/
+
+  结构与栏目页（partials/listing.html）不同：结集是「一本」，所以先给一张
+  带封面字和状态徽章的头卡，下面按时间先后编号列出全部篇目（01 起）。
+
+  结集页的开关写在 content/series/<key>/_index.md 的 front matter 里：
+    title / description / status / glyph / order / style / reverse
+*/ -}}
+{{ define "main" }}
+{{- $m := partial "func/series-meta.html" (dict "key" .Data.Term "page" .) -}}
+{{- $pages := .Pages -}}
+{{- $reverse := $m.reverse -}}
+{{- $badge := "badge-arch" -}}
+{{- with $m.status }}
+  {{- if or (in . "进行") (in . "更新") (in . "连载") }}{{ $badge = "badge-live" }}{{ end -}}
+{{- end -}}
+
+<article class="series-page">
+  <nav class="series-crumb" aria-label="结集">
+    <a href="{{ "/series/" | relURL }}">结集</a><span class="sep" aria-hidden="true">/</span><span>{{ $m.name }}</span>
+  </nav>
+
+  <header class="series-hero">
+    <span class="series-seal" aria-hidden="true">{{ $m.glyph }}</span>
+    <div class="series-hero-text">
+      <h1 class="title">{{ $m.name }}</h1>
+      {{- with $m.description }}<p class="series-desc">{{ . }}</p>{{ end -}}
+      <p class="series-stats">
+        <span class="ss-item">{{ len $pages }} {{ i18n "postsUnit" | default "篇" }}</span>
+        {{- with $m.span }}<span class="ss-item">{{ . }}</span>{{ end -}}
+        {{- with $m.status }}<span class="series-badge {{ $badge }}">{{ . }}</span>{{ end -}}
+      </p>
+    </div>
+  </header>
+
+  {{- with .Content }}<div class="section-content">{{ . }}</div>{{ end -}}
+
+  {{- if $pages }}
+  <p class="series-hint">{{ if $reverse }}按时间倒序排列，最新一篇在最前面。{{ else }}按时间先后编排，序号 01 为最早一篇。{{ end }}</p>
+  {{- if eq $m.style "series" -}}
+    {{- partial "components/listing-series.html" (dict "pages" $pages "reverse" $reverse) -}}
+  {{- else -}}
+    {{- partial "entry-list.html" (dict "pages" $pages "style" $m.style "group" true) -}}
+  {{- end -}}
+  {{- end -}}
+
+  {{- /* 其它结集：从这本跳到那本 */ -}}
+  {{- $others := slice -}}
+  {{- range partial "func/series-list.html" site -}}
+    {{- if ne .key $m.key }}{{ $others = $others | append . }}{{ end -}}
+  {{- end -}}
+  {{- with $others }}
+  <nav class="series-more" aria-label="其他结集">
+    <span class="timestamp">其他结集：</span>
+    {{- range . }}<a class="chip" href="{{ .url }}">{{ .name }}<span class="chip-count">{{ .count }}</span></a>{{ end -}}
+  </nav>
+  {{- end -}}
+</article>
+{{ end }}

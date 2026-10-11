@@ -10,6 +10,6 @@
 */ -}}
 {{- $b := .block -}}
 <section class="home-block block-hero">
-{{- with $b.title }}<div class="hero-title">{{ . | markdownify }}</div>{{ end -}}
+{{- with $b.title }}<h1 class="hero-title">{{ . | markdownify }}</h1>{{ end -}}
 {{- with $b.content }}<div class="hero-body">{{ . | markdownify }}</div>{{ end -}}
 </section>

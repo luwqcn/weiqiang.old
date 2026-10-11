@@ -48,7 +48,7 @@
 {{- /*
   再给逐页一个开关（Markdown 的 _index.md 可直接写 `showToc: true`）。
   Org 内容里自定义的 `#+XXX:` 并不会进 .Params（实测 go-org 只认
-  author/date/description/filetags/keywords/options 等固定几个键），
+  author/date/description/tags/options 等固定几个键），
   所以 Org 栏目页请用 hugo.toml 里 [[params.sections]] 的 `toc = true`。
   统一用 printf "%v" 归一化，免得字符串 "false" 被当成真值。
 */ -}}

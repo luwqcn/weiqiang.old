@@ -1,11 +1,11 @@
 +++
 title = "网站从 orgmode 导出迁移至 hugo 驱动"
 author = ["LOWEJAN"]
+description = "利用国庆假期把 orgmode 站点迁移至 hugo 驱动，简单记录。"
 date = 2026-10-07
-lastmod = 2026-10-07T21:47:38+08:00
+lastmod = 2026-10-11T18:33:08+08:00
 slug = "orgmode-to-hugo"
 tags = ["hugo", "orgmode"]
-keywords = ["hugo", "orgmode"]
 categories = ["站务"]
 draft = false
 +++
@@ -15,7 +15,7 @@ draft = false
 迁移的想法已经有点久了，但因为没有什么技术能力，一直没有动手。现在不一样了，智能体能力已经足够，所以用 workbuddy 做了整站迁移。
 
 
-## 为什么要迁移 {#为什么要迁移}
+## <span class="section-num">1</span> 为什么要迁移 {#为什么要迁移}
 
 迁移有两个原因：
 
@@ -24,7 +24,7 @@ draft = false
 二是 hugo 生态足够丰富，看过不少用 hugo 驱动的个人博客，一直有使用的想法，而且使用起来相对方便，自己设计或者使用别人的主题即可。
 
 
-## 迁移过程 {#迁移过程}
+## <span class="section-num">2</span> 迁移过程 {#迁移过程}
 
 整个过程都通过 workbuddy 完成，把自己的需求提给 workbuddy 后，按站点目前的风格制作了一个 hugo 主题。因为 hugo 对 orgmode 文件也有支持，所以让 workbuddy 稍微作了调整，预览下来基本就可以了。
 
@@ -40,7 +40,7 @@ draft = false
 其他还有一些风格上的微调不表。
 
 
-## 遗留的问题 {#遗留的问题}
+## <span class="section-num">3</span> 遗留的问题 {#遗留的问题}
 
 因为之前部署的 artalk 没有及时做备份，评论还没能迁移过来，这是最主要的问题。
 

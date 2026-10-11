@@ -218,13 +218,15 @@ article.post-entry {
     border-radius: var(--radius-md);
     padding: 5px 10px;
     background-color: var(--card-bg);
+    box-shadow: var(--shadow-sm);
     transition: background-color var(--dur) var(--ease),
-        border-color var(--dur) var(--ease);
+        border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
 article.post-entry:hover {
     background-color: var(--card-bg-hover);
     border-color: var(--rule-strong);
+    box-shadow: var(--shadow-md);
 }
 
 h2.article-title {
@@ -592,11 +594,12 @@ span.pageright {
     padding: 1.2rem 1.4rem;
     background: var(--card-bg);
     border-bottom: 1px solid var(--rule-color);
-    /* 只做颜色过渡，不做位移 —— 鼠标移上去卡片会「跳」一下，很闹。
-       注意别写成一条多值 transition：Hugo 的 CSS 压缩器会吃掉相邻
-       var() 之间的空格（var(--dur) var(--ease) → var(--dur)var(--ease)）。 */
-    transition: border-color var(--dur) linear;
-    transition: box-shadow var(--dur) linear;
+    box-shadow: var(--shadow-sm);
+    /* 只过渡颜色与阴影，不做位移，卡片保持安静。分开写属性，避免压缩器
+       把多个 transition 简写拼坏。 */
+    transition-property: border-color, box-shadow, background-color;
+    transition-duration: var(--dur);
+    transition-timing-function: var(--ease);
 }
 
 .section-card:hover,

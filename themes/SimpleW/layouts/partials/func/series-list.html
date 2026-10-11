@@ -1,0 +1,31 @@
+{{- /*
+  func/series-list.html — 全站结集清单。
+
+  用法：{{ $list := partial "func/series-list.html" site }}
+
+  来源是 site.Taxonomies.series（即文章 front matter 里出现过的
+  series = "…"），加上 hugo.toml [params.series] 里那些还没有对应文章的条目
+  （先占个位，等文章写进来就自动接上）。按 order、再按 name 排序。
+
+  每项的结构见 func/series-meta.html。
+*/ -}}
+{{- $cfg := site.Params.series | default dict -}}
+{{- $out := slice -}}
+{{- $seen := slice -}}
+
+{{- $terms := index site.Taxonomies "series" -}}
+{{- with $terms -}}
+  {{- range $k, $tp := . -}}
+    {{- $out = $out | append (partial "func/series-meta.html" (dict "key" $k "page" $tp.Page)) -}}
+    {{- $seen = $seen | append $k -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $cfg.items | default slice -}}
+  {{- $k := .key | default "" -}}
+  {{- if and $k (not (in $seen $k)) -}}
+    {{- $out = $out | append (partial "func/series-meta.html" (dict "key" $k)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return (sort (sort $out "name") "order") -}}

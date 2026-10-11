@@ -78,6 +78,13 @@
         {{- range $i, $t := $categories }}{{ if $i }}<span aria-hidden="true"> </span>{{ end }}<a href="{{ printf "%s%s/" ("categories/" | relURL) ($t | urlize) }}">{{ $t }}</a>{{ end -}}
         {{- $sep = true -}}
       {{- end -}}
+    {{- /* 结集：文章 front matter 写了 series = "ws" 才显示，链到 /series/ws/ */ -}}
+    {{- else if eq . "series" -}}
+      {{- with $.GetTerms "series" -}}
+        {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
+        {{- range $i, $t := . }}{{ if $i }}<span aria-hidden="true"> </span>{{ end }}<a class="meta-series" href="{{ $t.Page.RelPermalink }}">{{ $t.Page.Title }}</a>{{ end -}}
+        {{- $sep = true -}}
+      {{- end -}}
     {{- else if eq . "readingTime" -}}
       {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
       {{- /* 按中文阅读速度估算，而不是 Hugo 默认的英文 200 词/分钟 */ -}}
@@ -97,7 +104,7 @@
 
 {{- with .Params.cover }}
 <figure class="post-cover">
-  <img src="{{ . | relURL }}" alt="{{ $.Params.coverAlt | default $.Title }}" loading="lazy">
+  <img src="{{ . | relURL }}" alt="{{ $.Params.coverAlt | default $.Title }}" loading="eager" decoding="async" fetchpriority="high">
   {{- with $.Params.coverCaption }}<figcaption>{{ . }}</figcaption>{{ end -}}
 </figure>
 {{- end }}
@@ -108,6 +115,8 @@
   所以这里用正则补一遍。RE2 不支持反向引用，只能按级别各来一次。
 */ -}}
 {{- $content := .Content -}}
+{{- /* 迁移内容里若残留手写章节号，统一移除，避免与主题的形状/自动编号重复。 */ -}}
+{{- $content = replaceRE `<span class="section-num">[^<]*</span>\s*` "" $content -}}
 {{- /* 脚注 / 注释这类「容器标题」不参与编号，也不加分层标记 */ -}}
 {{- $content = partial "func/heading-nonumber.html" $content -}}
 {{- if $tocHTML -}}
@@ -126,18 +135,15 @@
 
 {{- /*
   标签单列一行，放在正文之后、上一篇/下一篇之上。
-  来源依次为：filetags（org 的 #+FILETAGS）→ keywords（org 的 #+KEYWORDS）
-  → tags（front matter）。没有任何一项时不输出，避免空行。
+  来源就是 front matter 的 `tags`（Hugo 惯例分类法，对外 /tags/<词>/）。
+  Org 时代的 #+FILETAGS 与 #+KEYWORDS 已经在迁移时合并进 tags
+  （scripts/org-to-md.py），所以这里只有一个来源。没有时不输出，避免空行。
 
-  ⚠️ Markdown 的 `tags` 要先经 scripts/sync-tags.py 并进 `keywords` 才有
-  链接：本站注册的分类法是 keywords（标签地址统一 /tags/<词>/），`tags`
-  没注册，直接 .GetTerms 拿不到东西。不能图省事去注册 `tag = "tags"`：
-  实测那样 tags 的列表页会顶掉 /tags/，同名词条页还会互相覆盖（Org 里
-  keyword 是 orgmode 的旧文章会整批从 /tags/orgmode/ 消失）。
-  filetags 排在最前：它是作者显式打的标签，比 #+KEYWORDS 里的描述性词更准。
+  ⚠️ 别再注册 keywords / filetags 两套分类法：实测那样它们的列表页会互相
+  顶掉 /tags/，同名词条页还会互相覆盖。一套 tags 就够。
 
-  独立页面（关于 / 收藏 / SiteLog）不显示标签：它们的 #+KEYWORDS 是站点级
-  描述词，不是文章标签，点进去也没有对应归档。单个独立页面想开，在头信息里
+  独立页面（关于 / 收藏 / SiteLog）不显示标签：它们的标签是站点级描述词，
+  不是文章标签，点进去也没有对应归档。单个独立页面想开，在头信息里
   写 `isPost: true` 即可。
 
   链接一律走 .GetTerms，而不是自己拿 urlize 拼 URL —— 拼出来的路径和 Hugo
@@ -152,20 +158,13 @@
   strings.Trim cutset string，写反了会得到「，,、;；」这种结果。
 */ -}}
 {{- if and $showTags $isPost -}}
-  {{- $taxo := "" -}}
-  {{- if .Params.filetags }}{{ $taxo = "filetags" -}}
-  {{- else if .Params.keywords }}{{ $taxo = "keywords" -}}
-  {{- else if .Params.tags }}{{ $taxo = "tags" -}}
-  {{- end -}}
   {{- $terms := slice -}}
-  {{- with $taxo }}{{ $terms = $.GetTerms . }}{{ end -}}
+  {{- with .Params.tags }}{{ $terms = $.GetTerms "tags" }}{{ end -}}
   {{- $plain := slice -}}
-  {{- if not $terms }}{{ $plain = .Params.tags | default slice }}{{ end -}}
+  {{- if and .Params.tags (not $terms) }}{{ $plain = .Params.tags }}{{ end -}}
   {{- /*
-    兜底：Markdown 习惯写 `tags`，而本站注册的标签分类法叫 keywords。
-    没跑 scripts/sync-tags.py（比如直接 hugo server 预览）时，tags 拿不到
-    词条、链接也还没生成，这时至少把词原样列出来（.post-tags span，样式
-    与链接版一致），别让标签整个消失。跑过脚本就有正常的链接版。
+    兜底：.GetTerms 拿不到词条时（比如刚写完还没构建过），至少把词原样
+    列出来（.post-tags span，样式与链接版一致），别让标签整个消失。
   */ -}}
   {{- if or $terms $plain }}
 <div class="post-tags" aria-label="{{ i18n "tags" | default "标签" }}">
@@ -174,6 +173,9 @@
         {{- $name := strings.TrimSpace (printf "%v" (.Page.Data.Term | default .LinkTitle)) -}}
         {{- $name = strings.TrimRight "，,、;；" $name -}}
         {{- $name = strings.TrimLeft "，,、;；" $name -}}
+        {{- /* 英文标签首字母大写，跟标签页标题（Hugo 的 LinkTitle）保持一致：
+               源文件里写的是 emacs，胶囊显示 #Emacs，点进去标题也是 Emacs。 */ -}}
+        {{- if findRE "^[a-z]" $name }}{{ $name = strings.FirstUpper $name }}{{ end -}}
         {{- with $name -}}
 <a href="{{ $href }}" rel="tag">#{{ $name }}</a>
         {{- end -}}
@@ -182,6 +184,7 @@
         {{- $name := strings.TrimSpace (printf "%v" .) -}}
         {{- $name = strings.TrimRight "，,、;；" $name -}}
         {{- $name = strings.TrimLeft "，,、;；" $name -}}
+        {{- if findRE "^[a-z]" $name }}{{ $name = strings.FirstUpper $name }}{{ end -}}
         {{- with $name -}}
 <span rel="tag">#{{ $name }}</span>
         {{- end -}}

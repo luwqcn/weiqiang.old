@@ -24,45 +24,87 @@
 {{- if not $desc }}{{ $desc = site.Params.description | default "" }}{{ end -}}
 {{- $desc = $desc | plainify | htmlUnescape | truncate 200 -}}
 
-{{- /* ---------- keywords ---------- */ -}}
+{{- /* ---------- keywords（SEO meta）----------
+  取自 front matter 的 tags，没有就用 hugo.toml 里站点级的 params.keywords。
+*/ -}}
 {{- $keywords := slice -}}
-{{- with .Params.keywords }}{{ $keywords = . }}{{ end -}}
-{{- if not $keywords }}{{ with .Params.tags }}{{ $keywords = . }}{{ end }}{{ end -}}
+{{- with .Params.tags }}{{ $keywords = . }}{{ end -}}
 {{- if not $keywords }}{{ with site.Params.keywords }}{{ $keywords = . }}{{ end }}{{ end -}}
 
 {{- /*
   ---------- CSS bundles ----------
 
-  拆成两份，按需加载：
+  样式按职责拆成可缓存的小包：
 
-    simplew.bundle.css   版面与组件，每个页面都要
-    simplew.syntax.css   代码高亮（syntax.css + chroma.css，约 20 KB）
+    simplew.core.css     所有页面共用的排版、组件与兼容层
+    simplew.node.css     列表页按实际风格加载 calendar / cover 样式
+    simplew.series.css   首页与结集页才加载
+    simplew.syntax.css   正文确有代码块时才加载
 
-  语法高亮只在正文里真有代码块时才给 —— 本站六百多个页面里用到的只有个
-  位数，白送 20 KB 不划算。判断见 partials/func/has-code.html。
-  万一漏判，最坏也只是代码没配色（<pre> 的基础样式在 base.css 里），
-  不会把版面弄坏。
+  ⚠️ 每个包的 Concat 目标名必须和内容一一对应。Hugo 的资源缓存是按目标名
+  记的：如果两个页面用同一个目标名却拼了不同的文件，先生成的那份会被后
+  面的页面直接复用，多拼的样式就凭空消失（评论样式这么丢过一次）。
+  所以「按需」的判断不能塞进核心包的拼装里，得单独出一个包。
 */ -}}
-{{- $sheetNames := slice
+{{- $coreNames := slice
     "css/base.css"
     "css/layout.css"
     "css/components.css"
-    "css/cover.css"
     "css/org.css"
-    "css/listing.css"
     "css/extras.css"
     "css/utils.css" -}}
-{{- $sheets := slice -}}
-{{- range $sheetNames -}}
-  {{- with resources.Get . }}{{ $sheets = $sheets | append . }}{{ end -}}
+{{- $coreSheets := slice -}}
+{{- range $coreNames -}}
+  {{- with resources.Get . }}{{ $coreSheets = $coreSheets | append . }}{{ end -}}
 {{- end -}}
-{{- /* 评论引擎的样式修正，用了哪家才加载哪家的 */ -}}
-{{- if eq (site.Params.comments.provider | default "none") "twikoo" -}}
-  {{- with resources.Get "css/twikoo.css" }}{{ $sheets = $sheets | append . }}{{ end -}}
+{{- with resources.Get "css/custom.css" }}{{ $coreSheets = $coreSheets | append . }}{{ end -}}
+{{- /*
+  核心包对所有页面必须完全一致（否则跨页缓存全废），凡是「有的页面要、
+  有的页面不要」的样式一律单独出包。
+*/ -}}
+{{- $coreCSS := $coreSheets | resources.Concat "css/simplew.core.css" | minify | fingerprint -}}
+
+{{- /*
+  评论样式单独一个包：只有真的会渲染评论框的页面才加载。
+  判断跟 page.html 里保持同一套（全局 → 按栏目 → 单篇，后写的赢），
+  免得 CSS 加载了评论却没显示、或者反过来。
+*/ -}}
+{{- $commentsCSS := "" -}}
+{{- if and .IsPage (eq (site.Params.comments.provider | default "none") "twikoo") -}}
+  {{- $showComments := partial "func/flag.html" (dict
+        "page" .
+        "keys" (slice "comments" "Comments")
+        "default" (ne .Section "")
+        "group" "post") -}}
+  {{- if $showComments -}}
+    {{- with resources.Get "css/twikoo.css" -}}
+      {{- $commentsCSS = . | minify | fingerprint -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
-{{- /* Drop in a site-level assets/css/custom.css to append your own rules. */ -}}
-{{- with resources.Get "css/custom.css" }}{{ $sheets = $sheets | append . }}{{ end -}}
-{{- $css := $sheets | resources.Concat "css/simplew.bundle.css" | minify | fingerprint -}}
+
+{{- $nodeSheets := slice -}}
+{{- $nodeStyle := "node" -}}
+{{- if and (not .IsPage) (not .IsHome) (ne .Data.Plural "series") -}}
+  {{- $nodeMeta := partial "func/section-meta.html" . -}}
+  {{- $nodeStyle = $nodeMeta.style | default "grouped" -}}
+  {{- if eq $nodeStyle "calendar" -}}
+    {{- with resources.Get "css/listing.css" }}{{ $nodeSheets = $nodeSheets | append . }}{{ end -}}
+  {{- else if eq $nodeStyle "cover" -}}
+    {{- with resources.Get "css/cover.css" }}{{ $nodeSheets = $nodeSheets | append . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $nodeCSS := "" -}}
+{{- with $nodeSheets -}}
+  {{- $nodeCSS = . | resources.Concat (printf "css/simplew.%s.css" $nodeStyle) | minify | fingerprint -}}
+{{- end -}}
+
+{{- $seriesCSS := "" -}}
+{{- if or .IsHome (eq .Section "series") (eq .Data.Plural "series") -}}
+  {{- with resources.Get "css/series.css" -}}
+    {{- $seriesCSS = . | minify | fingerprint -}}
+  {{- end -}}
+{{- end -}}
 
 {{- $syntax := "" -}}
 {{- if partial "func/has-code.html" . -}}
@@ -77,6 +119,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="{{ site.Params.themeColor | default "#ab4f49" }}">
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $desc }}">
 {{- with $keywords }}
@@ -105,7 +148,7 @@
 {{- /* ---------- colour scheme: resolved before first paint ---------- */ -}}
 <script>
 (function () {
-  var scheme = {{ $scheme | jsonify }};
+  var scheme = {{ $scheme | jsonify | safeJS }};
   var root = document.documentElement;
   try {
     var saved = window.localStorage.getItem("simplew-scheme");
@@ -118,9 +161,18 @@
 })();
 </script>
 
-<link rel="stylesheet" href="{{ $css.RelPermalink }}">
+<link rel="stylesheet" href="{{ $coreCSS.RelPermalink }}" integrity="{{ $coreCSS.Data.Integrity }}">
+{{- with $commentsCSS }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{- end -}}
+{{- with $nodeCSS }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{- end -}}
+{{- with $seriesCSS }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{- end -}}
 {{- with $syntax }}
-<link rel="stylesheet" href="{{ .RelPermalink }}">
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
 {{- end -}}
 
 {{- /*

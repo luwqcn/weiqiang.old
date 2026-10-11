@@ -6,6 +6,11 @@
     params.toc.open       bool   starts expanded (default true)
     params.toc.title      string heading label
     markup.tableOfContents.startLevel / endLevel  which headings to include
+
+  只在正文里真有小标题时才出现。Hugo 的 .TableOfContents 对「一个标题都没有
+  的页面」不是返回空字符串，而是返回一个空的 <nav id=TableOfContents></nav>
+  壳子 —— 光判 `and $enabled .TableOfContents` 会渲染出一个写着「文章目录」
+  的空框。所以这里按「壳子里有没有链接」来判断。
 */ -}}
 {{- $t := site.Params.toc | default dict -}}
 {{- $enabled := true -}}
@@ -22,11 +27,25 @@
   {{- if isset $pc "open" }}{{ $open = $pc.open }}{{ end -}}
 {{- end -}}
 
-{{- if and $enabled .TableOfContents -}}
-<aside class="post-toc" aria-label="{{ $t.title | default (i18n "toc" | default "目录") }}" data-scrollspy>
+{{- $toc := .TableOfContents -}}
+{{- /*
+  ox-hugo 导出时给标题塞了 <span class="section-num">1</span> 这种手写章节号，
+  目录里会跟着出现，跟主题自己的层级标记重复，这里统一摘掉。
+
+  ⚠️ replaceRE 返回的是普通字符串，不再是 template.HTML —— 直接打印会被
+  HTML 转义，页面上就会看到一坨 &lt;nav id="TableOfContents"> 的纯文本，
+  样式全丢。所以下面两处用到 $toc 的地方都必须过 safeHTML。
+*/ -}}
+{{- $toc = replaceRE `<span class="section-num">[^<]*</span>\s*` "" $toc -}}
+{{- $title := $t.title | default (i18n "toc" | default "文章目录") -}}
+{{- $items := 0 -}}
+{{- with $toc }}{{ $items = len (findRE `<a\s` .) }}{{ end -}}
+
+{{- if and $enabled (gt $items 0) -}}
+<aside class="post-toc" aria-label="{{ $title }}" data-scrollspy>
   <details class="toc"{{ if $open }} open{{ end }}>
-    <summary>{{ $t.title | default (i18n "toc" | default "目录") }}</summary>
-    {{ .TableOfContents }}
+    <summary>{{ $title }}</summary>
+    {{ $toc | safeHTML }}
   </details>
 </aside>
 {{- end -}}

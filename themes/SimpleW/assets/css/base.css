@@ -32,33 +32,37 @@
        改配色 = 改这里。下面「语义 token」只是把名字指到某个字面值上，
        深浅两套共用一个字面值表，不会出现「改了浅色忘了深色」的漏改。
        ------------------------------------------------------------------ */
-    /* light（默认，与原站逐像素一致） */
-    --c-bg: #fcfcfd;
-    --c-bg-top: #f2f4f6;
-    --c-main: #333;
-    --c-bq: #444;
-    --c-link: #000;
-    --c-link-hover: #ab4f49;
-    --c-quote: #f5f7ff;
-    --c-time: #666;
-    --c-desc: #999;
-    --c-rule: #eee;
-    --c-rule-strong: #ccc;
-    --c-card: #fff;
-    --c-card-hover: #eee;
-    --c-accent: #ab4f49;
-    --c-accent-soft: #cde;
-    --c-selection: #f6dedc;
-    --c-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --c-shadow-md: 0 2px 12px rgba(0, 0, 0, 0.06);
+    /* light：偏暖的纸张底色，正文仍保持高对比度 */
+    --c-bg: #fbfaf8;
+    --c-bg-top: #f4f1ed;
+    --c-main: #302d2a;
+    --c-bq: #514c47;
+    --c-link: #292724;
+    --c-link-hover: #9f4942;
+    --c-quote: #f5f1ec;
+    --c-time: #716b65;
+    --c-desc: #8d8680;
+    --c-rule: #e9e3dc;
+    --c-rule-strong: #d3cbc1;
+    --c-card: #fffefa;
+    --c-card-hover: #f6f1eb;
+    --c-accent: #9f4942;
+    --c-accent-soft: #efd9d5;
+    --c-selection: #f2d8d4;
+    --c-shadow-sm: 0 1px 3px rgba(61, 43, 31, 0.06);
+    --c-shadow-md: 0 8px 24px rgba(61, 43, 31, 0.09);
 
     /* 强调色的三种变体：渐变深端、透明底（行高亮）、行号字色 */
-    --c-accent-deep: #6f3330;
-    --c-accent-rgb: 171, 79, 73;
+    --c-accent-deep: #6f302c;
+    --c-accent-rgb: 159, 73, 66;
     --c-linenum: #4c666c;
-    /* Org 的 TODO / DONE 关键字：白字配底，深浅色下都不变 */
+    /* 状态色也集中在 token 层，callout / 结集徽章不再各写一套色值 */
     --c-todo-bg: #c0392b;
     --c-done-bg: #2e7d32;
+    --c-info: #5f7f9f;
+    --c-success: #477a56;
+    --c-warning: #a87320;
+    --c-danger: #a94442;
 
     /* dark */
     --c-bg-dark: #16181c;
@@ -83,6 +87,10 @@
     --c-accent-deep-dark: #8f5b57;
     --c-accent-rgb-dark: 232, 140, 133;
     --c-linenum-dark: #93a8ae;
+    --c-info-dark: #8eacc8;
+    --c-success-dark: #7cc47f;
+    --c-warning-dark: #d6aa59;
+    --c-danger-dark: #e08883;
 
     /* ------------------------------------------------------------------
        Semantic tokens — what the rest of the CSS actually uses.
@@ -112,6 +120,10 @@
     --linenum-color: var(--c-linenum);
     --todo-bg: var(--c-todo-bg);
     --done-bg: var(--c-done-bg);
+    --info-color: var(--c-info);
+    --success-color: var(--c-success);
+    --warning-color: var(--c-warning);
+    --danger-color: var(--c-danger);
 
     /* Body copy. The nav below points at this on purpose: when you retune
        the reading size, the top bar follows instead of drifting apart. */
@@ -162,6 +174,10 @@
     --accent-deep: var(--c-accent-deep-dark);
     --accent-rgb: var(--c-accent-rgb-dark);
     --linenum-color: var(--c-linenum-dark);
+    --info-color: var(--c-info-dark);
+    --success-color: var(--c-success-dark);
+    --warning-color: var(--c-warning-dark);
+    --danger-color: var(--c-danger-dark);
 
     --shadow-sm: var(--c-shadow-sm-dark);
     --shadow-md: var(--c-shadow-md-dark);
@@ -192,6 +208,10 @@
         --accent-deep: var(--c-accent-deep-dark);
         --accent-rgb: var(--c-accent-rgb-dark);
         --linenum-color: var(--c-linenum-dark);
+        --info-color: var(--c-info-dark);
+        --success-color: var(--c-success-dark);
+        --warning-color: var(--c-warning-dark);
+        --danger-color: var(--c-danger-dark);
 
         --shadow-sm: var(--c-shadow-sm-dark);
         --shadow-md: var(--c-shadow-md-dark);

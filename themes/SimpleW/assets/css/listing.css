@@ -25,21 +25,16 @@
    touches the markup.
    -------------------------------------------------------------------------- */
 .listing-calendar {
-    --heat-0: #ededed;
-    --heat-1: #eedad7;
-    --heat-2: #dcb0ab;
-    --heat-3: #c47d77;
-    --heat-4: #ab4f49;
-    --heat-stroke: rgba(0, 0, 0, 0.5);
-}
-
-:root[data-theme="dark"] .listing-calendar {
-    --heat-0: #26292f;
-    --heat-1: #4a302e;
-    --heat-2: #7d4c47;
-    --heat-3: #b06a64;
-    --heat-4: #e88c85;
-    --heat-stroke: rgba(255, 255, 255, 0.65);
+    margin-top: 2rem;
+    --heat-0: color-mix(in srgb, var(--card-bg) 58%, var(--rule-strong));
+    --heat-1: color-mix(in srgb, var(--card-bg) 78%, var(--accent));
+    --heat-2: color-mix(in srgb, var(--card-bg) 58%, var(--accent));
+    --heat-3: color-mix(in srgb, var(--card-bg) 32%, var(--accent));
+    --heat-4: var(--accent);
+    --heat-stroke: var(--main-color);
+    /* 格子描边：铺开后就是一条细网格，颜色跟着深浅色走 */
+    --heat-grid: var(--rule-strong);
+    --heat-grid-width: 0.5;
 }
 
 .listing-calendar.palette-ink {
@@ -61,15 +56,6 @@
 /* The media query is the no-JS fallback for `params.colorScheme = "auto"`,
    mirroring how utils.css resolves the rest of the palette. */
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) .listing-calendar {
-        --heat-0: #26292f;
-        --heat-1: #4a302e;
-        --heat-2: #7d4c47;
-        --heat-3: #b06a64;
-        --heat-4: #e88c85;
-        --heat-stroke: rgba(255, 255, 255, 0.65);
-    }
-
     :root:not([data-theme]) .listing-calendar.palette-ink {
         --heat-0: #26292f;
         --heat-1: #263a4e;
@@ -79,9 +65,16 @@
     }
 }
 
+/* 空格子带一圈极淡的描边，铺开后就是日历网格 ——
+   没发文的日子也能一眼看清自己在第几周、星期几。 */
 .listing-calendar .heat-empty {
     fill: var(--heat-0);
+    stroke: var(--heat-grid);
+    stroke-width: var(--heat-grid-width);
 }
+
+/* 有发文的日子盖在空格子之上，描边只在悬停/聚焦时出现，
+   免得和背景网格混在一起认不出哪天被选中（规则见第 3 节）。 */
 
 .listing-calendar .heat-l1 {
     fill: var(--heat-1);
@@ -102,10 +95,6 @@
 /* --------------------------------------------------------------------------
    2. Container and the year accordion
    -------------------------------------------------------------------------- */
-.listing-calendar {
-    margin-top: 2rem;
-}
-
 .listing-calendar .year {
     border-top: 1px solid var(--rule-color);
     margin: 0;
@@ -248,13 +237,19 @@
    accessible list below carries the real navigation. */
 .listing-calendar .heat-day {
     cursor: pointer;
-    stroke: transparent;
-    stroke-width: 1;
-    transition: stroke var(--dur) var(--ease);
+    /* 有发文的日子也描同一条边，网格才连得起来；悬停/聚焦时换成
+       --heat-stroke 并加粗，从背景里跳出来。 */
+    stroke: var(--heat-grid);
+    stroke-width: var(--heat-grid-width);
+    transition: stroke var(--dur) var(--ease),
+        stroke-width var(--dur) var(--ease);
 }
 
-.listing-calendar .heat-day:hover {
+.listing-calendar .heat-day:hover,
+.listing-calendar .heat-day:focus {
     stroke: var(--heat-stroke);
+    stroke-width: 2;
+    outline: none;
 }
 
 /* --------------------------------------------------------------------------

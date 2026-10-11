@@ -1,0 +1,26 @@
+{{- /*
+  series/taxonomy.html — 结集索引页 /series/
+
+  列出全站所有结集，每张卡给出封面字、结集名、状态徽章、一句话简介、
+  篇数与时间跨度。结集的标题与简介写在 content/series/<key>/_index.md 里，
+  没有时回退到 hugo.toml 的 [params.series]。
+*/ -}}
+{{ define "main" }}
+{{- $cfg := site.Params.series | default dict -}}
+{{- $showCount := true -}}
+{{- if isset $cfg "showcount" }}{{ $showCount = $cfg.showCount }}{{ end -}}
+{{- $showSpan := true -}}
+{{- if isset $cfg "showspan" }}{{ $showSpan = $cfg.showSpan }}{{ end -}}
+
+<header class="page-header">
+  <h1 class="title">{{ .Title }}</h1>
+  {{- with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end -}}
+</header>
+{{- with .Description }}<div class="meta">{{ . | markdownify }}</div>{{ end }}
+{{- with .Content }}<div class="section-content">{{ . }}</div>{{ end }}
+
+{{- partial "components/series-cards.html" (dict
+      "list" (partial "func/series-list.html" site)
+      "showCount" $showCount
+      "showSpan" $showSpan) -}}
+{{ end }}

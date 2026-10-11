@@ -4,14 +4,12 @@
   [[params.home.blocks]]
     type     = "taxonomy"
     title    = "标签"
-    taxonomy = "keywords"    # 分类法名（config [taxonomies] 里的 plural）
+    taxonomy = "tags"        # 分类法名（config [taxonomies] 里的 plural）
     limit    = 30
     sort     = "count"       # count | name
     min      = 1             # hide terms used fewer than this many times
 
-  默认取 config 里注册的第一个分类法：本站的 #+KEYWORDS 注册成 keyword =
-  "keywords"（对外地址改写成 /tags/<词>/），而常见的 `tag = "tags"` 本站没注册，
-  写死 tags 会拿到一片空。
+  没指定就取 site.Taxonomies 里第一个，有 tags 时优先 tags。
 */ -}}
 {{- $b := .block -}}
 {{- $tax := $b.taxonomy -}}

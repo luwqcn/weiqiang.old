@@ -1,0 +1,97 @@
+{{- /*
+  func/series-meta.html — 一条结集（series）的展示信息。
+
+  用法（传 dict）：
+      {{ $m := partial "func/series-meta.html" (dict "key" "ws") }}
+      {{ $m := partial "func/series-meta.html" (dict "key" .Data.Term "page" .) }}
+
+  取值优先级（后者覆盖前者）：
+    1. hugo.toml 的 [params.series] 里同 key 的那条（兜底用）
+    2. content/series/<key>/_index.md 的 front matter
+
+  _index.md 里可写的键：
+    title / description / status / glyph / order / style / reverse / cover
+
+  返回：key name description status glyph order style reverse url
+        count pages span page   —— 都有默认值，不会是 nil
+*/ -}}
+{{- $key := .key | default "" -}}
+{{- $cfg := site.Params.series | default dict -}}
+
+{{- $name := $key -}}
+{{- $description := "" -}}
+{{- $status := "" -}}
+{{- $glyph := "" -}}
+{{- $order := 100 -}}
+{{- $style := $cfg.style | default "series" -}}
+{{- $reverse := false -}}
+{{- $cover := "" -}}
+
+{{- /* ---- 1. 配置兜底 ---- */ -}}
+{{- range $cfg.items | default slice -}}
+  {{- if eq (.key | default "") $key -}}
+    {{- with .name }}{{ $name = . }}{{ end -}}
+    {{- with .description }}{{ $description = . }}{{ end -}}
+    {{- with .status }}{{ $status = . }}{{ end -}}
+    {{- with .glyph }}{{ $glyph = . }}{{ end -}}
+    {{- with .style }}{{ $style = . }}{{ end -}}
+    {{- with .cover }}{{ $cover = . }}{{ end -}}
+    {{- if isset . "order" }}{{ $order = .order }}{{ end -}}
+    {{- if isset . "reverse" }}{{ $reverse = .reverse }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* ---- 2. 结集页本身（content/series/<key>/_index.md） ---- */ -}}
+{{- $page := .page | default "" -}}
+{{- if not $page -}}
+  {{- $terms := index site.Taxonomies "series" -}}
+  {{- with $terms }}{{ with (index . $key) }}{{ $page = .Page }}{{ end }}{{ end -}}
+{{- end -}}
+
+{{- $pages := slice -}}
+{{- $count := 0 -}}
+{{- $url := printf "/series/%s/" $key -}}
+{{- with $page -}}
+  {{- $pages = .Pages.ByDate -}}
+  {{- $count = len .Pages -}}
+  {{- $url = .RelPermalink -}}
+  {{- /* 没写 _index.md 时，Hugo 拿 key 当标题，这时才让配置里的 name 生效 */ -}}
+  {{- with .Title }}{{ if ne . $key }}{{ $name = . }}{{ end }}{{ end -}}
+  {{- with .Description }}{{ $description = . }}{{ end -}}
+  {{- with .Params.status }}{{ $status = . }}{{ end -}}
+  {{- with .Params.glyph }}{{ $glyph = . }}{{ end -}}
+  {{- with .Params.style }}{{ $style = . }}{{ end -}}
+  {{- with .Params.cover }}{{ $cover = . }}{{ end -}}
+  {{- if isset .Params "order" }}{{ $order = .Params.order }}{{ end -}}
+  {{- if isset .Params "reverse" }}{{ $reverse = .Params.reverse }}{{ end -}}
+{{- end -}}
+
+{{- /* ---- 3. 派生值 ---- */ -}}
+{{- if not $glyph }}{{ with $name }}{{ $glyph = slicestr . 0 1 }}{{ end }}{{ end -}}
+
+{{- $span := "" -}}
+{{- with $pages -}}
+  {{- $y1 := (index . 0).Date.Format "2006" -}}
+  {{- $y2 := (index . (sub (len .) 1)).Date.Format "2006" -}}
+  {{- if eq $y1 $y2 -}}
+    {{- $span = printf "%s 年" $y1 -}}
+  {{- else -}}
+    {{- $span = printf "%s – %s" $y1 $y2 -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return (dict
+    "key" $key
+    "name" $name
+    "description" $description
+    "status" $status
+    "glyph" $glyph
+    "order" $order
+    "style" $style
+    "reverse" $reverse
+    "cover" $cover
+    "url" $url
+    "count" $count
+    "pages" $pages
+    "span" $span
+    "page" $page) -}}
