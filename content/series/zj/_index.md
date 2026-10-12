@@ -2,7 +2,6 @@
 title = "支教"
 description = "2010 年的支教旧文，留作存档。"
 status = "已归档"
-glyph = "教"
 order = 20
 style = "series"
 +++

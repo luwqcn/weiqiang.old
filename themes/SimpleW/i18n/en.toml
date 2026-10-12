@@ -114,6 +114,13 @@ other = "Comments"
 [commentsDisabled]
 other = "Comments are disabled."
 
+# The "mentions from around the web" block under the comment area (Webmention).
+[webmentionTitle]
+other = "Mentions from around the web"
+
+[webmentionIntro]
+other = "No webmentions yet. When someone responds to this post from their own site or the Fediverse, it will show up here."
+
 [commentTemplateMissing]
 other = "Comment template not found"
 

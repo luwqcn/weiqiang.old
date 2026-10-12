@@ -1,0 +1,173 @@
+/* ==========================================================================
+   SimpleW — webmention.css
+   评论区下面那一块「来自网络的提及」。
+
+   只在 params.webmention.enabled = true 且该页确实会渲染评论区时加载
+   —— 见 partials/head.html 里 $webmentionCSS 那段。
+
+   选择器统一用 #webmentions 开头，两个原因：
+     · 这一块挂在 #content 里面，正文列那条 `#content p { font-size:1.9rem;
+       margin:20px 0 }` 会波及这里的 p，只写 .wm-text 盖不住（id 选择器的
+       权重更高），加上 #webmentions 这一层才压得住。
+     · 顺带把影响范围锁死，不碰评论框和别处的样式。
+   ========================================================================== */
+
+#webmentions {
+    margin-top: 3.2rem;
+    padding-top: 2.4rem;
+    border-top: 1px dashed var(--rule-color);
+    font-size: 1.6rem;
+}
+
+/* 它排在「评论/留言」标题之前，紧跟其后的是评论区那条 15% 宽的点线。
+   那条线的上边距实际走的是 `#comment hr { margin: 6em auto 3em }`（id 选择器
+   压过 .comments hr 的 5em），6em 是原本给「正文 → 评论」留的距离；
+   上面现在换成了提及块，这一大段就显得像「这节完了」，收成 3em 与下边距
+   对称，读起来是干净的一刀两段。
+   权重上跟 #comment hr 打平（都是 0,1,0,1），靠加载顺序取胜 ——
+   webmention.css 排在 core 包之后，见 head.html。 */
+#webmentions + hr {
+    margin-top: 3em;
+}
+
+#webmentions .wm-title {
+    margin: 0 0 1.4rem;
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+#webmentions .wm-count {
+    margin-left: 0.6rem;
+    color: var(--desc-color);
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+/* ---- 点赞 / 转发 / 收藏：排成一行头像 ---- */
+#webmentions .wm-faces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.6rem;
+}
+
+#webmentions .wm-faces a {
+    display: block;
+    line-height: 0;
+}
+
+#webmentions .wm-faces img,
+#webmentions .wm-faces .wm-noavatar {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    background: var(--card-bg-hover);
+    border: 1px solid var(--rule-color);
+}
+
+/* ---- 回复 / 提及：排成列表 ---- */
+#webmentions .wm-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#webmentions .wm-item {
+    display: flex;
+    gap: 1.2rem;
+    padding: 1.4rem 0;
+    border-top: 1px solid var(--rule-color);
+}
+
+#webmentions .wm-item:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+#webmentions .wm-avatar {
+    flex: 0 0 auto;
+    line-height: 0;
+}
+
+#webmentions .wm-avatar img,
+#webmentions .wm-avatar .wm-noavatar {
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    background: var(--card-bg-hover);
+    border: 1px solid var(--rule-color);
+}
+
+/* 没有头像时（作者没给 photo）显示名字首字。权重跟上面那两条尺寸规则
+   对齐，靠写在后面生效 —— 只写 .wm-noavatar 的话会被上面的 display:block 盖掉，
+   首字就贴到左上角去了。 */
+#webmentions .wm-faces .wm-noavatar,
+#webmentions .wm-avatar .wm-noavatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--desc-color);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+#webmentions .wm-body {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+#webmentions .wm-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+#webmentions .wm-author {
+    font-weight: 500;
+    color: var(--link-color);
+}
+
+#webmentions .wm-author:hover {
+    color: var(--link-color-hover);
+}
+
+#webmentions .wm-type,
+#webmentions .wm-date {
+    color: var(--desc-color);
+    font-size: 1.4rem;
+}
+
+/* 提及正文来自别人的站点，属于不可信的短引文 —— 用引文色、别抢正文风头。
+   overflow-wrap 兜住长网址，窄屏不至于顶出横向滚动条。 */
+#webmentions .wm-text {
+    margin: 0.5rem 0 0;
+    font-size: 1.55rem;
+    line-height: 1.75;
+    color: var(--bq-color);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+#webmentions .wm-hint {
+    margin: 0;
+    color: var(--desc-color);
+    font-size: 1.45rem;
+    line-height: 1.8;
+}
+
+@media (max-width: 600px) {
+    #webmentions .wm-item {
+        gap: 1rem;
+    }
+
+    #webmentions .wm-avatar img,
+    #webmentions .wm-avatar .wm-noavatar {
+        width: 3.2rem;
+        height: 3.2rem;
+    }
+}

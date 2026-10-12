@@ -2,7 +2,6 @@
 title = "桑下書集"
 description = "桑下書集相关，记录書集进展。"
 status = "进行中"
-glyph = "書"
 order = 30
 style = "series"
 +++

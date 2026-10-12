@@ -7,6 +7,25 @@
 */ -}}
 {{- $scheme := site.Params.colorScheme | default "light" -}}
 
+{{- /*
+  ---------- Webmention ----------
+  静态站收不了别人发来的 POST，所以「接收」交给托管端点（默认
+  webmention.io），本站只做两件事：在 <head> 里声明端点让别人发现，
+  以及在评论区把收到的提及画出来（partials/comments/webmention.html）。
+
+  配置见 [params.webmention]。enabled 关掉时这里一行都不输出。
+*/ -}}
+{{- $wm := site.Params.webmention | default dict -}}
+{{- $wmOn := false -}}
+{{- if isset $wm "enabled" }}{{ $wmOn = $wm.enabled }}{{ end -}}
+{{- $wmDomain := $wm.domain | default "" -}}
+{{- $wmEndpoint := "" -}}
+{{- $wmPingback := "" -}}
+{{- if and $wmOn $wmDomain -}}
+  {{- $wmEndpoint = $wm.endpoint | default (printf "https://webmention.io/%s/webmention" $wmDomain) -}}
+  {{- $wmPingback = $wm.pingback | default (printf "https://webmention.io/%s/xmlrpc" $wmDomain) -}}
+{{- end -}}
+
 {{- /* ---------- title ---------- */ -}}
 {{- $title := "" -}}
 {{- if .IsHome -}}
@@ -83,6 +102,24 @@
   {{- end -}}
 {{- end -}}
 
+{{- /*
+  Webmention 区块单独一个包，判断跟 partials/comments.html 保持同一套
+  （开关 + 是否真的渲染评论区），免得 CSS 加载了那块却不显示。
+*/ -}}
+{{- $webmentionCSS := "" -}}
+{{- if and .IsPage $wmOn $wmEndpoint -}}
+  {{- $showComments := partial "func/flag.html" (dict
+        "page" .
+        "keys" (slice "comments" "Comments")
+        "default" (ne .Section "")
+        "group" "post") -}}
+  {{- if $showComments -}}
+    {{- with resources.Get "css/webmention.css" -}}
+      {{- $webmentionCSS = . | minify | fingerprint -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
 {{- $nodeSheets := slice -}}
 {{- $nodeStyle := "node" -}}
 {{- if and (not .IsPage) (not .IsHome) (ne .Data.Plural "series") -}}
@@ -145,6 +182,38 @@
 {{- end }}
 <link rel="canonical" href="{{ .Permalink }}">
 
+{{- /*
+  ---------- IndieWeb：接收端点声明 ----------
+  别人（或 Bridgy 这类桥）抓这个页面时，靠这两行才知道回应该往哪儿推。
+  rel="me" 是身份声明：webmention.io 登录走 IndieAuth 认领域名，就是靠
+  它找到你那个能回链的档案（GitHub / Mastodon / Bluesky 主页都行），
+  只在 webmention 打开时才输出。
+*/ -}}
+{{- with $wmEndpoint }}
+<link rel="webmention" href="{{ . }}">
+{{- end -}}
+{{- with $wmPingback }}
+<link rel="pingback" href="{{ . }}">
+{{- end -}}
+{{- if $wmOn -}}
+  {{- $relMe := $wm.relMe | default slice -}}
+  {{- if eq "string" (printf "%T" $relMe) }}{{ $relMe = slice $relMe }}{{ end -}}
+  {{- range $relMe }}
+<link rel="me" href="{{ . }}">
+  {{- end -}}
+{{- end -}}
+
+{{- /*
+  发到社交平台的那条帖子：Bridgy 靠 rel="syndication" 把帖子对回本文，
+  才能把帖子下面的回复反向变成 webmention。front matter 里写：
+      syndication = ["https://mastodon.example/@you/123456"]
+*/ -}}
+{{- $syn := .Params.syndication | default slice -}}
+{{- if eq "string" (printf "%T" $syn) }}{{ $syn = slice $syn }}{{ end -}}
+{{- range $syn }}
+<link rel="syndication" href="{{ . }}">
+{{- end }}
+
 {{- /* ---------- colour scheme: resolved before first paint ---------- */ -}}
 <script>
 (function () {
@@ -163,6 +232,9 @@
 
 <link rel="stylesheet" href="{{ $coreCSS.RelPermalink }}" integrity="{{ $coreCSS.Data.Integrity }}">
 {{- with $commentsCSS }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{- end -}}
+{{- with $webmentionCSS }}
 <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
 {{- end -}}
 {{- with $nodeCSS }}
@@ -186,6 +258,14 @@
   {{- with site.Params.comments.twikoo }}{{ $cdn = .cdn | default "" }}{{ end -}}
 {{- end -}}
 {{- with $cdn -}}
+  {{- with urls.Parse . -}}
+    {{- if and .Scheme .Host }}
+<link rel="preconnect" href="{{ printf "%s://%s" .Scheme .Host }}" crossorigin>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- /* 网络提及那块也是滚到评论区才去取数据，同样先把握手做掉 */ -}}
+{{- with $wmEndpoint -}}
   {{- with urls.Parse . -}}
     {{- if and .Scheme .Host }}
 <link rel="preconnect" href="{{ printf "%s://%s" .Scheme .Host }}" crossorigin>

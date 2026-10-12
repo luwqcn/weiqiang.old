@@ -116,6 +116,14 @@ other = "评论/留言"
 [commentsDisabled]
 other = "评论功能未启用。"
 
+# 评论区下面那块「来自网络的提及」（Webmention）。
+# 标题在没有提及、以及有提及的时候都显示；intro 是空态下那句说明。
+[webmentionTitle]
+other = "来自网络的提及"
+
+[webmentionIntro]
+other = "还没有网络提及。当有人在独立博客或 Fediverse 上回应这篇文章时，会自动出现在这里。"
+
 [commentTemplateMissing]
 other = "未找到评论模板"
 

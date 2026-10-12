@@ -8,7 +8,8 @@
            "showSpan"  true
            "class"     "series-cards") }}
 
-  一张卡：封面字（印章）| 结集名 + 状态徽章 + 一句话简介 + 篇数/跨度 | 箭头
+  一张卡：左侧一道书脊（颜色跟状态走）+ 结集名 + 状态徽章 + 一句话简介
+        + 篇数/跨度 + 右侧箭头
 */ -}}
 {{- $list := .list | default slice -}}
 {{- $showCount := true -}}
@@ -22,14 +23,14 @@
 {{- if $list -}}
 <div class="{{ $class }}">
 {{- range $list }}
-  {{- $badge := "badge-arch" -}}
+  {{- /* 状态既决定徽章配色，也决定左侧书脊的颜色 */ -}}
+  {{- $state := "is-arch" -}}
   {{- with .status }}
-    {{- if or (in . "进行") (in . "更新") (in . "连载") }}{{ $badge = "badge-live" }}{{ end -}}
+    {{- if or (in . "进行") (in . "更新") (in . "连载") }}{{ $state = "is-live" }}{{ end -}}
   {{- end -}}
-  <a class="series-card" href="{{ .url }}">
-    <span class="series-seal" aria-hidden="true">{{ .glyph }}</span>
+  <a class="series-card {{ $state }}" href="{{ .url }}">
     <span class="sc-body">
-      <span class="sc-title">{{ .name }}{{ with .status }}<span class="series-badge {{ $badge }}">{{ . }}</span>{{ end }}</span>
+      <span class="sc-title">{{ .name }}{{ with .status }}<span class="series-badge {{ $state }}">{{ . }}</span>{{ end }}</span>
       {{- if and $showDesc .description }}<span class="sc-desc">{{ .description }}</span>{{ end }}
       <span class="sc-meta">
         {{- if $showCount }}<span>{{ .count }} {{ i18n "postsUnit" | default "篇" }}</span>{{ end -}}

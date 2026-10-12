@@ -460,6 +460,58 @@ uglyURLs = false
       issueTerm = "pathname"
 
   # -------------------------------------------------------------------------
+  # 网络提及（Webmention）—— 评论区下面单独一块
+  #
+  # 跟上面评论是两条线：Twikoo 收本站访客的留言，这里收「别人在自己的
+  # 站点 / Mastodon / Bluesky 上回应了这篇文章」时自动推过来的通知
+  # （回复 / 提及 / 点赞 / 转发 / 收藏）。
+  #
+  # 为什么不能纯静态自己做：Hugo 生成的是静态 HTML，收不了别人发来的
+  # POST，「接收」这一环必须外置。这里走 webmention.io 的托管端点——
+  # 本站只负责在 <head> 里声明端点（让别人发现），以及把它的公开 API
+  # 结果画到评论区。样式 themes/SimpleW/assets/css/webmention.css，
+  # 模板 themes/SimpleW/layouts/partials/comments/webmention.html。
+  #
+  # 上线前要做的几件事：
+  #   1. relMe —— 站点上要有 rel="me" 指向一个能回链的档案。webmention.io
+  #      登录走 IndieAuth 认领域名，就是靠它找到你的 GitHub / Mastodon /
+  #      Bluesky 主页；那个主页里也要有链回本站的链接（反过来才算验证过）。
+  #   2. 去 https://webmention.io 用 weiqiang.org 登录一次，端点才开始
+  #      真的收东西（登录前推过来的会被丢掉）。
+  #   3. 想让社交平台的回复也汇进来：去 https://brid.gy 关联你的
+  #      Mastodon / Bluesky 账号，然后在这边每篇文章的 front matter 里写
+  #      syndication = ["那条帖子的地址"]，head 会输出 rel="syndication"，
+  #      Bridgy 靠它把帖子对回文章、再把帖下的回复变成 webmention。
+  #
+  # 单篇想关掉，front matter 写 `webmention: false`。
+  # -------------------------------------------------------------------------
+  [params.webmention]
+    # 关掉就整块不输出（head 里的端点声明、样式、前端请求全都没有）
+    enabled = true
+    domain = "weiqiang.org"
+    title = "来自网络的提及"
+    # 没有提及时给一句说明；关掉的话，没提及就整块不显示
+    intro = true
+
+    # webmention.io 的 API token。默认留空 —— 公开提及不带 token 也能读到，
+    # 而填了它会明文出现在页面源码里，谁都能拿去读你的提及列表。
+    # 只有想把「非公开」提及也显示出来时才需要填。
+    token = ""
+
+    # 端点地址。留空即用 webmention.io 给这个域名的默认端点。
+    # 将来换成自己搭的接收服务，改这两行即可，模板不用动。
+    endpoint = ""       # 默认 https://webmention.io/<domain>/webmention
+    pingback = ""       # 默认 https://webmention.io/<domain>/xmlrpc
+
+    # 站点身份：rel="me" 指向的档案。填了才会输出 <link rel="me">。
+    # TODO 等确认账号后填上，例如：
+    #   relMe = [
+    #     "https://github.com/shujiaccn",
+    #     "https://mastodon.social/@你的账号",
+    #   ]
+    relMe = []
+
+  # -------------------------------------------------------------------------
   # 其它
   # -------------------------------------------------------------------------
   [params.post]
@@ -525,23 +577,22 @@ uglyURLs = false
   # -------------------------------------------------------------------------
   # 结集（series）—— /series/ 索引页与各结集页的开关
   #
-  # 每一条的「名字 / 简介 / 状态徽章 / 排序 / 封面字」写在
+  # 每一条的「名字 / 简介 / 状态 / 排序」写在
   # content/series/<key>/_index.md 的 front matter 里：
   #
   #     title = "往事如烟"
   #     description = "2016 年前网志存档，不再更新。"
   #     status = "已归档"
-  #     glyph = "烟"
   #     order = 10
   #
   # 下面这张表只是兜底：某个 key 一时没有 _index.md，才从这里取名和简介。
   #
   # ⚠️ 排序要改 content/series/<key>/_index.md 里的 order：那份 front matter
   #    优先级高于这里（见 func/series-meta.html），改这里对已有 _index.md 的
-  #    结集不起作用——order、name、description、status、glyph 都是如此。
+  #    结集不起作用——order、name、description、status 都是如此。
   #
-  #   status  徽章文案（已归档 / 进行中 …），留空就不显示徽章
-  #   glyph   结集封面上的那个字，取名字里最有代表性的一字
+  #   status  徽章文案（已归档 / 进行中 …），留空就不显示徽章；
+  #           卡片左侧那道书脊的颜色也跟着它走（进行中 = 绿，其余 = 赭红）
   #   order   越小越靠前（生效位置见上面那条警告）
   #   style   series（编号卷次，默认）| grouped | calendar | cards | plain
   # -------------------------------------------------------------------------
@@ -555,7 +606,6 @@ uglyURLs = false
       name = "往事如烟"
       description = "2016 年前网志存档，不再更新。"
       status = "已归档"
-      glyph = "烟"
       order = 10
 
     [[params.series.items]]
@@ -563,7 +613,6 @@ uglyURLs = false
       name = "支教"
       description = "2010 年的支教旧文，留作存档。"
       status = "已归档"
-      glyph = "教"
       order = 20
 
     [[params.series.items]]
@@ -571,5 +620,4 @@ uglyURLs = false
       name = "桑下書集"
       description = "桑下書集相关，记录書集进展。"
       status = "进行中"
-      glyph = "書"
       order = 30

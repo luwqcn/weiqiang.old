@@ -2,7 +2,6 @@
 title = "往事如烟"
 description = "2016 年前网志存档，不再更新。"
 status = "已归档"
-glyph = "烟"
 order = 10
 style = "series"
 +++

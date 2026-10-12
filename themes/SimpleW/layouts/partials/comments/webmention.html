@@ -1,0 +1,199 @@
+{{- /*
+  partials/comments/webmention.html — 「来自网络的提及」
+
+  跟评论是两条线：Twikoo 收的是本站访客的留言，这里收的是别人在自己的
+  站点 / Mastodon / Bluesky 上回应了本文时，由 Webmention 协议自动推过来
+  的通知（回复 / 提及 / 点赞 / 转发 / 收藏），显示在评论框下面单独一块。
+
+  静态站生成的 HTML 收不了 POST，所以「接收」这一环交给 webmention.io
+  的托管端点（声明写在 partials/head.html），这里只负责把它的公开 API
+  结果画出来。
+
+  几点取舍：
+
+  · 不带 token 也能读公开提及，所以默认不填 token —— 填了它就会出现在
+    页面源码里，谁都能拿去读你的提及列表。只有想把「非公开」提及也
+    显示出来时才需要。
+  · 文案一律用 textContent 写进去，链接只放行 http(s)。提及内容来自
+    别人的站点，属于不可信输入，不能拼 HTML。
+  · 滚到附近才发请求（IntersectionObserver），不拖首屏。
+  · 请求失败就整块收起来，不显示「还没有提及」那种会误导人的话。
+*/ -}}
+{{- $w := site.Params.webmention | default dict -}}
+{{- $domain := $w.domain | default "" -}}
+{{- $token := $w.token | default "" -}}
+{{- $title := $w.title | default (i18n "webmentionTitle" | default "来自网络的提及") -}}
+{{- $intro := true -}}
+{{- if isset $w "intro" }}{{ $intro = $w.intro }}{{ end -}}
+{{- with $domain -}}
+<section id="webmentions" class="webmentions" data-target="{{ $.Permalink }}"{{ with $token }} data-token="{{ . }}"{{ end }}>
+  <h4 class="wm-title">{{ $title }}<span class="wm-count"></span></h4>
+  <div class="wm-faces" hidden></div>
+  <ul class="wm-list" hidden></ul>
+  {{- if $intro }}
+  <p class="wm-hint">{{ i18n "webmentionIntro" | default "还没有网络提及。当有人在独立博客或 Fediverse 上回应这篇文章时，会自动出现在这里。" }}</p>
+  {{- end }}
+</section>
+<script>
+(function () {
+  var root = document.getElementById("webmentions");
+  if (!root) { return; }
+  if (!window.fetch) { root.hidden = true; return; }
+
+  var target = root.getAttribute("data-target") || "";
+  if (!target) { root.hidden = true; return; }
+
+  var token = root.getAttribute("data-token") || "";
+  var hasHint = !!root.querySelector(".wm-hint");
+  var countEl = root.querySelector(".wm-count");
+  var facesEl = root.querySelector(".wm-faces");
+  var listEl = root.querySelector(".wm-list");
+  var hintEl = root.querySelector(".wm-hint");
+
+  var REACTIONS = { "like-of": "赞", "repost-of": "转发", "bookmark-of": "收藏", "rsvp": "回应" };
+  var RESPONSES = { "in-reply-to": "回复", "mention-of": "提及" };
+
+  function safeUrl(value) {
+    return (typeof value === "string" && /^https?:\/\//i.test(value)) ? value : "";
+  }
+
+  function node(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) { n.className = cls; }
+    if (text) { n.textContent = text; }
+    return n;
+  }
+
+  function authorName(item) {
+    var a = item.author || {};
+    return a.name || a.nickname || "匿名";
+  }
+
+  function avatar(item) {
+    var a = item.author || {};
+    var photo = safeUrl(a.photo);
+    var name = authorName(item);
+    var box;
+    if (photo) {
+      box = document.createElement("img");
+      box.src = photo;
+      box.alt = name;
+      box.loading = "lazy";
+      box.referrerPolicy = "no-referrer";
+    } else {
+      box = node("span", "wm-noavatar", name.slice(0, 1));
+    }
+    var link = safeUrl(item.url) || safeUrl(a.url);
+    if (!link) { return box; }
+    var wrapper = node("a");
+    wrapper.href = link;
+    wrapper.rel = "nofollow noopener ugc";
+    wrapper.target = "_blank";
+    wrapper.title = name;
+    wrapper.appendChild(box);
+    return wrapper;
+  }
+
+  function when(item) {
+    return item.published || item["wm-received"] || "";
+  }
+
+  function row(item) {
+    var li = node("li", "wm-item");
+
+    var av = node("div", "wm-avatar");
+    av.appendChild(avatar(item));
+    li.appendChild(av);
+
+    var body = node("div", "wm-body");
+    var head = node("div", "wm-head");
+
+    var name = authorName(item);
+    var link = safeUrl(item.url) || safeUrl((item.author || {}).url);
+    if (link) {
+      var a = node("a", "wm-author", name);
+      a.href = link;
+      a.rel = "nofollow noopener ugc";
+      a.target = "_blank";
+      head.appendChild(a);
+    } else {
+      head.appendChild(node("span", "wm-author", name));
+    }
+
+    head.appendChild(node("span", "wm-type", RESPONSES[item["wm-property"]] || "提及"));
+
+    var stamp = when(item);
+    if (stamp) {
+      var t = document.createElement("time");
+      t.className = "wm-date";
+      t.dateTime = stamp;
+      t.textContent = String(stamp).slice(0, 10);
+      head.appendChild(t);
+    }
+    body.appendChild(head);
+
+    var text = String(((item.content || {}).text) || "").trim();
+    if (text) {
+      if (text.length > 400) { text = text.slice(0, 400) + "…"; }
+      body.appendChild(node("p", "wm-text", text));
+    }
+
+    li.appendChild(body);
+    return li;
+  }
+
+  function draw(data) {
+    var items = (data && data.children) || [];
+    var reactions = [];
+    var responses = [];
+
+    items.forEach(function (item) {
+      var prop = item["wm-property"] || "";
+      if (REACTIONS[prop]) { reactions.push(item); }
+      else if (RESPONSES[prop]) { responses.push(item); }
+    });
+
+    if (!items.length) {
+      if (!hasHint) { root.hidden = true; }
+      return;
+    }
+
+    if (reactions.length) {
+      facesEl.hidden = false;
+      reactions.forEach(function (item) { facesEl.appendChild(avatar(item)); });
+    }
+
+    if (responses.length) {
+      listEl.hidden = false;
+      responses.sort(function (a, b) {
+        return new Date(when(b) || 0) - new Date(when(a) || 0);
+      });
+      responses.forEach(function (item) { listEl.appendChild(row(item)); });
+    }
+
+    if (hintEl) { hintEl.hidden = true; }
+    if (countEl) { countEl.textContent = "· " + items.length + " 条"; }
+    root.dataset.count = String(items.length);
+  }
+
+  function load() {
+    var api = "https://webmention.io/api/mentions.jf2?target=" +
+      encodeURIComponent(target) + "&per-page=200";
+    if (token) { api += "&token=" + encodeURIComponent(token); }
+    fetch(api, { credentials: "omit" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) { if (data) { draw(data); } else { root.hidden = true; } })
+      .catch(function () { root.hidden = true; });
+  }
+
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { io.disconnect(); load(); }
+    }, { rootMargin: "200px" });
+    io.observe(root);
+  } else {
+    load();
+  }
+})();
+</script>
+{{- end -}}

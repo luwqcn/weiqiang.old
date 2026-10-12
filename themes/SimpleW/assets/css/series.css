@@ -1,37 +1,50 @@
 /* ==========================================================================
    SimpleW — series.css
    结集（series）：
-     1. 封面字（印章）
+     1. 书脊色（按状态两套：赭红 = 已归档，绿 = 进行中）
      2. /series/ 索引页与主页的卡片阵列
      3. 状态徽章
      4. 结集页头卡（series-hero）
      5. 编号卷次列表（series-entries）
      6. 结集间跳转（series-more）
    根字号 62.5%，下面所有 rem 按 1rem = 10px 读。
+
+   结集 = 一册书，所以卡片和头卡左侧那道竖条按「书脊」处理：归档的用赭红，
+   还在写的用绿。（早先那套「封面字印章」已废弃，front matter 的 glyph 也删了。）
+
    注意：正文列有 `#content p { font-size:1.9rem; margin:20px 0 }`（优先级带
    id），凡是 <p> 的自定义字号都要用 `#content .xxx` 级别才能盖回来。
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. 封面字 —— 取结集名里最有代表性的一字，做一枚朱文印
+   1. 书脊色
    -------------------------------------------------------------------------- */
-.series-seal {
-    flex: 0 0 auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 5.2rem;
-    height: 5.2rem;
-    border-radius: 0.6rem;
-    /* 斜向渐变的赭红，配一圈内描边，像盖在纸上的印 */
-    background: linear-gradient(160deg, var(--accent) 0%, var(--accent-deep) 100%);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22), var(--shadow-sm);
-    color: #fff;
-    font-family: var(--bq-fonts);
-    font-size: 2.8rem;
-    line-height: 1;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
-    user-select: none;
+.series-card,
+.series-hero {
+    --spine: var(--accent);
+    --spine-soft: rgba(var(--accent-rgb), 0.45);
+}
+
+/* 还在写的结集用绿色，与「已归档」的赭红区分开 */
+.series-card.is-live,
+.series-hero.is-live {
+    --spine: #2e7d32;
+    --spine-soft: rgba(46, 125, 50, 0.5);
+}
+
+:root[data-theme="dark"] .series-card.is-live,
+:root[data-theme="dark"] .series-hero.is-live {
+    --spine: #7cc47f;
+    --spine-soft: rgba(124, 196, 127, 0.55);
+}
+
+/* colorScheme = "auto" 且没点过切换按钮时的兜底 */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .series-card.is-live,
+    :root:not([data-theme]) .series-hero.is-live {
+        --spine: #7cc47f;
+        --spine-soft: rgba(124, 196, 127, 0.55);
+    }
 }
 
 /* --------------------------------------------------------------------------
@@ -46,21 +59,23 @@
 
 .series-card {
     display: flex;
-    align-items: flex-start;
-    gap: 1.4rem;
+    align-items: center;
+    gap: 1rem;
     padding: 1.4rem 1.6rem;
     border: 1px solid var(--rule-color);
+    border-left: 4px solid var(--spine-soft);
     border-radius: var(--radius-md);
     background: var(--card-bg);
-    /* 卡片只过渡颜色和阴影；属性分开写，压缩后仍清晰稳定。 */
-    transition-property: border-color, box-shadow, background-color;
-    transition-duration: var(--dur);
-    transition-timing-function: var(--ease);
+    /* 只做颜色过渡，不做位移 —— 卡片「跳」一下很闹。
+       别写成多值 transition：Hugo 的 CSS 压缩器会吃掉相邻 var() 之间的空格。 */
+    transition: border-color var(--dur) linear;
+    transition: box-shadow var(--dur) linear;
 }
 
 .series-card:hover,
 .series-card:focus-visible {
     border-color: var(--accent);
+    border-left-color: var(--spine);
     /* 必须整套写回来：全局 a:hover 的 `border-bottom:1px solid;
        padding-bottom:2px` 优先级更高，不写回 padding-bottom 卡片会往上缩。 */
     border-bottom: 1px solid var(--accent);
@@ -105,7 +120,7 @@
 .series-card .sc-arrow {
     flex: 0 0 auto;
     font-size: 2.4rem;
-    line-height: 1.15;
+    line-height: 1;
     color: var(--rule-strong);
     transition: color var(--dur) linear;
 }
@@ -125,18 +140,12 @@
     padding-bottom: 1.2rem;
 }
 
-.series-cards.is-compact .series-seal {
-    width: 4.4rem;
-    height: 4.4rem;
-    font-size: 2.4rem;
-}
-
 .series-cards.is-compact .sc-desc {
     font-size: 1.4rem;
 }
 
 /* --------------------------------------------------------------------------
-   3. 状态徽章 —— 已归档 / 进行中
+   3. 状态徽章
    -------------------------------------------------------------------------- */
 .series-badge {
     display: inline-block;
@@ -152,11 +161,25 @@
     white-space: nowrap;
 }
 
-/* 还在写的结集用统一的成功色，与「已归档」的赭红区分开 */
-.series-badge.badge-live {
-    border-color: color-mix(in srgb, var(--success-color) 38%, transparent);
-    background: color-mix(in srgb, var(--success-color) 9%, transparent);
-    color: var(--success-color);
+.series-badge.is-live {
+    border-color: rgba(46, 125, 50, 0.38);
+    background: rgba(46, 125, 50, 0.08);
+    color: #2e7d32;
+}
+
+:root[data-theme="dark"] .series-badge.is-live {
+    border-color: rgba(124, 196, 127, 0.4);
+    background: rgba(124, 196, 127, 0.12);
+    color: #7cc47f;
+}
+
+/* colorScheme = "auto" 且没点过切换按钮时的兜底 */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .series-badge.is-live {
+        border-color: rgba(124, 196, 127, 0.4);
+        background: rgba(124, 196, 127, 0.12);
+        color: #7cc47f;
+    }
 }
 
 /* --------------------------------------------------------------------------
@@ -174,26 +197,16 @@
 }
 
 .series-hero {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.8rem;
     margin: 0 0 1.6rem;
     padding: 1.8rem 2rem;
     border: 1px solid var(--rule-color);
+    border-left: 5px solid var(--spine);
     border-radius: var(--radius-md);
     background: var(--card-bg);
     box-shadow: var(--shadow-sm);
 }
 
-.series-hero .series-seal {
-    width: 6.4rem;
-    height: 6.4rem;
-    border-radius: 0.8rem;
-    font-size: 3.4rem;
-}
-
 .series-hero-text {
-    flex: 1 1 auto;
     min-width: 0;
 }
 
@@ -259,7 +272,6 @@
     font-size: 1.5rem;
     color: var(--accent);
     font-variant-numeric: tabular-nums;
-    /* 没有目录、没有右侧浮动元素时，序号靠左顶格，视觉上就是一条竖列 */
     text-align: left;
 }
 
@@ -322,14 +334,7 @@
     }
 
     .series-hero {
-        gap: 1.2rem;
-        padding: 1.4rem 1.4rem;
-    }
-
-    .series-hero .series-seal {
-        width: 5.2rem;
-        height: 5.2rem;
-        font-size: 2.8rem;
+        padding: 1.4rem;
     }
 
     .series-hero .title {
