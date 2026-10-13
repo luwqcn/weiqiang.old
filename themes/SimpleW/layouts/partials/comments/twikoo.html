@@ -37,22 +37,53 @@
 <script src="{{ $cdn }}" defer></script>
 <script>
 window.addEventListener("DOMContentLoaded", function () {
+  /* 评论框默认收在一个 <details> 里。Twikoo 靠元素的 clientWidth 算布局，
+     藏在关着的 details 里的容器量出来是 0，初始化出来的界面会错位。
+     所以这里不在页面加载时就 init，改成等读者把 details 点开再 init：
+     先看那个 details 是不是已经 open，没开就监听它的 toggle 事件。
+     没有折叠（包着 #comments-provider 的 details 不存在）时按「已展开」
+     处理，行为跟从前一样。 */
+  var panel = document.getElementById("comments-provider");
+  var box = panel ? panel.closest("details") : null;
   var tries = 0;
-  (function init() {
+  function providerVisible() {
+    return !box || box.open;
+  }
+  function start() {
     if (typeof twikoo === "undefined") {
       // CDN 还没到（或挂了）：给几秒钟重试，超过就放弃，留个提示
-      if (++tries <= 20) return setTimeout(init, 300);
-      var box = document.getElementById("twikoo");
-      if (box) box.innerHTML = '<p class="comments-disabled">评论脚本加载失败，请检查网络或稍后重试。</p>';
+      if (++tries <= 20) return setTimeout(start, 300);
+      var el = document.getElementById("twikoo");
+      if (el) el.innerHTML = '<p class="comments-disabled">评论脚本加载失败，请检查网络或稍后重试。</p>';
       return;
     }
-    twikoo.init({{ dict
+    twikoo.init(Object.assign({{ dict
         "envId" $envId
         "el" "#twikoo"
         "lang" ($t.lang | default "zh-CN")
         "path" $path
-      | jsonify | safeJS }});
-  })();
+      | jsonify | safeJS }}, {
+      /* 评论加载完把条数写回标题旁的计数，读者不用展开就知道有几条 */
+      onCommentLoaded: function () {
+        var n = document.querySelectorAll("#twikoo .tk-comment").length;
+        var out = document.querySelector(".comments-count");
+        if (out && n) { out.textContent = n; out.hidden = false; }
+      }
+    }));
+  }
+
+  /* 只 init 一次：details 会被反复开合，重复 init 会往 #twikoo 里再插一份。 */
+  var done = false;
+  function startOnce() { if (!done) { done = true; start(); } }
+
+  if (providerVisible()) {
+    startOnce();
+    return;
+  }
+
+  /* 等展开：details 的 toggle 事件在 open 变化后触发（包括用键盘、脚本
+     或浏览器的「查找」自动展开）。比盯着某个按钮的点击更稳。 */
+  box.addEventListener("toggle", function () { if (box.open) { startOnce(); } });
 });
 </script>
 {{- end -}}

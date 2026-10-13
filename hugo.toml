@@ -400,6 +400,12 @@ uglyURLs = false
     provider = "twikoo"        # artalk | giscus | disqus | waline | twikoo | utterances | custom | none
     title = "评论/留言"
     showDivider = true
+    # 评论框默认收起来，读者点标题右边的按钮才展开。
+    # 头条那行「评论/留言（N） [查看评论]」始终可见，展开后按钮变「收起评论」。
+    # 想让评论框像从前一样一开始就铺开，把这里改成 false；
+    # 单篇想单独改，在 front matter 写 `collapse = false`。
+    # 没启用 provider（none）时这一项无效，本来就没有框可收。
+    collapse = true
     # template = "comments/my-provider.html"   # 自定义评论模板：写成 partial 路径
     # customRaw = """<div id="mine"></div><script>…</script>"""
 
@@ -503,13 +509,29 @@ uglyURLs = false
     endpoint = ""       # 默认 https://webmention.io/<domain>/webmention
     pingback = ""       # 默认 https://webmention.io/<domain>/xmlrpc
 
-    # 站点身份：rel="me" 指向的档案。填了才会输出 <link rel="me">。
-    # TODO 等确认账号后填上，例如：
-    #   relMe = [
-    #     "https://github.com/shujiaccn",
-    #     "https://mastodon.social/@你的账号",
-    #   ]
-    relMe = []
+    # 读者提交 Webmention 的入口地址。留空即用 https://webmention.io/<domain>/，
+    # 页面上会拼成 https://webmention.io/<domain>/?target=<本文地址> 再链过去；
+    # webmention.io 的表单会自己带上 target，读者只要填「我那篇回应文章的地址」。
+    # 将来换自建接收端，这里填那个端的提交页地址。
+    form = ""
+
+    # 站点身份：rel="me" 指向的档案，全站每一页的 <head> 都会输出。
+    # IndieAuth（webmention.io / IndieLogin 登录）抓主页找的就是这些。
+    #
+    # 两种写法：
+    #   · 纯字符串 —— 普通身份声明，输出 <link rel="me" href="…">
+    #   · map       —— 可带 authn，输出 <link rel="me authn" href="…">
+    #
+    # ⚠️ IndieLogin 的规则：页面上只要有任意一条 rel="me" 带 authn，
+    #    登录时就**只认带 authn 的**。邮箱最稳（无第三方账号可失效，
+    #    验证码直接发到信箱），所以拿它当带 authn 的主力。
+    #
+    # 主站那两条同时也在 layouts/partials/custom-head.html 里按 /about/
+    # 输出过 —— 这里改成全站后，custom-head 要收敛，避免同页重复声明。
+    relMe = [
+      { href = "mailto:lu@weiqiang.org", authn = true },
+      { href = "https://github.com/shujiaccn" },
+    ]
 
   # -------------------------------------------------------------------------
   # 其它

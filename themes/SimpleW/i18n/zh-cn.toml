@@ -116,13 +116,35 @@ other = "评论/留言"
 [commentsDisabled]
 other = "评论功能未启用。"
 
-# 评论区下面那块「来自网络的提及」（Webmention）。
-# 标题在没有提及、以及有提及的时候都显示；intro 是空态下那句说明。
+# 评论区上面那块「Webmentions」（折叠小结，形式参考 Taxodium）。
 [webmentionTitle]
 other = "来自网络的提及"
 
-[webmentionIntro]
-other = "还没有网络提及。当有人在独立博客或 Fediverse 上回应这篇文章时，会自动出现在这里。"
+# summary 行右侧，等 JS 拉完数据后被换成 (n)；没有提及就整条藏起来。
+[webmentionLoading]
+other = "(…)"
+[webmentionTip]
+other = "想回应这篇文章？可以在自己的博客或社交帖子里链接本文，再到 Webmention 端点提交：Source 填你的文章地址，Target 填本文地址。"
+[webmentionEndpoint]
+other = "提交入口"
+[webmentionForm]
+other = "用表单提交"
+[webmentionNoJS]
+other = "提交 Webmention 不需要 JavaScript，但加载已收到的提及需要开启它。"
+[webmentionEmpty]
+other = "还没有收到提及。"
+
+# 头像行前面那句类别标签，拼成「3 赞 / 转发」这样。
+[webmentionReactions]
+other = "赞 / 转发"
+
+# 评论框默认收进 <details>，summary 那一行写「评论/留言」，点开才见 Twikoo。
+# commentsToggle* 是给「不折叠」配置留的兼容文案，正常用不到。
+[commentsToggle]
+other = "查看评论"
+
+[commentsToggleClose]
+other = "收起评论"
 
 [commentTemplateMissing]
 other = "未找到评论模板"

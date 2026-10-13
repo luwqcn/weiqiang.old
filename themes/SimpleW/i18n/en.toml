@@ -114,12 +114,35 @@ other = "Comments"
 [commentsDisabled]
 other = "Comments are disabled."
 
-# The "mentions from around the web" block under the comment area (Webmention).
+# The "Webmentions" collapsible block above the comment area (Taxodium style).
 [webmentionTitle]
 other = "Mentions from around the web"
 
-[webmentionIntro]
-other = "No webmentions yet. When someone responds to this post from their own site or the Fediverse, it will show up here."
+# Sits at the right of the summary line; replaced by "(n)" once loaded, hidden when empty.
+[webmentionLoading]
+other = "(…)"
+[webmentionTip]
+other = "Want to respond? Link to this post from your own blog or a social post, then submit it to the Webmention endpoint: Source is your post's URL, Target is this page."
+[webmentionEndpoint]
+other = "submission endpoint"
+[webmentionForm]
+other = "use the form"
+[webmentionNoJS]
+other = "Sending a Webmention needs no JavaScript, but loading the ones already received does."
+[webmentionEmpty]
+other = "No webmentions yet."
+
+# Category label in front of the avatar row, e.g. "3 likes / reposts".
+[webmentionReactions]
+other = "likes / reposts"
+
+# Comments live inside a <details>; the summary line reads "Comments", and Twikoo
+# loads only after it is opened. commentsToggle* is kept for the non-collapsed config.
+[commentsToggle]
+other = "Show comments"
+
+[commentsToggleClose]
+other = "Hide comments"
 
 [commentTemplateMissing]
 other = "Comment template not found"

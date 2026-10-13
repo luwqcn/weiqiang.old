@@ -1,0 +1,25 @@
+{{- /*
+  custom-head.html —— 站点自己的 <head> 追加内容
+
+  head.html 末尾会调这个模板（前提是它存在），每一页都会输出。
+
+  ⚠️ rel="me" 的身份声明**已经搬去 hugo.toml 的 [params.webmention] relMe**
+  了，现在是全站输出（原来只在 /about/ 输出）。所以这里**不再重复** <link
+  rel="me">，只留一条挂在 about 页正文后面的隐形 <a rel="me"> —— 照顾按
+  <a> 标签爬 rel=me 的老实现（现代实现读 <link> 就够）。
+
+  前置条件（页面上做不到的部分）：登录的目标站点必须能**反过来**在自己
+  那边看到这个站点。GitHub 要去 Settings → Public profile 的 Website 栏
+  填 https://weiqiang.org/。邮箱方式不需要这个回链。
+*/ -}}
+{{- if eq .RelPermalink "/about/" }}
+{{- /* 正文里本来就有「邮箱留言：[EMAIL](mailto:lu@weiqiang.org)」，这里补一条
+       带 rel="me" 的可见链接，照顾按 <a> 标签找的旧实现（浏览器不认的
+       rel 值会被忽略，对阅读没影响）。文字用「邮箱」，不再重复一遍地址。 */ -}}
+{{- if not (in .Content "rel=\"me\"") -}}
+<div class="visually-hidden" aria-hidden="true">
+  <a rel="me" href="mailto:lu@weiqiang.org">邮箱</a>
+  <a rel="me" href="https://github.com/shujiaccn">GitHub</a>
+</div>
+{{- end }}
+{{- end -}}

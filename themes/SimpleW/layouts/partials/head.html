@@ -183,11 +183,22 @@
 <link rel="canonical" href="{{ .Permalink }}">
 
 {{- /*
-  ---------- IndieWeb：接收端点声明 ----------
-  别人（或 Bridgy 这类桥）抓这个页面时，靠这两行才知道回应该往哪儿推。
-  rel="me" 是身份声明：webmention.io 登录走 IndieAuth 认领域名，就是靠
-  它找到你那个能回链的档案（GitHub / Mastodon / Bluesky 主页都行），
-  只在 webmention 打开时才输出。
+  ---------- IndieWeb：身份声明 rel="me" ----------
+  IndieAuth（webmention.io 登录）抓这个页面的 HTML，从 rel="me" 里找
+  「能证明这是你」的档案。列表在 [params.webmention] relMe。
+
+  两种写法都收：
+    · 纯字符串 —— 只作身份声明，输出 <link rel="me" href="…">
+    · map       —— 可带 authn，输出 <link rel="me authn" href="…">
+                  注意 IndieLogin 的规则：页面上只要有任意一条带 authn，
+                  登录时**只认带 authn 的**。所以带 authn 的应当是主力
+                  （邮箱最佳：无第三方账号可失效，验证码发到信箱）。
+
+  map 写法：
+      relMe = [
+        { href = "mailto:lu@weiqiang.org", authn = true },
+        { href = "https://github.com/shujiaccn" },
+      ]
 */ -}}
 {{- with $wmEndpoint }}
 <link rel="webmention" href="{{ . }}">
@@ -199,7 +210,17 @@
   {{- $relMe := $wm.relMe | default slice -}}
   {{- if eq "string" (printf "%T" $relMe) }}{{ $relMe = slice $relMe }}{{ end -}}
   {{- range $relMe }}
-<link rel="me" href="{{ . }}">
+    {{- $href := "" -}}
+    {{- $authn := false -}}
+    {{- if reflect.IsMap . -}}
+      {{- $href = .href | default "" -}}
+      {{- if isset . "authn" }}{{ $authn = .authn }}{{ end -}}
+    {{- else -}}
+      {{- $href = printf "%v" . -}}
+    {{- end -}}
+    {{- with $href }}
+<link rel="me{{ if $authn }} authn{{ end }}" href="{{ . }}">
+    {{- end }}
   {{- end -}}
 {{- end -}}
 

@@ -1,54 +1,94 @@
 {{- /*
-  partials/comments/webmention.html — 「来自网络的提及」
+  partials/comments/webmention.html — 「Webmentions」折叠块
 
-  跟评论是两条线：Twikoo 收的是本站访客的留言，这里收的是别人在自己的
-  站点 / Mastodon / Bluesky 上回应了本文时，由 Webmention 协议自动推过来
-  的通知（回复 / 提及 / 点赞 / 转发 / 收藏），显示在评论框下面单独一块。
+  形式参考 Taxodium「给博客添加 Webmention」那篇的成品：
+  一个 <details> 小结，summary 里带条数，展开后先是一段「怎么给我发
+  Webmention」的说明，再是收到的头像 / 回复列表。用 <details> 而不是
+  自己写按钮的好处：不依赖 JS 就能开合、键盘和读屏器天然可访问，
+  也不会像上一版那样担心「脚本没跑起来按钮就点不动」。
 
-  静态站生成的 HTML 收不了 POST，所以「接收」这一环交给 webmention.io
-  的托管端点（声明写在 partials/head.html），这里只负责把它的公开 API
-  结果画出来。
+  跟评论是两条线：Twikoo 收本站访客的留言，这里收别人在自己的站点 /
+  Fediverse 上回应本文时推过来的通知（回复 / 提及 / 点赞 / 转发 / 收藏）。
+
+  静态站生成的 HTML 收不了 POST，「接收」交给 webmention.io 的托管端点
+  （声明写在 partials/head.html），这里只拉它的公开 API 画出来。
 
   几点取舍：
 
   · 不带 token 也能读公开提及，所以默认不填 token —— 填了它就会出现在
-    页面源码里，谁都能拿去读你的提及列表。只有想把「非公开」提及也
-    显示出来时才需要。
-  · 文案一律用 textContent 写进去，链接只放行 http(s)。提及内容来自
-    别人的站点，属于不可信输入，不能拼 HTML。
-  · 滚到附近才发请求（IntersectionObserver），不拖首屏。
-  · 请求失败就整块收起来，不显示「还没有提及」那种会误导人的话。
+    页面源码里，谁都能拿去读你的提及列表。
+  · 文案一律 textContent、链接只放行 http(s)。提及内容来自别人的站点，
+    属于不可信输入。
+  · details 展开、且滚到附近时才发请求，不拖首屏。
+  · 请求失败就把条数留成空，不显示「还没有提及」这种会误导人的话。
 */ -}}
 {{- $w := site.Params.webmention | default dict -}}
 {{- $domain := $w.domain | default "" -}}
 {{- $token := $w.token | default "" -}}
-{{- $title := $w.title | default (i18n "webmentionTitle" | default "来自网络的提及") -}}
+{{- $title := $w.title | default (i18n "webmentionTitle" | default "Webmentions") -}}
 {{- $intro := true -}}
 {{- if isset $w "intro" }}{{ $intro = $w.intro }}{{ end -}}
+
+{{- /* 提交端点：说明文字里要露给读者看，让他们知道往哪儿提交 */ -}}
+{{- $endpoint := $w.endpoint | default "" -}}
+{{- if and (not $endpoint) $domain -}}
+  {{- $endpoint = printf "https://webmention.io/%s/webmention" $domain -}}
+{{- end -}}
+{{- $form := "" -}}
+{{- if $domain -}}
+  {{- $form = $w.form | default (printf "https://webmention.io/%s/" $domain) -}}
+  {{- $form = printf "%s?target=%s" (strings.TrimSuffix "/" $form) (urlquery $.Permalink) -}}
+{{- end -}}
+
+{{- $reactLabel := i18n "webmentionReactions" | default "赞 / 转发" -}}
+
 {{- with $domain -}}
-<section id="webmentions" class="webmentions" data-target="{{ $.Permalink }}"{{ with $token }} data-token="{{ . }}"{{ end }}>
-  <h4 class="wm-title">{{ $title }}<span class="wm-count"></span></h4>
-  <div class="wm-faces" hidden></div>
-  <ul class="wm-list" hidden></ul>
-  {{- if $intro }}
-  <p class="wm-hint">{{ i18n "webmentionIntro" | default "还没有网络提及。当有人在独立博客或 Fediverse 上回应这篇文章时，会自动出现在这里。" }}</p>
-  {{- end }}
+<section id="webmentions" class="webmentions" data-target="{{ $.Permalink }}" data-react-label="{{ $reactLabel }}"{{ with $token }} data-token="{{ . }}"{{ end }}>
+  <details class="wm-details">
+    <summary class="wm-summary">
+      <span class="wm-title">{{ $title }}</span>
+      <span class="wm-count js-only">{{ i18n "webmentionLoading" | default "(加载中…)" }}</span>
+    </summary>
+
+    {{- if $intro }}
+    <p class="wm-tip">
+      {{- i18n "webmentionTip" | default "想回应这篇文章？可以在自己的博客或社交帖子里链接本文，再到 Webmention 端点提交：Source 填你的文章地址，Target 填本文地址。" -}}
+      {{- with $endpoint }} <a href="{{ . }}" rel="nofollow noopener" target="_blank">{{ i18n "webmentionEndpoint" | default "提交入口" }}</a>{{ end -}}
+      {{- with $form }}（<a href="{{ . }}" rel="nofollow noopener" target="_blank">{{ i18n "webmentionForm" | default "用表单提交" }}</a>）{{ end -}}
+    </p>
+    {{- end }}
+
+    <noscript>
+      <p class="wm-tip">{{ i18n "webmentionNoJS" | default "你可以给自己发 Webmention，但加载已收到的提及需要开启 JavaScript。" }}</p>
+    </noscript>
+
+    <div class="wm-reactions" hidden><span class="wm-reactions-label js-only"></span></div>
+    <ul class="wm-list" hidden></ul>
+    <p class="wm-empty" hidden>{{ i18n "webmentionEmpty" | default "还没有收到提及。" }}</p>
+  </details>
 </section>
 <script>
 (function () {
   var root = document.getElementById("webmentions");
   if (!root) { return; }
-  if (!window.fetch) { root.hidden = true; return; }
+  var box = root.querySelector(".wm-details");
+  if (!box) { return; }
+  if (!window.fetch) { root.querySelectorAll(".js-only").forEach(function (n) { n.hidden = true; }); return; }
 
   var target = root.getAttribute("data-target") || "";
-  if (!target) { root.hidden = true; return; }
+  if (!target) { return; }
 
   var token = root.getAttribute("data-token") || "";
-  var hasHint = !!root.querySelector(".wm-hint");
+  /* 类别标签的文案从 data-* 读。别在脚本里调 i18n(...) —— 那是 Hugo 的
+     模板函数，编译完的页面里没有这个全局，一调用就抛 ReferenceError，
+     整个 draw() 会在这一行断掉（提及列表也跟着画不出来）。 */
+  var reactLabel = root.getAttribute("data-react-label") || "赞 / 转发";
   var countEl = root.querySelector(".wm-count");
-  var facesEl = root.querySelector(".wm-faces");
+  var reactEl = root.querySelector(".wm-reactions");
   var listEl = root.querySelector(".wm-list");
-  var hintEl = root.querySelector(".wm-hint");
+  var emptyEl = root.querySelector(".wm-empty");
+  var reactLabelEl = root.querySelector(".wm-reactions-label");
+  var loaded = false;
 
   var REACTIONS = { "like-of": "赞", "repost-of": "转发", "bookmark-of": "收藏", "rsvp": "回应" };
   var RESPONSES = { "in-reply-to": "回复", "mention-of": "提及" };
@@ -153,14 +193,22 @@
       else if (RESPONSES[prop]) { responses.push(item); }
     });
 
+    if (countEl) {
+      /* Taxodium 那种写法：条数直接缀在 summary 后面，写作 (n) */
+      countEl.textContent = items.length ? "(" + items.length + ")" : "";
+      countEl.hidden = !items.length;
+    }
+
     if (!items.length) {
-      if (!hasHint) { root.hidden = true; }
+      if (emptyEl) { emptyEl.hidden = false; }
+      root.dataset.count = "0";
       return;
     }
 
     if (reactions.length) {
-      facesEl.hidden = false;
-      reactions.forEach(function (item) { facesEl.appendChild(avatar(item)); });
+      reactEl.hidden = false;
+      if (reactLabelEl) { reactLabelEl.textContent = reactions.length + " " + reactLabel; }
+      reactions.forEach(function (item) { reactEl.appendChild(avatar(item)); });
     }
 
     if (responses.length) {
@@ -171,29 +219,30 @@
       responses.forEach(function (item) { listEl.appendChild(row(item)); });
     }
 
-    if (hintEl) { hintEl.hidden = true; }
-    if (countEl) { countEl.textContent = "· " + items.length + " 条"; }
     root.dataset.count = String(items.length);
   }
 
   function load() {
+    if (loaded) { return; }
+    loaded = true;
     var api = "https://webmention.io/api/mentions.jf2?target=" +
       encodeURIComponent(target) + "&per-page=200";
     if (token) { api += "&token=" + encodeURIComponent(token); }
     fetch(api, { credentials: "omit" })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) { if (data) { draw(data); } else { root.hidden = true; } })
-      .catch(function () { root.hidden = true; });
+      .then(function (data) {
+        if (data) { draw(data); }
+        else if (countEl) { countEl.hidden = true; }
+      })
+      .catch(function () { if (countEl) { countEl.hidden = true; } });
   }
 
-  if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) { io.disconnect(); load(); }
-    }, { rootMargin: "200px" });
-    io.observe(root);
-  } else {
-    load();
+  /* 只在「读者真的展开了」之后才拉数据：details 不展开，这里一个请求都不发。 */
+  function maybeLoad() {
+    if (box.open) { load(); }
   }
+  box.addEventListener("toggle", maybeLoad);
+  maybeLoad();
 })();
 </script>
 {{- end -}}

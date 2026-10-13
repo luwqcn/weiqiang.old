@@ -11,6 +11,12 @@
   <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
 {{- end -}}
 
+{{- /*
+  评论区现在用原生 <details> 开合，不再需要专门的展开脚本（原 comments.js
+  已删）。Twikoo 的延迟初始化写在 comments/twikoo.html 内联脚本里，跟着
+  评论模板一起走，不需要在这里条件加载。
+*/ -}}
+
 {{- if templates.Exists "partials/custom-js.html" }}
 {{ partial "custom-js.html" . }}
 {{- end }}
