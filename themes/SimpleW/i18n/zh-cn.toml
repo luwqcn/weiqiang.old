@@ -22,6 +22,15 @@ other = "顶部"
 [toggleTheme]
 other = "切换深浅色"
 
+[themeAuto]
+other = "跟随系统"
+
+[themeLight]
+other = "浅色"
+
+[themeDark]
+other = "深色"
+
 [lastUpdated]
 other = "本页最近更新：{lastmod}"
 
@@ -116,35 +125,46 @@ other = "评论/留言"
 [commentsDisabled]
 other = "评论功能未启用。"
 
-# 评论区上面那块「Webmentions」（折叠小结，形式参考 Taxodium）。
-[webmentionTitle]
-other = "来自网络的提及"
+# 评论区 = 一个标签页组，三个标签：网络提及 / 评论 / 邮件。
+# 结构见 partials/comments.html，标签文案在这儿改。
+[commentTabWebmention]
+other = "网络提及"
 
-# summary 行右侧，等 JS 拉完数据后被换成 (n)；没有提及就整条藏起来。
-[webmentionLoading]
-other = "(…)"
+[commentTabComments]
+other = "评论"
+
+[commentTabEmail]
+other = "邮件"
+
+# 「邮件」面板：一句说明 + 一个「写信给 <地址>」按钮。
+[emailIntro]
+other = "不想公开留言？可以直接写信给我，我会看到。"
+[emailWriteTo]
+other = "写信给"
+
+# mailto 的默认主题：拼成「回复：<文章标题>」，省得对方自己起标题。
+[replySubject]
+other = "回复："
+
+# 「网络提及」面板开头那段「怎么给我发 Webmention」的说明 + 折起的提交表单。
 [webmentionTip]
-other = "想回应这篇文章？可以在自己的博客或社交帖子里链接本文，再到 Webmention 端点提交：Source 填你的文章地址，Target 填本文地址。"
-[webmentionEndpoint]
-other = "提交入口"
+other = "想回应这篇文章？先在自己的博客或社交帖子里写上本文的链接，再把那篇帖子的地址告诉我。"
 [webmentionForm]
 other = "用表单提交"
+[webmentionSource]
+other = "你那篇回应文章的地址"
+[webmentionTargetHint]
+other = "回应对象"
+[webmentionSubmit]
+other = "发送 Webmention"
 [webmentionNoJS]
-other = "提交 Webmention 不需要 JavaScript，但加载已收到的提及需要开启它。"
+other = "加载已收到的提及需要开启 JavaScript；提交不受影响。"
 [webmentionEmpty]
 other = "还没有收到提及。"
 
 # 头像行前面那句类别标签，拼成「3 赞 / 转发」这样。
 [webmentionReactions]
 other = "赞 / 转发"
-
-# 评论框默认收进 <details>，summary 那一行写「评论/留言」，点开才见 Twikoo。
-# commentsToggle* 是给「不折叠」配置留的兼容文案，正常用不到。
-[commentsToggle]
-other = "查看评论"
-
-[commentsToggleClose]
-other = "收起评论"
 
 [commentTemplateMissing]
 other = "未找到评论模板"

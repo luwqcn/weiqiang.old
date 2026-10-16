@@ -74,11 +74,14 @@
 
 .series-card:hover,
 .series-card:focus-visible {
-    border-color: var(--accent);
+    /* 悬停时整圈边框跟着书脊走，不用 --accent：
+       进行中的卡（绿脊）四边也变绿，归档的卡本来就是赭红，观感不变。 */
+    border-color: var(--spine);
     border-left-color: var(--spine);
     /* 必须整套写回来：全局 a:hover 的 `border-bottom:1px solid;
-       padding-bottom:2px` 优先级更高，不写回 padding-bottom 卡片会往上缩。 */
-    border-bottom: 1px solid var(--accent);
+       padding-bottom:2px` 优先级更高，不写回 padding-bottom 卡片会往上缩。
+       这里的 border-bottom 也是简写，颜色得再写一次，否则会退回 currentColor。 */
+    border-bottom: 1px solid var(--spine);
     padding-bottom: 1.4rem;
     box-shadow: var(--shadow-md);
 }
@@ -127,7 +130,8 @@
 
 .series-card:hover .sc-arrow,
 .series-card:focus-visible .sc-arrow {
-    color: var(--accent);
+    /* 同样跟书脊同色，免得绿卡悬停时冒出一枚赭红箭头 */
+    color: var(--spine);
 }
 
 /* 主页上稍紧一点，别抢「栏目」那块的风头 */

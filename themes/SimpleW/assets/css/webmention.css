@@ -1,6 +1,6 @@
 /* ==========================================================================
    SimpleW — webmention.css
-   评论区上面那一块「Webmentions」折叠块（形式参考 Taxodium）。
+   「网络提及」标签的面板（形式参考 Taxodium）。
 
    只在 params.webmention.enabled = true 且该页确实会渲染评论区时加载
    —— 见 partials/head.html 里 $webmentionCSS 那段。
@@ -9,15 +9,15 @@
      · 这一块挂在 #content 里面，正文列那条 `#content p { font-size:1.9rem;
        margin:20px 0 }` 会波及这里的 p，只写 .wm-text / .wm-tip 盖不住
        （id 选择器的权重更高），加上 #webmentions 这一层才压得住。
-     · 顺带把影响范围锁死，不碰下面评论块的样式。
+     · 顺带把影响范围锁死，不碰同一标签组里的评论 / 邮件面板。
 
-   两块（提及 / 评论）都是 <details class="*-details"> + <summary class="*-summary">，
-   样式在 components.css 里共用一套 .details-panel 规则，这里只管提及自己的内容。
-   正文与提及区之间那条 .comments-divider 也归这里管（它只在这块渲染时出现）。
+   标签栏本身（.ctabs / .ctab / .ctab-panel）的样式在 components.css 里，
+   这里只管提及面板自己的内容。正文与标签组之间那条 .comments-divider 也归
+   这里管（它只在这块渲染时出现）。
    ========================================================================== */
 
-/* 正文与提及/评论区之间那道分隔线（模板里 `.comments-divider`，压在
-   #webmentions 上面）。样式跟栏目页那条 15% 点线同款，全站观感一致。
+/* 正文与标签组之间那道分隔线（模板里 `.comments-divider`，压在 #comment 顶部）。
+   样式跟栏目页那条 15% 点线同款，全站观感一致。
    下面 components.css 的 `#comment hr` 权重 (0,1,0,1) 压过单类选择器，
    所以这里也用 `#comment` 起头，只改上下边距 —— 宽度、点线样式沿用那条，
    不重复写。 */
@@ -30,19 +30,7 @@
     font-size: 1.6rem;
 }
 
-#webmentions .wm-title {
-    font-size: 1.8rem;
-    font-weight: 500;
-}
-
-#webmentions .wm-count {
-    margin-left: 0.6rem;
-    color: var(--desc-color);
-    font-size: 1.4rem;
-    font-weight: 400;
-}
-
-/* ---- summary 下面那段「怎么给我发 Webmention」的说明 ---- */
+/* ---- 面板开头那段「怎么给我发 Webmention」的说明 ---- */
 #webmentions .wm-tip {
     margin: 0 0 1.6rem;
     color: var(--desc-color);
@@ -51,6 +39,118 @@
 }
 
 #webmentions .wm-tip a {
+    color: var(--link-color);
+}
+
+/* ---- 提交表单：默认折起，点「用表单提交」才展开 ----
+   target 由模板藏成 hidden，面板里只露 Source 一栏，所以排版就是
+   「标签 → 输入框 + 按钮 → 回应对象」三行。 */
+#webmentions .wm-send {
+    margin: 0 0 2rem;
+}
+
+#webmentions .wm-send > summary {
+    display: inline-block;
+    cursor: pointer;
+    color: var(--link-color);
+    font-size: 1.5rem;
+    line-height: 1.6;
+    list-style: none;
+}
+
+/* 收起 / 展开的三角：照侧栏目录那套自己做（.toc > summary 同款），
+   因为 display:inline-block 会把原生 marker 干掉。 */
+#webmentions .wm-send > summary::-webkit-details-marker {
+    display: none;
+}
+
+#webmentions .wm-send > summary::before {
+    content: "▸ ";
+    color: var(--desc-color);
+}
+
+#webmentions .wm-send[open] > summary::before {
+    content: "▾ ";
+}
+
+#webmentions .wm-send > summary:hover {
+    color: var(--link-color-hover);
+}
+
+#webmentions .wm-send[open] > summary {
+    margin-bottom: 1.2rem;
+}
+
+#webmentions .wm-send-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    padding: 1.4rem 1.6rem;
+    border: 1px solid var(--rule-color);
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+}
+
+#webmentions .wm-send-form label {
+    flex: 1 1 100%;
+    margin: 0;
+    color: var(--desc-color);
+    font-size: 1.45rem;
+    line-height: 1.6;
+}
+
+#webmentions .wm-send-form input[type="url"] {
+    flex: 1 1 20rem;
+    min-width: 0;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-sm);
+    background: var(--bg-color);
+    color: var(--main-color);
+    font-family: inherit;
+    font-size: 1.5rem;
+    line-height: 1.5;
+}
+
+#webmentions .wm-send-form input[type="url"]:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* 按钮跟「邮件」面板那个 .cm-email-btn 同款，两个面板观感一致 */
+#webmentions .wm-send-form button {
+    flex: 0 0 auto;
+    padding: 0.7rem 1.8rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2rem;
+    background: var(--card-bg);
+    color: var(--link-color);
+    font-family: inherit;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+#webmentions .wm-send-form button:hover {
+    color: var(--link-color-hover);
+    border-color: var(--accent);
+    background: var(--card-bg-hover);
+}
+
+/* 回应对象那行：本文地址本身可能很长，窄屏要能自己折 */
+#webmentions .wm-send-target {
+    flex: 1 1 100%;
+    margin: 0;
+    color: var(--desc-color);
+    font-size: 1.35rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+#webmentions .wm-send-target a {
     color: var(--link-color);
 }
 
@@ -189,5 +289,11 @@
     #webmentions .wm-avatar .wm-noavatar {
         width: 3.2rem;
         height: 3.2rem;
+    }
+
+    /* 窄屏让输入框和按钮各占一行，别挤在一起 */
+    #webmentions .wm-send-form input[type="url"],
+    #webmentions .wm-send-form button {
+        flex: 1 1 100%;
     }
 }

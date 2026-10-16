@@ -50,7 +50,16 @@
 {{- end -}}
 
 {{- if eq $scheme "auto" }}
-<button class="theme-toggle" type="button" data-theme-toggle aria-label="{{ i18n "toggleTheme" | default "切换深浅色" }}" title="{{ i18n "toggleTheme" | default "切换深浅色" }}">◐</button>
+{{- /* 三态循环：跟随系统（默认）→ 浅色 / 深色 → 回到跟随系统。
+       图标与提示文字由 main.js 按当前状态改写，这里给出的 data-label-*
+       是它唯一能拿到的文案来源（外部脚本里没有 i18n 函数）。 */}}
+<button class="theme-toggle" type="button" data-theme-toggle
+  aria-label="{{ i18n "toggleTheme" | default "切换深浅色" }}"
+  title="{{ i18n "toggleTheme" | default "切换深浅色" }}"
+  data-label-auto="{{ i18n "themeAuto" | default "跟随系统" }}"
+  data-label-light="{{ i18n "themeLight" | default "浅色" }}"
+  data-label-dark="{{ i18n "themeDark" | default "深色" }}"
+  data-label-hint="{{ i18n "toggleTheme" | default "切换深浅色" }}">&#9680;</button>
 {{- end -}}
 
 {{- if $navAnchor }}

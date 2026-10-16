@@ -235,19 +235,38 @@
 <link rel="syndication" href="{{ . }}">
 {{- end }}
 
-{{- /* ---------- colour scheme: resolved before first paint ---------- */ -}}
+{{- /*
+  ---------- colour scheme: resolved before first paint ----------
+
+  三种状态，只有两个变量：
+    data-scheme-mode  auto | light | dark   —— 访客的「意图」
+    data-theme        light | dark          —— 真正画出来的一套颜色
+
+  auto 在这里就被落成具体的 light/dark，所以 CSS 只认 data-theme 一个开关，
+  不用去猜 prefers-color-scheme（那条 media 兜底只留给禁用 JS 的访客）。
+  优先级：访客存过的选择 > 站点 [params.colorScheme] 写死的 light/dark > auto。
+
+  存储键是 simplew-theme，存的是「意图」（auto/light/dark）。老键 simplew-scheme
+  只有 light/dark 两个值，一旦点过就永久锁死、回不到跟随系统 —— 这里直接弃用
+  并清掉，让所有人都从 auto 重新开始。
+*/ -}}
 <script>
 (function () {
-  var scheme = {{ $scheme | jsonify | safeJS }};
+  var configured = {{ $scheme | jsonify | safeJS }};
   var root = document.documentElement;
+  var mq = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+  var mode = null;
   try {
-    var saved = window.localStorage.getItem("simplew-scheme");
-    if (saved === "dark" || saved === "light") { root.dataset.theme = saved; return; }
+    window.localStorage.removeItem("simplew-scheme");
+    var saved = window.localStorage.getItem("simplew-theme");
+    if (saved === "auto" || saved === "light" || saved === "dark") mode = saved;
   } catch (e) {}
-  if (scheme === "dark") { root.dataset.theme = "dark"; return; }
-  if (scheme === "light") { root.dataset.theme = "light"; return; }
-  root.dataset.theme = (window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  if (!mode && (configured === "light" || configured === "dark")) mode = configured;
+  if (!mode) mode = "auto";
+  root.setAttribute("data-scheme-mode", mode);
+  root.dataset.theme = (mode === "auto")
+    ? ((mq && mq.matches) ? "dark" : "light")
+    : mode;
 })();
 </script>
 

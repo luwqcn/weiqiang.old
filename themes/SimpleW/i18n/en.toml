@@ -22,6 +22,15 @@ other = "Top"
 [toggleTheme]
 other = "Toggle colour scheme"
 
+[themeAuto]
+other = "Follow system"
+
+[themeLight]
+other = "Light"
+
+[themeDark]
+other = "Dark"
+
 [lastUpdated]
 other = "Last updated: {lastmod}."
 
@@ -114,35 +123,46 @@ other = "Comments"
 [commentsDisabled]
 other = "Comments are disabled."
 
-# The "Webmentions" collapsible block above the comment area (Taxodium style).
-[webmentionTitle]
-other = "Mentions from around the web"
+# The comment area is a tab strip: Webmention / Comments / Email.
+# Markup lives in partials/comments.html; the tab wording lives here.
+[commentTabWebmention]
+other = "Webmention"
 
-# Sits at the right of the summary line; replaced by "(n)" once loaded, hidden when empty.
-[webmentionLoading]
-other = "(…)"
+[commentTabComments]
+other = "Comments"
+
+[commentTabEmail]
+other = "Email"
+
+# The Email panel: one line of copy plus a "write to <address>" button.
+[emailIntro]
+other = "Rather not post publicly? Email reaches me directly."
+[emailWriteTo]
+other = "Write to"
+
+# Default mailto subject, built as "Reply: <post title>".
+[replySubject]
+other = "Reply: "
+
+# The how-to paragraph at the top of the Webmention panel, plus the folded form.
 [webmentionTip]
-other = "Want to respond? Link to this post from your own blog or a social post, then submit it to the Webmention endpoint: Source is your post's URL, Target is this page."
-[webmentionEndpoint]
-other = "submission endpoint"
+other = "Want to respond? Write about this post on your own site, linking to it, then send me the URL of that post."
 [webmentionForm]
-other = "use the form"
+other = "Send with a form"
+[webmentionSource]
+other = "URL of your post"
+[webmentionTargetHint]
+other = "In response to"
+[webmentionSubmit]
+other = "Send webmention"
 [webmentionNoJS]
-other = "Sending a Webmention needs no JavaScript, but loading the ones already received does."
+other = "Loading received mentions requires JavaScript; sending is unaffected."
 [webmentionEmpty]
 other = "No webmentions yet."
 
 # Category label in front of the avatar row, e.g. "3 likes / reposts".
 [webmentionReactions]
 other = "likes / reposts"
-
-# Comments live inside a <details>; the summary line reads "Comments", and Twikoo
-# loads only after it is opened. commentsToggle* is kept for the non-collapsed config.
-[commentsToggle]
-other = "Show comments"
-
-[commentsToggleClose]
-other = "Hide comments"
 
 [commentTemplateMissing]
 other = "Comment template not found"

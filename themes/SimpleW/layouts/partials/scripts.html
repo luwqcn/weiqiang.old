@@ -12,9 +12,11 @@
 {{- end -}}
 
 {{- /*
-  评论区现在用原生 <details> 开合，不再需要专门的展开脚本（原 comments.js
-  已删）。Twikoo 的延迟初始化写在 comments/twikoo.html 内联脚本里，跟着
-  评论模板一起走，不需要在这里条件加载。
+  评论区是一个标签页组，切换靠原生 radio + <label> + CSS 兄弟选择器，**不需要
+  任何脚本**（原来的 comments.js 展开脚本已删）。需要 JS 的两件事都内联在各自
+  的面板模板里、跟着模板一起走，所以这里不用条件加载：
+    · 评论标签：comments/twikoo.html 在标签被选中后延迟初始化 Twikoo
+    · 提及标签：comments/webmention.html 在标签被选中后才去拉 webmention.io
 */ -}}
 
 {{- if templates.Exists "partials/custom-js.html" }}

@@ -21,6 +21,28 @@
            enabled: true
            provider: giscus
            template: comments/mine.html
+           email: someone@example.com
+
+  ---------------------------------------------------------------------------
+  渲染形态（2026-10 起）：一个标签页组，标签是「网络提及 / 评论 / 邮件」。
+
+    #comment
+      <hr class="comments-divider">                    ← showDivider 控制
+      .ctabs#comment-tabs
+        input.ctab-radio#ct-{webmention,comments,email}     ← 唯一 checked = 默认标签
+        .ctabs-bar  > label.ctab[for=…] + span.ctab-badge[data-count-*]
+        .ctabs-body > section.ctab-panel#panel-{…}
+
+  三点设计取舍，改之前先看一眼：
+
+  · 切换靠原生 radio + <label> + CSS 兄弟选择器，**一行 JS 都不用**。禁 JS 的
+    读者照样能来回切 —— 沿用这块一开始就定的「不依赖 JS」原则。radio 藏起来
+    但仍可聚焦，读屏器按标准单选组播报（可访问名来自 label 的 for 关联）。
+  · 三个面板各自条件渲染：网络提及看 [params.webmention]，评论看 provider，
+    邮件看 [params.comments] email 填没填。三个都不可用时回落成一句「未启用」。
+  · Twikoo 与 Webmention 都只在**自己的标签被选中时**才开始干活：前者靠
+    clientWidth 算布局，藏在 display:none 里量出来是 0 会错位；后者纯为省一个
+    请求。各自的监听写在 comments/twikoo.html 与 comments/webmention.html 里。
 */ -}}
 {{- $page := . -}}
 {{- $c := site.Params.comments | default dict -}}
@@ -30,7 +52,7 @@
 {{- $provider := $c.provider | default "none" -}}
 {{- $template := $c.template | default "" -}}
 {{- $customRaw := $c.customRaw | default "" -}}
-{{- $title := $c.title | default (i18n "comments" | default "评论/留言") -}}
+{{- $email := $c.email | default "" -}}
 {{- $divider := true -}}
 {{- if isset $c "showdivider" }}{{ $divider = $c.showDivider }}{{ end -}}
 
@@ -42,40 +64,17 @@
   {{- if isset $pc "enabled" }}{{ $enabled = $pc.enabled }}{{ end -}}
   {{- with $pc.provider }}{{ $provider = . }}{{ end -}}
   {{- with $pc.template }}{{ $template = . }}{{ end -}}
-  {{- with $pc.title }}{{ $title = . }}{{ end -}}
+  {{- with $pc.email }}{{ $email = . }}{{ end -}}
   {{- with $pc.raw }}{{ $customRaw = . }}{{ end -}}
 {{- end -}}
+{{- /* front matter 里写 false 时 Hugo 有时给的是字符串 "false"，非空字符串
+       在模板里是真值，不归一化就关不掉。 */ -}}
+{{- if in (slice "false" "0") (printf "%v" $enabled) }}{{ $enabled = false }}{{ end -}}
 
 {{- /*
-  评论框要不要折叠起来，默认折叠（点小结行才展开）。
-
-  折叠用的原生 <details>，跟上面 Webmentions 那块同一套交互：不依赖 JS
-  就能开合、键盘和读屏器天然可访问。summary 那一行就是「评论/留言」标题
-  + 条数，展开后才是 Twikoo。
-
-  优先级：单篇 front matter > [params.comments] > 默认 true。
-  keys 把 camelCase / 小写都列上，Hugo 的 params 键大小写不总一致。
-*/ -}}
-{{- $collapse := true -}}
-{{- if isset $c "collapse" }}{{ $collapse = $c.collapse }}{{ end -}}
-{{- range (slice "collapse" "Collapse") -}}
-  {{- if isset $page.Params . }}{{ $collapse = index $page.Params . }}{{ end -}}
-{{- end -}}
-{{- if in (slice "false" "0" "") (printf "%v" $collapse) }}{{ $collapse = false }}{{ end -}}
-
-{{- /* provider="none" 本来就没评论框可收，这时不折叠，直接说明未启用 */ -}}
-{{- if eq $provider "none" }}{{ $collapse = false }}{{ end -}}
-
-{{- if $enabled -}}
-{{- /*
-  「来自网络的提及」：跟评论框是两条独立的线 —— 评论收的是本站访客的留言，
-  这里收的是别人在自己的站点 / Fediverse 上回应本文时推过来的通知。
-
-  开关在 [params.webmention]，跟 provider 互不影响；单篇想关就在 front
-  matter 写 `webmention: false`。
-
-  位置在「评论/留言」标题之前：站外回过来的一手回应，读起来更像正文的
-  延伸，先看到它比沉在留言堆后面顺。两块都是 <details>，一上一下同款交互。
+  Webmention 开关：跟评论 provider 是两条独立的线 —— 评论收本站访客的留言，
+  这段收别人在自己的站点 / Fediverse 上回应本文时推过来的通知。单篇想关就在
+  front matter 写 `webmention: false`。
 */ -}}
 {{- $wm := site.Params.webmention | default dict -}}
 {{- $wmOn := false -}}
@@ -88,11 +87,26 @@
     {{- $wmOn = $wmPage -}}
   {{- end -}}
 {{- end -}}
-{{- /* front matter 里写 false 时 Hugo 有时给的是字符串 "false"，非空字符串
-       在模板里是真值，不归一化就关不掉。 */ -}}
 {{- if in (slice "false" "0" "") (printf "%v" $wmOn) }}{{ $wmOn = false }}{{ end -}}
 
-{{- /* 浏览量：只有 artalk 自带 PV 计数，挂在 summary 行右侧 */ -}}
+{{- /* 没配 domain 时提及端点无从谈起，整块不发 */ -}}
+{{- $hasWM := and $wmOn (ne ($wm.domain | default "") "") -}}
+{{- $hasComments := ne $provider "none" -}}
+{{- $hasEmail := ne $email "" -}}
+
+{{- /* 可用标签，按固定顺序拼；默认标签取自 [params.comments] defaultTab，
+       不在可用集合里就退到第一个。 */ -}}
+{{- $tabs := slice -}}
+{{- if $hasWM }}{{ $tabs = $tabs | append "webmention" }}{{ end -}}
+{{- if $hasComments }}{{ $tabs = $tabs | append "comments" }}{{ end -}}
+{{- if $hasEmail }}{{ $tabs = $tabs | append "email" }}{{ end -}}
+{{- $tabCount := len $tabs -}}
+{{- $defaultTab := lower (printf "%v" ($c.defaultTab | default "webmention")) -}}
+{{- if not (in (slice "webmention" "comments" "email") $defaultTab) }}{{ $defaultTab = "webmention" }}{{ end -}}
+{{- if and $tabs (not (in $tabs $defaultTab)) }}{{ $defaultTab = index $tabs 0 }}{{ end -}}
+
+{{- if $enabled -}}
+{{- /* 浏览量：只有 artalk 自带 PV 计数，挂在它那个标签上 */ -}}
 {{- $pv := false -}}
 {{- if eq $provider "artalk" -}}
   {{- $a := $c.artalk | default dict -}}
@@ -101,62 +115,79 @@
 {{- end -}}
 
 <div id="comment" class="comments" data-provider="{{ $provider }}">
-  {{- if and $wmOn (ne $provider "webmention") }}
-  {{- /* 正文与评论/提及区之间那道分隔线。「提及」在最前，所以它就压在
-         提及块头上（正文收尾后先看到这一刀，再是两块折叠）。
-         [params.comments] showDivider = false 可关掉。 */ -}}
+  {{- /* 正文与评论/提及区之间那道分隔线。[params.comments] showDivider = false
+         可关掉；宽度与点线样式在 components.css 的 `#comment hr`，间距在
+         webmention.css 的 `#comment .comments-divider`。 */ -}}
   {{- if $divider }}<hr class="comments-divider">{{ end }}
-  {{ partial "comments/webmention.html" $page }}
-  {{- end }}
 
-  {{- /*
-    评论块：summary 一行 = 标题 + 条数 +（artalk 时）浏览量，展开后直接是
-    Twikoo 留言框。
-
-    这里不再摆「回复这篇文章」那两个入口 —— 邮件 / Webmention 的说明与
-    入口统一收在上面那块「提及」里，两处功能重叠，删掉更紧凑（原本的
-    comments/reply-by.html 已删）。
-
-    不折叠时不套 <details>：省掉一层多余的开合控件，也让禁用 JS 的读者
-    直接看到留言框。Twikoo 本来就要 JS，删掉这层反而少一个打不开的壳。
-  */ -}}
-  {{- if $collapse }}
-  <details class="comments-details" id="comments-details">
-    <summary class="comments-summary">
-      <span class="comments-title">{{ $title }}</span>
-      <span class="comments-count" hidden></span>
-      {{- if $pv }}
-      <span class="tj">{{ i18n "pageviews" | default "浏览量" }}：<span class="artalk-pv-count">{{ i18n "loading" | default "加载中..." }}</span></span>
-      {{- end }}
-    </summary>
-    <div class="comments-body">
-      <div class="comments-provider" id="comments-provider">
+  {{- if eq $tabCount 0 }}
+  <p class="comments-disabled">{{ i18n "commentsDisabled" | default "评论功能未启用。" }}</p>
   {{- else }}
-  <div class="pl"><h4>{{ $title }}<span class="comments-count" hidden></span></h4></div>
-  <div class="comments-provider" id="comments-provider">
-  {{- end }}
-  {{- if $template -}}
-    {{- if templates.Exists (printf "partials/%s" $template) -}}
-      {{ partial $template $page }}
-    {{- else -}}
-      <p class="comments-disabled">{{ i18n "commentTemplateMissing" | default "未找到评论模板" }}：{{ $template }}</p>
-    {{- end -}}
-  {{- else if $customRaw -}}
-    {{ $customRaw | safeHTML }}
-  {{- else if eq $provider "none" -}}
-    <p class="comments-disabled">{{ i18n "commentsDisabled" | default "评论功能未启用。" }}</p>
-  {{- else -}}
-    {{- $path := printf "comments/%s.html" $provider -}}
-    {{- if templates.Exists (printf "partials/%s" $path) -}}
-      {{ partial $path $page }}
-    {{- else -}}
-      <p class="comments-disabled">{{ i18n "commentProviderUnknown" | default "未知的评论提供方" }}：{{ $provider }}</p>
-    {{- end -}}
-  {{- end }}
-  </div>
-  {{- if $collapse }}
+  <div class="ctabs" id="comment-tabs">
+    {{- /* radio 必须排在 .ctabs-bar 与 .ctabs-body 之前，CSS 才能用兄弟选择器
+           把「哪个选中」映射到「哪个面板显示」。 */ -}}
+    {{- range $tabs }}
+    <input type="radio" class="ctab-radio" name="comment-tab" id="ct-{{ . }}"{{ if eq . $defaultTab }} checked{{ end }}>
+    {{- end }}
+
+    <div class="ctabs-bar">
+      {{- range $tabs }}
+      {{- if eq . "webmention" }}
+      <label class="ctab" for="ct-webmention">
+        <span class="ctab-text">{{ with $wm.title }}{{ . }}{{ else }}{{ i18n "commentTabWebmention" | default "网络提及" }}{{ end }}</span>
+        <span class="ctab-badge" data-count-webmention hidden></span>
+      </label>
+      {{- else if eq . "comments" }}
+      <label class="ctab" for="ct-comments">
+        <span class="ctab-text">{{ with $c.title }}{{ . }}{{ else }}{{ i18n "commentTabComments" | default "评论" }}{{ end }}</span>
+        <span class="ctab-badge" data-count-comments hidden></span>
+        {{- if $pv }}
+        <span class="tj">{{ i18n "pageviews" | default "浏览量" }}：<span class="artalk-pv-count">{{ i18n "loading" | default "加载中..." }}</span></span>
+        {{- end }}
+      </label>
+      {{- else if eq . "email" }}
+      <label class="ctab" for="ct-email">
+        <span class="ctab-text">{{ i18n "commentTabEmail" | default "邮件" }}</span>
+      </label>
+      {{- end }}
+      {{- end }}
     </div>
-  </details>
+
+    <div class="ctabs-body">
+      {{- if $hasWM }}
+      <section class="ctab-panel" id="panel-webmention">
+        {{ partial "comments/webmention.html" $page }}
+      </section>
+      {{- end }}
+
+      {{- if $hasComments }}
+      <section class="ctab-panel" id="panel-comments">
+        {{- if $template -}}
+          {{- if templates.Exists (printf "partials/%s" $template) -}}
+            {{ partial $template $page }}
+          {{- else -}}
+            <p class="comments-disabled">{{ i18n "commentTemplateMissing" | default "未找到评论模板" }}：{{ $template }}</p>
+          {{- end -}}
+        {{- else if $customRaw -}}
+          {{ $customRaw | safeHTML }}
+        {{- else -}}
+          {{- $path := printf "comments/%s.html" $provider -}}
+          {{- if templates.Exists (printf "partials/%s" $path) -}}
+            {{ partial $path $page }}
+          {{- else -}}
+            <p class="comments-disabled">{{ i18n "commentProviderUnknown" | default "未知的评论提供方" }}：{{ $provider }}</p>
+          {{- end -}}
+        {{- end }}
+      </section>
+      {{- end }}
+
+      {{- if $hasEmail }}
+      <section class="ctab-panel" id="panel-email">
+        {{ partial "comments/email.html" (dict "page" $page "email" $email) }}
+      </section>
+      {{- end }}
+    </div>
+  </div>
   {{- end }}
 </div>
 {{- end -}}

@@ -1,0 +1,27 @@
+{{- /*
+  partials/comments/email.html — 「邮件」标签的面板
+
+  给不想公开留言的读者一条私信通道：一句说明 + 一个 mailto 按钮，主题
+  自动写成「回复：<文章标题>」，省得对方自己起标题。
+
+  地址来自 [params.comments] email（单篇可用 front matter 的 comments.email
+  覆盖），由 comments.html 解析好传进来 —— 留空时这个标签整个不出现，所以
+  这里不必再兜一层空判断，但留着也无害。
+
+  只给一个 mailto，不做页内表单：静态站收不了 POST，硬做要么外挂第三方表单
+  服务，要么写一堆没处落地的 JS。邮件客户端本来就是这条路的终点。
+*/ -}}
+{{- $page := .page -}}
+{{- $email := .email | default "" -}}
+{{- $subject := printf "%s%s" (i18n "replySubject" | default "回复：") $page.Title -}}
+{{- with $email }}
+<div class="cm-email">
+  <p class="cm-email-tip">{{ i18n "emailIntro" | default "不想公开留言？可以直接写信给我，我会看到。" }}</p>
+  <p class="cm-email-row">
+    <a class="cm-email-btn" href="mailto:{{ . }}?subject={{ urlquery $subject }}" rel="nofollow">
+      <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>{{ i18n "emailWriteTo" | default "写信给" }} <span class="cm-email-addr">{{ . }}</span></span>
+    </a>
+  </p>
+</div>
+{{- end -}}

@@ -163,8 +163,13 @@ uglyURLs = false
   # 列表页默认收录范围：recursive（含子目录）| direct（仅本层）
   listScope = "recursive"
 
-  # light = 完全沿用原站观感（默认）
-  # auto  = 跟随系统深浅色，并在导航栏出现切换按钮
+  # 全站默认的深浅色：
+  #   light = 一律浅色（主题原始观感）
+  #   dark  = 一律深色
+  #   auto  = 跟随访客的系统设置（本站用这个），并在导航栏给出三态切换按钮：
+  #           ◐ 跟随系统 → 与当前观感相反的那种 → 另一种 → 回到跟随系统
+  #           （系统是浅色时就是 ◐ → ● 深 → ○ 浅 → ◐）
+  # 访客一旦手动切过，就按他选的来（存在浏览器里）；再点回 ◐ 即恢复跟随系统。
   colorScheme = "auto"
 
   # 站点标志：assets/images/logo.svg 会被内联，随主题色变化
@@ -398,14 +403,19 @@ uglyURLs = false
   [params.comments]
     enabled = true
     provider = "twikoo"        # artalk | giscus | disqus | waline | twikoo | utterances | custom | none
-    title = "评论/留言"
-    showDivider = true
-    # 评论框默认收起来，读者点标题右边的按钮才展开。
-    # 头条那行「评论/留言（N） [查看评论]」始终可见，展开后按钮变「收起评论」。
-    # 想让评论框像从前一样一开始就铺开，把这里改成 false；
-    # 单篇想单独改，在 front matter 写 `collapse = false`。
-    # 没启用 provider（none）时这一项无效，本来就没有框可收。
-    collapse = true
+    # 评论区是一个标签页组：网络提及 / 评论 / 邮件（结构见 partials/comments.html）。
+    # 三个标签各由自己的开关决定出不出现 —— 提及看 [params.webmention]，
+    # 评论看 provider，邮件看下面 email 填没填。三个都不可用时回落成一句
+    # 「评论功能未启用」。
+    title = "评论"             # 「评论」那个标签上的文案
+    showDivider = true         # 正文与标签组之间那条点线，false 可关
+    # 页面打开时停在哪个标签：webmention | comments | email。
+    # 填的那个如果没渲染出来（比如提及没开），自动退到第一个可用的。
+    defaultTab = "webmention"
+    # 「邮件」标签的收件地址。填了才出现这个标签，留空则整块不渲染。
+    # 按钮会自动拼成 mailto:…?subject=回复：<文章标题>，省得对方自己起标题。
+    # 单篇想换地址，在 front matter 写 comments.email。
+    email = "lu@weiqiang.org"
     # template = "comments/my-provider.html"   # 自定义评论模板：写成 partial 路径
     # customRaw = """<div id="mine"></div><script>…</script>"""
 
@@ -495,7 +505,7 @@ uglyURLs = false
     # 关掉就整块不输出（head 里的端点声明、样式、前端请求全都没有）
     enabled = true
     domain = "weiqiang.org"
-    title = "来自网络的提及"
+    title = "网络提及"        # 评论区里那个标签上的文案
     # 没有提及时给一句说明；关掉的话，没提及就整块不显示
     intro = true
 
@@ -509,9 +519,13 @@ uglyURLs = false
     endpoint = ""       # 默认 https://webmention.io/<domain>/webmention
     pingback = ""       # 默认 https://webmention.io/<domain>/xmlrpc
 
-    # 读者提交 Webmention 的入口地址。留空即用 https://webmention.io/<domain>/，
-    # 页面上会拼成 https://webmention.io/<domain>/?target=<本文地址> 再链过去；
-    # webmention.io 的表单会自己带上 target，读者只要填「我那篇回应文章的地址」。
+    # 读者提交 Webmention 用的表单地址（页内 <form action>）。
+    # 留空即用 https://webmention.io/<domain>/webmention。
+    #
+    # ⚠️ 必须是带 /webmention 的那条：webmention.io 的 PHP 版把提交表单挪到了
+    #    /<domain>/webmention，老写法 https://webmention.io/<domain> 现在 404。
+    #    另外表单页不认 ?target= 预填，所以模板自己起 form、把本文地址藏成
+    #    hidden 字段，读者只填「我那篇回应文章的地址」。
     # 将来换自建接收端，这里填那个端的提交页地址。
     form = ""
 

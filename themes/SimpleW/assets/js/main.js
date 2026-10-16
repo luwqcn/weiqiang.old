@@ -5,63 +5,92 @@
 (function () {
   "use strict";
 
-  var STORAGE_KEY = "simplew-scheme";
+  var STORAGE_KEY = "simplew-theme"; // auto | light | dark
   var root = document.documentElement;
 
   /* ----------------------------------------------------------------------
-     1. Theme toggle
+     1. Theme toggle — three states
+
+     auto（跟随系统，默认）→ 显式 light / dark → 回到 auto
+
+     早先只有两态，点一下就永久存成 light 或 dark，从此不再跟系统走，而且
+     没有办法回到「跟随系统」。现在按钮自己循环三态，图标就是当前状态：
+        ◐  跟随系统      ○  浅色      ●  深色
+     按钮上的三个文案从 data-label-* 读，外部脚本里没有 i18n 函数可用。
+
      Only rendered when params.colorScheme = "auto", but the logic is a no-op
-     when the button is absent.
+     when the button is absent — 系统变暗时页面照样自己跟上。
      ---------------------------------------------------------------------- */
-  function currentScheme() {
-    return root.dataset.theme === "dark" ? "dark" : "light";
+  var MODE_ATTR = "data-scheme-mode";
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+
+  function systemTheme() {
+    return (mq && mq.matches) ? "dark" : "light";
   }
 
-  function paint(scheme) {
-    root.dataset.theme = scheme;
+  function currentMode() {
+    var m = root.getAttribute(MODE_ATTR);
+    return (m === "light" || m === "dark") ? m : "auto";
+  }
+
+  /* 一圈走完是 auto → 与当前观感相反的那种 → 另一种 → 回 auto。
+     比如系统是浅色时：◐（浅）→ ● 深 → ○ 浅 → ◐（浅）。
+     关键是第一步必须落在「屏幕上会变」的那一边：系统已经是浅色时直接切去
+     ○ 浅色，颜色纹丝不动，看起来就像点了没反应。第二次之后的判断用同一个
+     规则推导 —— 与系统同色的那种是这一圈的倒数第二站，下一步就该回 auto。 */
+  function nextMode() {
+    var mode = currentMode();
+    var sys = systemTheme();
+    if (mode === "auto") return sys === "dark" ? "light" : "dark";
+    if (mode === sys) return "auto";
+    return mode === "dark" ? "light" : "dark";
+  }
+
+  function glyphFor(mode) {
+    if (mode === "auto") return "\u25D0"; // ◐ 半明半暗 = 跟随系统
+    return mode === "dark" ? "\u25CF" : "\u25CB"; // ● / ○
+  }
+
+  function paint(mode) {
+    var resolved = (mode === "auto") ? systemTheme() : mode;
+    root.setAttribute(MODE_ATTR, mode);
+    root.dataset.theme = resolved;
     document.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
-      btn.textContent = scheme === "dark" ? "\u25D0" : "\u25D1";
-      btn.setAttribute("aria-pressed", scheme === "dark" ? "true" : "false");
+      btn.textContent = glyphFor(mode);
+      var state = btn.getAttribute("data-label-" + mode) || "";
+      var hint = btn.getAttribute("data-label-hint") || "";
+      var label = hint ? (state ? state + " · " + hint : hint) : state;
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
     });
   }
 
-  function store(scheme) {
+  function store(mode) {
     try {
-      window.localStorage.setItem(STORAGE_KEY, scheme);
+      window.localStorage.setItem(STORAGE_KEY, mode);
     } catch (e) {
       /* private mode — the toggle still works, it just will not persist */
-    }
-  }
-
-  function readStored() {
-    try {
-      var v = window.localStorage.getItem(STORAGE_KEY);
-      return v === "dark" || v === "light" ? v : null;
-    } catch (e) {
-      return null;
     }
   }
 
   document.addEventListener("click", function (ev) {
     var btn = ev.target.closest("[data-theme-toggle]");
     if (!btn) return;
-    var next = currentScheme() === "dark" ? "light" : "dark";
-    paint(next);
-    store(next);
+    var mode = nextMode();
+    paint(mode);
+    store(mode);
   });
 
   /* Follow the OS while the visitor has not made an explicit choice. */
-  if (window.matchMedia) {
-    var mq = window.matchMedia("(prefers-color-scheme: dark)");
-    var onChange = function (e) {
-      if (readStored()) return;
-      paint(e.matches ? "dark" : "light");
+  if (mq) {
+    var onSystemChange = function () {
+      if (currentMode() === "auto") paint("auto");
     };
-    if (mq.addEventListener) mq.addEventListener("change", onChange);
-    else if (mq.addListener) mq.addListener(onChange);
+    if (mq.addEventListener) mq.addEventListener("change", onSystemChange);
+    else if (mq.addListener) mq.addListener(onSystemChange);
   }
 
-  paint(currentScheme());
+  paint(currentMode());
 
   /* Wide tables and external-link attributes are handled in CSS / render hooks.
      Keeping those concerns out of JavaScript makes the page usable before this

@@ -149,8 +149,12 @@
 
    两条激活路径，改的时候要一起动（CSS 没法把 media query 和属性选择器
    合成一条规则）：
-     · 明确选了深色 → <html data-theme="dark">（head.html 的内联脚本写）
-     · 跟随系统     → 无 JS 时的兜底，见 utils.css
+     · 正常路径 → <html data-theme="dark">（head.html 的内联脚本写。
+                  不管是手动选的深色，还是 auto 解析出来的深色，都走这条，
+                  main.js 在系统变暗时会替 auto 把属性改掉）
+     · 无 JS     → 下面那条 media 兜底，此时 data-theme 谁也没写过
+   「跟随系统」这件事不需要额外规则：data-scheme-mode="auto" 只是给按钮看的，
+   页面颜色永远只认 data-theme。
 */
 :root[data-theme="dark"] {
     --bg-color: var(--c-bg-dark);

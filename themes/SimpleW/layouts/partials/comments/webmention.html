@@ -1,11 +1,11 @@
 {{- /*
-  partials/comments/webmention.html — 「Webmentions」折叠块
+  partials/comments/webmention.html — 「网络提及」标签的面板
 
-  形式参考 Taxodium「给博客添加 Webmention」那篇的成品：
-  一个 <details> 小结，summary 里带条数，展开后先是一段「怎么给我发
-  Webmention」的说明，再是收到的头像 / 回复列表。用 <details> 而不是
-  自己写按钮的好处：不依赖 JS 就能开合、键盘和读屏器天然可访问，
-  也不会像上一版那样担心「脚本没跑起来按钮就点不动」。
+  这是 comments.html 里 .ctabs 的第一个面板（#panel-webmention），不再自带
+  折叠壳 —— 折叠/切换交给标签栏，这里只管内容：
+
+    一段「怎么给我发 Webmention」的说明 + 一个折起的提交表单
+    →  收到的头像行 + 回复列表
 
   跟评论是两条线：Twikoo 收本站访客的留言，这里收别人在自己的站点 /
   Fediverse 上回应本文时推过来的通知（回复 / 提及 / 点赞 / 转发 / 收藏）。
@@ -19,71 +19,81 @@
     页面源码里，谁都能拿去读你的提及列表。
   · 文案一律 textContent、链接只放行 http(s)。提及内容来自别人的站点，
     属于不可信输入。
-  · details 展开、且滚到附近时才发请求，不拖首屏。
+  · **只有「网络提及」这个标签被选中时才发请求**（监听 #ct-webmention 的
+    change），默认停在别的标签就一个请求都不发，也不拖首屏。
   · 请求失败就把条数留成空，不显示「还没有提及」这种会误导人的话。
+  · 提交入口用**页内表单**而不是外链：webmention.io 现在的表单页不认
+    ?target= 预填，直接链过去读者得手填两栏；自己起一个 form 把 target
+    藏成 hidden，读者只填自己那篇帖子的地址，少一步。跨站 POST 普通表单
+    不需要 CORS，也不用 JS。
 */ -}}
 {{- $w := site.Params.webmention | default dict -}}
 {{- $domain := $w.domain | default "" -}}
 {{- $token := $w.token | default "" -}}
-{{- $title := $w.title | default (i18n "webmentionTitle" | default "Webmentions") -}}
 {{- $intro := true -}}
 {{- if isset $w "intro" }}{{ $intro = $w.intro }}{{ end -}}
 
-{{- /* 提交端点：说明文字里要露给读者看，让他们知道往哪儿提交 */ -}}
-{{- $endpoint := $w.endpoint | default "" -}}
-{{- if and (not $endpoint) $domain -}}
-  {{- $endpoint = printf "https://webmention.io/%s/webmention" $domain -}}
-{{- end -}}
-{{- $form := "" -}}
+{{- /* 读者提交用的表单地址（页内 <form action>）。
+       ⚠️ webmention.io 换成 PHP 版之后，「提交表单」搬到了
+       https://webmention.io/<domain>/webmention；
+       老写法 https://webmention.io/<domain>（不带 /webmention）现在整片 404
+       —— 连示例里的 aaronparecki.com 都 404，别再用。
+       表单页只认 POST 过来的 target，GET 上挂 ?target= 不会预填，所以这里
+       干脆自己起一个 form，把 target 藏成 hidden 字段，读者只填自己那篇
+       回应文章的地址。跨站提交普通表单不需要 CORS，纯 HTML 就能用。 */ -}}
+{{- $formAction := "" -}}
 {{- if $domain -}}
-  {{- $form = $w.form | default (printf "https://webmention.io/%s/" $domain) -}}
-  {{- $form = printf "%s?target=%s" (strings.TrimSuffix "/" $form) (urlquery $.Permalink) -}}
+  {{- $formAction = $w.form | default (printf "https://webmention.io/%s/webmention" $domain) -}}
 {{- end -}}
 
 {{- $reactLabel := i18n "webmentionReactions" | default "赞 / 转发" -}}
 
 {{- with $domain -}}
-<section id="webmentions" class="webmentions" data-target="{{ $.Permalink }}" data-react-label="{{ $reactLabel }}"{{ with $token }} data-token="{{ . }}"{{ end }}>
-  <details class="wm-details">
-    <summary class="wm-summary">
-      <span class="wm-title">{{ $title }}</span>
-      <span class="wm-count js-only">{{ i18n "webmentionLoading" | default "(加载中…)" }}</span>
-    </summary>
+<div id="webmentions" class="webmentions" data-target="{{ $.Permalink }}" data-react-label="{{ $reactLabel }}"{{ with $token }} data-token="{{ . }}"{{ end }}>
+  {{- if $intro }}
+  <p class="wm-tip">
+    {{- i18n "webmentionTip" | default "本站支持 Webmention 想回应这篇文章？先在自己的博客或社交帖子里写上本文的链接，再把那篇帖子的地址告诉我。" -}}
+  </p>
+  {{- with $formAction }}
+  <div class="wm-send">
+    <span>{{ i18n "webmentionForm" | default "手动提交" }}</span>
+    <form class="wm-send-form" action="{{ . }}" method="post">
+      <input type="hidden" name="target" value="{{ $.Permalink }}">
+      <label for="wm-source">{{ i18n "webmentionSource" | default "你那篇回应文章的地址" }}</label>
+      <input id="wm-source" name="source" type="url" required autocomplete="off" spellcheck="false" placeholder="https://">
+      <button type="submit">{{ i18n "webmentionSubmit" | default "发送 Webmention" }}</button>
+      <p class="wm-send-target">{{ i18n "webmentionTargetHint" | default "回应对象" }}：<a href="{{ $.Permalink }}">{{ $.Permalink }}</a></p>
+    </form>
+  </div>
+  {{- end }}
+  {{- end }}
 
-    {{- if $intro }}
-    <p class="wm-tip">
-      {{- i18n "webmentionTip" | default "想回应这篇文章？可以在自己的博客或社交帖子里链接本文，再到 Webmention 端点提交：Source 填你的文章地址，Target 填本文地址。" -}}
-      {{- with $endpoint }} <a href="{{ . }}" rel="nofollow noopener" target="_blank">{{ i18n "webmentionEndpoint" | default "提交入口" }}</a>{{ end -}}
-      {{- with $form }}（<a href="{{ . }}" rel="nofollow noopener" target="_blank">{{ i18n "webmentionForm" | default "用表单提交" }}</a>）{{ end -}}
-    </p>
-    {{- end }}
+  <noscript>
+    <p class="wm-tip">{{ i18n "webmentionNoJS" | default "加载已收到的提及需要开启 JavaScript；提交不受影响。" }}</p>
+  </noscript>
 
-    <noscript>
-      <p class="wm-tip">{{ i18n "webmentionNoJS" | default "你可以给自己发 Webmention，但加载已收到的提及需要开启 JavaScript。" }}</p>
-    </noscript>
-
-    <div class="wm-reactions" hidden><span class="wm-reactions-label js-only"></span></div>
-    <ul class="wm-list" hidden></ul>
-    <p class="wm-empty" hidden>{{ i18n "webmentionEmpty" | default "还没有收到提及。" }}</p>
-  </details>
-</section>
+  <div class="wm-reactions" hidden><span class="wm-reactions-label js-only"></span></div>
+  <ul class="wm-list" hidden></ul>
+  <p class="wm-empty" hidden>{{ i18n "webmentionEmpty" | default "还没有收到提及。" }}</p>
+</div>
 <script>
 (function () {
   var root = document.getElementById("webmentions");
   if (!root) { return; }
-  var box = root.querySelector(".wm-details");
-  if (!box) { return; }
   if (!window.fetch) { root.querySelectorAll(".js-only").forEach(function (n) { n.hidden = true; }); return; }
 
   var target = root.getAttribute("data-target") || "";
   if (!target) { return; }
 
+  /* 标签栏里那个 radio：只有它被选中时才值得去拉数据。 */
+  var radio = document.getElementById("ct-webmention");
+
   var token = root.getAttribute("data-token") || "";
-  /* 类别标签的文案从 data-* 读。别在脚本里调 i18n(...) —— 那是 Hugo 的
-     模板函数，编译完的页面里没有这个全局，一调用就抛 ReferenceError，
-     整个 draw() 会在这一行断掉（提及列表也跟着画不出来）。 */
+  /* 文案从 data-* 读。别在脚本里调 i18n(...) —— 那是 Hugo 的模板函数，
+     编译完的页面里没有这个全局，一调用就抛 ReferenceError，整个 draw()
+     会在那一行断掉（提及列表跟着画不出来）。 */
   var reactLabel = root.getAttribute("data-react-label") || "赞 / 转发";
-  var countEl = root.querySelector(".wm-count");
+  var badge = document.querySelector("[data-count-webmention]");
   var reactEl = root.querySelector(".wm-reactions");
   var listEl = root.querySelector(".wm-list");
   var emptyEl = root.querySelector(".wm-empty");
@@ -193,15 +203,13 @@
       else if (RESPONSES[prop]) { responses.push(item); }
     });
 
-    if (countEl) {
-      /* Taxodium 那种写法：条数直接缀在 summary 后面，写作 (n) */
-      countEl.textContent = items.length ? "(" + items.length + ")" : "";
-      countEl.hidden = !items.length;
+    if (badge) {
+      badge.textContent = String(items.length);
+      badge.hidden = !items.length;
     }
 
     if (!items.length) {
       if (emptyEl) { emptyEl.hidden = false; }
-      root.dataset.count = "0";
       return;
     }
 
@@ -218,8 +226,6 @@
       });
       responses.forEach(function (item) { listEl.appendChild(row(item)); });
     }
-
-    root.dataset.count = String(items.length);
   }
 
   function load() {
@@ -230,18 +236,15 @@
     if (token) { api += "&token=" + encodeURIComponent(token); }
     fetch(api, { credentials: "omit" })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        if (data) { draw(data); }
-        else if (countEl) { countEl.hidden = true; }
-      })
-      .catch(function () { if (countEl) { countEl.hidden = true; } });
+      .then(function (data) { if (data) { draw(data); } })
+      .catch(function () { /* 拉不到就什么都不显示，别留一个骗人的空态 */ });
   }
 
-  /* 只在「读者真的展开了」之后才拉数据：details 不展开，这里一个请求都不发。 */
+  /* 只在自己的标签被选中时才拉：默认停在别的标签，这里一个请求都不发。 */
   function maybeLoad() {
-    if (box.open) { load(); }
+    if (!radio || radio.checked) { load(); }
   }
-  box.addEventListener("toggle", maybeLoad);
+  if (radio) { radio.addEventListener("change", maybeLoad); }
   maybeLoad();
 })();
 </script>

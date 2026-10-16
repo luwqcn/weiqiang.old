@@ -692,107 +692,154 @@ span.pageright {
     border-top: 1px;
 }
 
-.comments hr {
-    margin: 5em auto 2.5em;
-    width: 15%;
+/* ---- 标签页：网络提及 / 评论 / 邮件 ----
+   结构见 partials/comments.html：
+     .ctabs > input.ctab-radio#ct-{webmention,comments,email}
+              + .ctabs-bar  > label.ctab[for=…]
+              + .ctabs-body > section.ctab-panel#panel-{…}
+
+   切换全靠原生 radio + <label> + 兄弟选择器，**一行 JS 都不用**，禁 JS 的读者
+   照样能来回切。下面那三行 `:checked` 规则就是「谁选中 → 谁显示」的全部映射；
+   用 id 指定面板，所以某个标签没渲染时对应规则空转，不影响其余两个。 */
+
+/* 藏起 radio，但**不能 display:none / visibility:hidden** —— 那样会把键盘 Tab
+   和读屏一起丢掉。用 clip 这套「视觉消失、仍在可访问树里」的写法。 */
+.ctabs > .ctab-radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
     border: 0;
-    border-top: 10px dotted var(--accent-soft);
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
-/* 不折叠时的老标题行（[params.comments] collapse = false / 单篇覆盖时用）。
-   默认的折叠路径不再走这里，改成下面的 <details>。 */
-.pl {
+.ctabs-bar {
     display: flex;
-    margin: 2em 0;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.2rem;
+    border-bottom: 1px solid var(--rule-color);
+}
+
+.ctab {
+    display: inline-flex;
     align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.pl h4 {
-    margin: 0;
-    font-size: 2rem;
-}
-
-.pl .tj {
+    gap: 0.6rem;
+    padding: 0.7rem 1.3rem;
+    margin-bottom: -1px;
+    border-bottom: 2px solid transparent;
     color: var(--desc-color);
-    font-size: 1.5rem;
-}
-
-/* ---- 折叠小结：提及块与评论块共用 ----
-   两块都是原生 <details>：不依赖 JS 就能开合，键盘 / 读屏器天然可访问，
-   也不会再出现「脚本没跑起来按钮点不动」的坑（上一版那个自定义按钮
-   要配 comments.js 才敢显示，就是被这个问题逼出来的）。
-   summary 行做成整条可点的标题行，箭头自己用 CSS 画，跟站点其他部分一致。 */
-.comments-details,
-.wm-details {
-    margin: 2em 0;
-}
-
-.comments-summary,
-.wm-summary {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.8rem;
+    font-size: 1.75rem;
+    line-height: 1.5;
     cursor: pointer;
-    list-style: none;
-    outline: none;
+    user-select: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-/* 去掉浏览器默认三角，换成自己那条 —— 用 currentColor 描边，深浅色都跟得住 */
-.comments-summary::-webkit-details-marker,
-.wm-summary::-webkit-details-marker {
+.ctab:hover {
+    color: var(--accent);
+}
+
+/* 选中的那个：赭红字 + 下划线，压住底下的灰线 */
+#ct-webmention:checked ~ .ctabs-bar > .ctab[for="ct-webmention"],
+#ct-comments:checked ~ .ctabs-bar > .ctab[for="ct-comments"],
+#ct-email:checked ~ .ctabs-bar > .ctab[for="ct-email"] {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* 键盘走到被藏起来的 radio 时，把焦点画在它对应的 label 上。
+   必须一个 id 对一条 —— 写成 .ctab-radio:focus-visible 会把三个标签一起点亮。 */
+#ct-webmention:focus-visible ~ .ctabs-bar > .ctab[for="ct-webmention"],
+#ct-comments:focus-visible ~ .ctabs-bar > .ctab[for="ct-comments"],
+#ct-email:focus-visible ~ .ctabs-bar > .ctab[for="ct-email"] {
+    outline: 2px solid var(--accent);
+    outline-offset: -3px;
+    border-radius: 3px;
+}
+
+/* 标签上那个条数小徽标：没数字时带 hidden，由脚本揭开。
+   底色用 accent-soft（浅色 #efd9d5 / 深色 #3d4a52），在两种主题下都看得见；
+   card-bg-hover 在浅色下几乎跟页面同色，做药丸会看不出来。 */
+.ctab-badge {
+    padding: 0.1rem 0.55rem;
+    border-radius: 1rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.ctab-badge[hidden] {
     display: none;
 }
 
-.comments-summary::after,
-.wm-summary::after {
-    content: "";
-    flex: 0 0 auto;
-    align-self: center;
-    width: 0.7em;
-    height: 0.7em;
-    margin-left: -0.2em;
-    border-right: 2px solid var(--desc-color);
-    border-bottom: 2px solid var(--desc-color);
-    transform: rotate(45deg) translate(-0.1em, -0.1em);
-    transition: transform 0.2s ease;
-}
-
-.comments-details[open] > .comments-summary::after,
-.wm-details[open] > .wm-summary::after {
-    transform: rotate(225deg) translate(-0.1em, -0.1em);
-}
-
-.comments-summary:hover::after,
-.wm-summary:hover::after {
-    border-color: var(--accent);
-}
-
-.comments-summary:focus-visible,
-.wm-summary:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 6px;
-    border-radius: 2px;
-}
-
-.comments-title {
-    font-size: 2rem;
-    font-weight: 500;
-}
-
-/* Twikoo 渲染完把条数写回这个 <span>（见 comments/twikoo.html）；
-   没拿到数字前它带 hidden，不占位。 */
-.comments-count {
+.ctabs-bar .tj {
     color: var(--desc-color);
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 400;
 }
 
-.comments-provider {
-    margin-top: 1.5rem;
+.ctabs-body {
+    margin-top: 2rem;
+}
+
+.ctab-panel {
+    display: none;
+}
+
+#ct-webmention:checked ~ .ctabs-body > #panel-webmention,
+#ct-comments:checked ~ .ctabs-body > #panel-comments,
+#ct-email:checked ~ .ctabs-body > #panel-email {
+    display: block;
+}
+
+/* ---- 「邮件」面板：一句说明 + 一个 mailto 按钮 ----
+   选择器带 #comment：这一块在 #content 里，正文那条 `#content p`（权重
+   (1,0,1)）会盖掉单类选择器的字号和 margin，得加到 (1,1,0) 才压得住。 */
+#comment .cm-email-tip {
+    margin: 0 0 1.6rem;
+    color: var(--desc-color);
+    font-size: 1.5rem;
+    line-height: 1.8;
+}
+
+#comment .cm-email-row {
+    margin: 0;
+}
+
+#comment .cm-email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.75rem 1.6rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2rem;
+    background: var(--card-bg);
+    color: var(--link-color);
+    font-size: 1.55rem;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+#comment .cm-email-btn:hover {
+    color: var(--link-color-hover);
+    border-color: var(--accent);
+    background: var(--card-bg-hover);
+}
+
+#comment .cm-email-btn svg {
+    flex: 0 0 auto;
+}
+
+#comment .cm-email-addr {
+    overflow-wrap: anywhere;
 }
 
 .comments-disabled {
@@ -819,6 +866,9 @@ span.pageright {
 
 /* --------------------------------------------------------------------------
    10. Theme switch button (opt-in)
+
+   三态循环，图标就是状态：◐ 跟随系统 / ○ 浅色 / ● 深色（见 js/main.js）。
+   三个字形宽度不一，给个 min-width 免得切换时导航条跟着抖。
    -------------------------------------------------------------------------- */
 .theme-toggle {
     appearance: none;
@@ -832,11 +882,19 @@ span.pageright {
     line-height: 1;
     padding: 0.2em 0.45em;
     font-family: inherit;
+    text-align: center;
+    min-width: 1.6em;
 }
 
 .theme-toggle:hover {
     color: var(--accent);
     border-color: var(--rule-color);
+}
+
+/* 跟随系统时收一档颜色，一眼能看出「这是自动，不是我锁的手动」；
+   手动选过之后就是正常的导航链接色。 */
+:root[data-scheme-mode="auto"] .theme-toggle {
+    color: var(--time-color);
 }
 
 /* --------------------------------------------------------------------------
