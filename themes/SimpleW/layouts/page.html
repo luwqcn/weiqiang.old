@@ -31,7 +31,7 @@
       "default" false
       "group" "post") -}}
 
-<article class="post{{ if $numHeadings }} num-headings{{ end }}{{ with .Params.bodyClass }} {{ . }}{{ end }}">
+<article class="post h-entry{{ if $numHeadings }} num-headings{{ end }}{{ with .Params.bodyClass }} {{ . }}{{ end }}">
 {{- /*
   post-layout 包住整篇（标题 + 元信息 + 正文），目录的 top:0 才等于
   main 的最上边；只包正文的话目录会挂在标题下面，得滚一段才吸顶。
@@ -45,8 +45,29 @@
     {{- with .File }}{{ $titleID = .BaseFileName }}{{ end -}}
   {{- end -}}
   {{- if not $titleID }}{{ $titleID = .Title | anchorize }}{{ end -}}
-  <h1 class="title" id="{{ $titleID }}"><a class="title-link" href="{{ .RelPermalink }}">{{ .Title }}</a></h1>
+  <h1 class="title p-name" id="{{ $titleID }}"><a class="title-link u-url" href="{{ .Permalink }}">{{ .Title }}</a></h1>
   {{- with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end -}}
+
+  {{- /*
+    IndieWeb：作者 h-card（微格式）。
+    webmention.io 抓 source 页面解析时，靠它取作者名 / 头像 / 主页 ——
+    我们在别人站点上留下的那笔提及，显示的作者信息就来自这里；
+    h-entry 那部分由 <article class="… h-entry"> 和下面的
+    p-name / u-url / dt-published / e-content 一起凑齐。
+    这里用 visually-hidden 是为了不改版面：php-mf2 只读 DOM、不看 CSS，
+    藏起来照样解析得到。哪天想让它露出来（标题下署一行名），把
+    visually-hidden 去掉、补两行样式就行。
+    名字 / 主页 / 头像在 hugo.toml 的 [params.hcard] 里改。
+  */ -}}
+  {{- $hc := site.Params.hcard | default dict -}}
+  {{- $hcName := $hc.name | default (site.Params.author | default site.Title) -}}
+  {{- $hcURL := $hc.url | default site.Home.Permalink -}}
+  <div class="p-author h-card visually-hidden">
+    {{- with $hc.photo }}<img class="u-photo" src="{{ . | absURL }}" alt="" width="96" height="96">{{ end }}
+    <a class="p-name u-url" href="{{ $hcURL | absURL }}" rel="author">{{ $hcName }}</a>
+    {{- with $hc.note }}<span class="p-note">{{ . }}</span>{{ end }}
+  </div>
+  {{- with .Description }}<p class="p-summary visually-hidden">{{ . }}</p>{{ end }}
 </header>
 
 {{- if $metaKeys }}
@@ -55,12 +76,12 @@
   {{- range $metaKeys -}}
     {{- if eq . "date" -}}
       {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
-      <time class="date" datetime="{{ $.Date.Format "2006-01-02" }}">{{ $.Date.Format $df }}</time>
+      <time class="date dt-published" datetime="{{ $.Date.Format "2006-01-02" }}">{{ $.Date.Format $df }}</time>
       {{- $sep = true -}}
     {{- else if eq . "lastmod" -}}
       {{- if ne ($.Lastmod.Format "2006-01-02") ($.Date.Format "2006-01-02") -}}
         {{- if $sep }}<span class="sep" aria-hidden="true">·</span>{{ end -}}
-        <span>{{ i18n "updated" | default "更新于" }} <time datetime="{{ $.Lastmod.Format "2006-01-02" }}">{{ $.Lastmod.Format $df }}</time></span>
+        <span>{{ i18n "updated" | default "更新于" }} <time class="dt-updated" datetime="{{ $.Lastmod.Format "2006-01-02" }}">{{ $.Lastmod.Format $df }}</time></span>
         {{- $sep = true -}}
       {{- end -}}
     {{- else if eq . "section" -}}
@@ -129,7 +150,7 @@
 {{- end -}}
 
 {{- /* replaceRE 返回的是普通字符串，直接打印会被转义，必须过一道 safeHTML */ -}}
-<div class="post-body{{ if $numHeadings }} num-headings{{ end }}">
+<div class="post-body e-content{{ if $numHeadings }} num-headings{{ end }}">
 {{ $content | safeHTML }}
 </div>
 
@@ -157,6 +178,94 @@
   注意 Hugo 的 strings.Trim / TrimLeft / TrimRight 是 cutset 在前：
   strings.Trim cutset string，写反了会得到「，,、;；」这种结果。
 */ -}}
+{{- /*
+  版权栏：贴在标签栏之上，内容和排布参考 dallas.lu 的文章页
+  （https://dallas.lu/how-to-prove-your-original-work/）——
+  正文结束后一块极淡的底，先摆「标题 + 原文地址」，再用 dl 横排
+  作者 / 发布于 / 更新于 / 版权协议；文章 front matter 里写了
+  syndication（一稿多发的社交帖子）或 archive（网页存档快照）时，
+  各多出一格。这跟那篇文章讲的「让读者和平台能独立核对何时由谁发布」
+  是一回事：页面自己把可核对的线索摆出来，比页脚一行「版权保留」有用。
+
+  全站关：[params.license] enabled = false；单篇关：front matter 写
+  showLicense = false。独立页面（关于 / 收藏 / SiteLog）跟标签一样不显示。
+
+  注意别在这里用 <p>：本块在 <main id="content"> 里，layout.css 的
+  `#content p`（(1,0,1)，1.9rem 大字号）会盖掉单类选择器的字号。
+*/ -}}
+{{- $showLicense := partial "func/flag.html" (dict
+      "page" .
+      "keys" (slice "showLicense" "showlicense" "enabled")
+      "default" $isPost
+      "group" "license") -}}
+{{- if $showLicense -}}
+  {{- $lic := site.Params.license | default dict -}}
+  {{- $licName := $lic.name | default "" -}}
+  {{- $licURL := $lic.url | default "" -}}
+  {{- /* 作者信息跟页面顶部那张隐形的 h-card 用同一套取值，别两处各写一份 */ -}}
+  {{- $hc := site.Params.hcard | default dict -}}
+  {{- $authorName := $hc.name | default (site.Params.author | default site.Title) -}}
+  {{- $authorURL := $hc.url | default site.Home.Permalink -}}
+  {{- /* 字符串和数组两种写法都认 */ -}}
+  {{- $syn := .Params.syndication | default slice -}}
+  {{- if eq "string" (printf "%T" $syn) }}{{ $syn = slice $syn }}{{ end -}}
+  {{- $arc := .Params.archive | default slice -}}
+  {{- if eq "string" (printf "%T" $arc) }}{{ $arc = slice $arc }}{{ end -}}
+<div class="post-license" aria-label="{{ i18n "licenseLabel" | default "版权信息" }}">
+  <div class="pl-base">
+    <strong class="pl-title">{{ .Title }}</strong>
+    <a class="pl-url" rel="bookmark" href="{{ .Permalink }}">{{ .Permalink }}</a>
+  </div>
+  <dl class="pl-meta">
+    <div class="pl-item">
+      <dt>{{ i18n "licenseAuthor" | default "作者" }}</dt>
+      <dd><a rel="author" href="{{ $authorURL }}">{{ $authorName }}</a></dd>
+    </div>
+    <div class="pl-item">
+      <dt>{{ i18n "licensePublished" | default "发布于" }}</dt>
+      <dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $df }}</time></dd>
+    </div>
+    {{- if ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02") }}
+    <div class="pl-item">
+      <dt>{{ i18n "licenseUpdated" | default "更新于" }}</dt>
+      <dd><time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format $df }}</time></dd>
+    </div>
+    {{- end }}
+    <div class="pl-item">
+      <dt>{{ i18n "licenseProtocol" | default "版权协议" }}</dt>
+      <dd>
+        {{- if $licURL -}}
+        <a rel="license" href="{{ $licURL }}">{{ $licName | default $licURL }}</a>
+        {{- else -}}
+        {{ $licName | default (i18n "licenseReserved" | default "版权所有，未经许可请勿转载") }}
+        {{- end -}}
+      </dd>
+    </div>
+    {{- with $syn }}
+    <div class="pl-item">
+      <dt>{{ i18n "licenseSyndication" | default "同步发布" }}</dt>
+      <dd>
+        {{- range $i, $u := . }}{{ if $i }}<span aria-hidden="true"> </span>{{ end -}}
+        <a class="u-syndication" rel="syndication" href="{{ $u }}">{{ (urls.Parse $u).Host }}</a>
+        {{- end }}
+      </dd>
+    </div>
+    {{- end }}
+    {{- with $arc }}
+    <div class="pl-item">
+      <dt>{{ i18n "licenseArchive" | default "网页存档" }}</dt>
+      <dd>
+        {{- range $i, $u := . }}{{ if $i }}<span aria-hidden="true"> </span>{{ end -}}
+        <a href="{{ $u }}">{{ (urls.Parse $u).Host }}</a>
+        {{- end }}
+      </dd>
+    </div>
+    {{- end }}
+  </dl>
+  {{- with $lic.note }}<div class="pl-note">{{ . }}</div>{{ end }}
+</div>
+{{- end -}}
+
 {{- if and $showTags $isPost -}}
   {{- $terms := slice -}}
   {{- with .Params.tags }}{{ $terms = $.GetTerms "tags" }}{{ end -}}
@@ -177,7 +286,7 @@
                源文件里写的是 emacs，胶囊显示 #Emacs，点进去标题也是 Emacs。 */ -}}
         {{- if findRE "^[a-z]" $name }}{{ $name = strings.FirstUpper $name }}{{ end -}}
         {{- with $name -}}
-<a href="{{ $href }}" rel="tag">#{{ $name }}</a>
+<a class="p-category" href="{{ $href }}" rel="tag">#{{ $name }}</a>
         {{- end -}}
       {{- end -}}
       {{- range $plain -}}
@@ -186,7 +295,7 @@
         {{- $name = strings.TrimLeft "，,、;；" $name -}}
         {{- if findRE "^[a-z]" $name }}{{ $name = strings.FirstUpper $name }}{{ end -}}
         {{- with $name -}}
-<span rel="tag">#{{ $name }}</span>
+<span class="p-category" rel="tag">#{{ $name }}</span>
         {{- end -}}
       {{- end -}}
 </div>

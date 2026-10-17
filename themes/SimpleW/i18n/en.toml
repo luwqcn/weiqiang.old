@@ -147,6 +147,8 @@ other = "Reply: "
 # The how-to paragraph at the top of the Webmention panel, plus the folded form.
 [webmentionTip]
 other = "Want to respond? Write about this post on your own site, linking to it, then send me the URL of that post."
+[webmentionTipLink]
+other = "This site supports <a href=\"{{ .url }}\" target=\"_blank\" rel=\"noopener\">Webmention</a>. Want to respond? Write about this post on your own site, linking to it, then send me the URL of that post."
 [webmentionForm]
 other = "Send with a form"
 [webmentionSource]
@@ -196,3 +198,21 @@ other = "{count} words"
 
 [readingTimeText]
 other = "about {minutes} min read"
+
+# Copyright panel at the end of a post (sits above the tag row).
+[licenseLabel]
+other = "Copyright information"
+[licenseAuthor]
+other = "Author"
+[licensePublished]
+other = "Published"
+[licenseUpdated]
+other = "Updated"
+[licenseProtocol]
+other = "License"
+[licenseSyndication]
+other = "Also posted at"
+[licenseArchive]
+other = "Archived at"
+[licenseReserved]
+other = "All rights reserved."

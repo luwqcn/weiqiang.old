@@ -44,6 +44,96 @@
     opacity: 0.6;
 }
 
+/* ---------------------------------------------------------------------------
+   正文末尾的版权栏，贴在标签行之上（page.html 里在 .post-tags 之前输出）。
+   排布参考 dallas.lu 的文章页：一块比页面略暗的底，先「标题 + 原文地址」，
+   再 dl 横排各项「标签在上、值在下」，无边框、四角一点点圆角、不用 <p>
+   （#content p 会按正文的大字号盖过来）。
+
+   底色拿 --rule-color 兑进页面底色，而不是直接用 --bg-color-quote：
+   引用色是实打实的一块暖灰，压在文章末尾太重；20% 只比背景暗一档
+   （实测 ≈ rgb(247,245,242)，页面底色 rgb(251,250,248)），再淡就看不出来了。
+
+   字号：容器 1.6rem（除标题外的各项继承），标题 .pl-title 跟正文同号
+   （--body-font-size 1.9rem）——层级靠颜色（dt 灰 / dd 深）和字重撑。
+--------------------------------------------------------------------------- */
+.post-license {
+    margin-top: 4rem;
+    padding: 1.3rem 1.7rem;
+    /* 只有一点点圆角，跟评论区标签栏的 0.4rem 对齐 */
+    border-radius: 0.4rem;
+    background: color-mix(in srgb, var(--rule-color) 20%, var(--bg-color));
+    color: var(--bq-color);
+    font-size: 1.6rem;
+    line-height: 1.7;
+}
+
+/* 深色下色阶跨度小，同样比例混出来跟页面底只差几阶、块会消失；
+   24% ≈ rgb(27,29,34) vs 页面 rgb(22,24,28)，才等价于浅色那档的观感。 */
+:root[data-theme="dark"] .post-license {
+    background: color-mix(in srgb, var(--rule-color) 24%, var(--bg-color));
+}
+
+.post-license .pl-base {
+    margin-bottom: 1.1rem;
+}
+
+.post-license .pl-title {
+    display: block;
+    color: var(--main-color);
+    font-size: var(--body-font-size);
+    line-height: 1.7;
+}
+
+.post-license .pl-url {
+    /* inline-block 而不是 block：站点给链接的虚线底边（layout.css 的 a 规则）
+       跟着文字走，不会拉成一条横贯整行的分隔线。 */
+    display: inline-block;
+    max-width: 100%;
+    margin-top: 0.1rem;
+    color: var(--desc-color);
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+/* 各项横排、窄屏自己折行；间隔给足，免得「更新于 2026-10-01」被看成一格 */
+.post-license .pl-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem 2.6rem;
+    margin: 0;
+}
+
+.post-license .pl-item {
+    margin: 0;
+    min-width: 0;
+}
+
+.post-license .pl-item dt {
+    color: var(--desc-color);
+    line-height: 1.7;
+}
+
+.post-license .pl-item dd {
+    margin: 0;
+    color: var(--bq-color);
+    line-height: 1.7;
+}
+
+.post-license .pl-item dd a {
+    color: var(--link-color);
+}
+
+.post-license .pl-item dd a:hover {
+    color: var(--link-color-hover);
+}
+
+.post-license .pl-note {
+    margin-top: 1.1rem;
+    color: var(--desc-color);
+    line-height: 1.7;
+}
+
 /* 正文末尾的标签行，位于「上一篇 / 下一篇」之上 */
 .post-tags {
     display: flex;
@@ -717,39 +807,70 @@ span.pageright {
     white-space: nowrap;
 }
 
+/* 三等分 + 分段控件：三个标签直接三等分、文字居中，**只有最外圈四角一点点小圆角**
+   （0.4rem，靠 overflow:hidden 裁齐两端标签的外角，不给标签自己加圆角）。
+   三档底色依次递进（2026-10-17 老大定调）：常态 10% → hover 30% → 选中 50%，
+   都用 accent-soft 跟页面底色兑开。
+   （某个面板没渲染时剩下的自动均分，比如只有两个标签就是各 50%。） */
 .ctabs-bar {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;
-    gap: 0.2rem;
-    border-bottom: 1px solid var(--rule-color);
+    align-items: stretch;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0.4rem;
+    background: transparent;
 }
 
 .ctab {
+    flex: 1 1 0;
+    min-width: 0;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
-    padding: 0.7rem 1.3rem;
-    margin-bottom: -1px;
-    border-bottom: 2px solid transparent;
+    padding: 0.8rem 1.2rem;
+    border: 0;
+    border-radius: 0;
+    background: color-mix(in srgb, var(--accent-soft) 10%, var(--bg-color));
     color: var(--desc-color);
     font-size: 1.75rem;
     line-height: 1.5;
+    white-space: nowrap;
     cursor: pointer;
     user-select: none;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition: color 0.15s ease, background-color 0.15s ease;
 }
 
+/* hover / 选中都用 accent-soft 跟页面底色兑开来（跟 listing.css 的热力图同一种写法），
+   比直接用 --accent-soft 淡一档：浅色下是近乎无色的暖白，深色下是比页面亮一点的暖灰。 */
 .ctab:hover {
     color: var(--accent);
+    background: color-mix(in srgb, var(--accent-soft) 30%, var(--bg-color));
 }
 
-/* 选中的那个：赭红字 + 下划线，压住底下的灰线 */
+/* 选中的那块：三档里最深的一档 + accent 字 */
 #ct-webmention:checked ~ .ctabs-bar > .ctab[for="ct-webmention"],
 #ct-comments:checked ~ .ctabs-bar > .ctab[for="ct-comments"],
 #ct-email:checked ~ .ctabs-bar > .ctab[for="ct-email"] {
     color: var(--accent);
-    border-bottom-color: var(--accent);
+    background: color-mix(in srgb, var(--accent-soft) 50%, var(--bg-color));
+}
+
+/* 选中标签里那个条数徽标要反过来：底色跟选中块同为 accent-soft 会糊成一团，
+   改成实心 accent 底 + 卡片底色的字。 */
+#ct-webmention:checked ~ .ctabs-bar > .ctab[for="ct-webmention"] .ctab-badge,
+#ct-comments:checked ~ .ctabs-bar > .ctab[for="ct-comments"] .ctab-badge,
+#ct-email:checked ~ .ctabs-bar > .ctab[for="ct-email"] .ctab-badge {
+    background: var(--accent);
+    color: var(--card-bg);
+}
+
+/* 「评论」标签里那截「浏览量：n」跟着选中色走，灰字压在 accent-soft 上太糊 */
+#ct-comments:checked ~ .ctabs-bar > .ctab[for="ct-comments"] .tj {
+    color: var(--accent);
 }
 
 /* 键盘走到被藏起来的 radio 时，把焦点画在它对应的 label 上。
@@ -758,8 +879,7 @@ span.pageright {
 #ct-comments:focus-visible ~ .ctabs-bar > .ctab[for="ct-comments"],
 #ct-email:focus-visible ~ .ctabs-bar > .ctab[for="ct-email"] {
     outline: 2px solid var(--accent);
-    outline-offset: -3px;
-    border-radius: 3px;
+    outline-offset: -2px;
 }
 
 /* 标签上那个条数小徽标：没数字时带 hidden，由脚本揭开。
@@ -785,8 +905,24 @@ span.pageright {
     font-weight: 400;
 }
 
+/* 三等分之后，窄屏每格只剩 ~110px，缩一点字号 / 内边距才装得下；
+   浏览量那截太长，先藏掉，别把「评论」这格撑破。 */
+@media screen and (max-width: 600px) {
+    .ctab {
+        padding: 0.7rem 0.35rem;
+        gap: 0.4rem;
+        font-size: 1.55rem;
+    }
+
+    .ctabs-bar .tj {
+        display: none;
+    }
+}
+
+/* 标签栏 → 面板内容：跟上面那条 .comments-divider 的间距同步放大
+   （那条 2.5em → 4em，这条 2rem → 3.2rem，比例仍是 1.25） */
 .ctabs-body {
-    margin-top: 2rem;
+    margin-top: 3.2rem;
 }
 
 .ctab-panel {

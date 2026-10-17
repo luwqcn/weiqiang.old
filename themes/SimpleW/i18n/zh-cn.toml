@@ -128,13 +128,13 @@ other = "评论功能未启用。"
 # 评论区 = 一个标签页组，三个标签：网络提及 / 评论 / 邮件。
 # 结构见 partials/comments.html，标签文案在这儿改。
 [commentTabWebmention]
-other = "网络提及"
+other = "网络提及Webmention"
 
 [commentTabComments]
-other = "评论"
+other = "评论Twikoo"
 
 [commentTabEmail]
-other = "邮件"
+other = "邮件回复"
 
 # 「邮件」面板：一句说明 + 一个「写信给 <地址>」按钮。
 [emailIntro]
@@ -149,10 +149,13 @@ other = "回复："
 # 「网络提及」面板开头那段「怎么给我发 Webmention」的说明 + 折起的提交表单。
 [webmentionTip]
 other = "想回应这篇文章？先在自己的博客或社交帖子里写上本文的链接，再把那篇帖子的地址告诉我。"
+# 带「Webmention」外链的版本（地址由模板传入，hugo.toml [params.webmention] source_url 可改）。
+[webmentionTipLink]
+other = "本站支持 <a href=\"{{ .url }}\" target=\"_blank\" rel=\"noopener\">Webmention</a>，想回应这篇文章？先在自己的博客或社交帖子里写上本文的链接，再把那篇帖子的地址告诉我。"
 [webmentionForm]
-other = "用表单提交"
+other = "手动提交"
 [webmentionSource]
-other = "你那篇回应文章的地址"
+other = "回应文章的地址"
 [webmentionTargetHint]
 other = "回应对象"
 [webmentionSubmit]
@@ -198,3 +201,21 @@ other = "共 {count} 字"
 
 [readingTimeText]
 other = "阅读约需 {minutes} 分钟"
+
+# 正文末尾的版权栏（显示在标签栏之上）。文案都在这，别改模板里的 default。
+[licenseLabel]
+other = "版权信息"
+[licenseAuthor]
+other = "作者"
+[licensePublished]
+other = "发布于"
+[licenseUpdated]
+other = "更新于"
+[licenseProtocol]
+other = "版权协议"
+[licenseSyndication]
+other = "同步发布"
+[licenseArchive]
+other = "网页存档"
+[licenseReserved]
+other = "版权所有，未经许可请勿转载"

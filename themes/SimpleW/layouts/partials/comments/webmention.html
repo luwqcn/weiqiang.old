@@ -31,6 +31,8 @@
 {{- $domain := $w.domain | default "" -}}
 {{- $token := $w.token | default "" -}}
 {{- $intro := true -}}
+{{- /* 「Webmention」一词外链的地址：hugo.toml [params.webmention] source_url 可覆盖。 */ -}}
+{{- $webmentionurl := $w.source_url | default "https://indieweb.org/Webmention" -}}
 {{- if isset $w "intro" }}{{ $intro = $w.intro }}{{ end -}}
 
 {{- /* 读者提交用的表单地址（页内 <form action>）。
@@ -51,18 +53,24 @@
 {{- with $domain -}}
 <div id="webmentions" class="webmentions" data-target="{{ $.Permalink }}" data-react-label="{{ $reactLabel }}"{{ with $token }} data-token="{{ . }}"{{ end }}>
   {{- if $intro }}
-  <p class="wm-tip">
-    {{- i18n "webmentionTip" | default "本站支持 Webmention 想回应这篇文章？先在自己的博客或社交帖子里写上本文的链接，再把那篇帖子的地址告诉我。" -}}
-  </p>
+  {{- $tipHTML := "" -}}
+  {{- if $webmentionurl -}}
+    {{- $tipHTML = i18n "webmentionTipLink" (dict "url" $webmentionurl) | default (printf "本站支持 <a href=\"%s\" target=\"_blank\" rel=\"noopener\">Webmention</a>，想回应这篇文章？先在自己的博客或社交帖子里写上本文的链接，再把那篇帖子的地址告诉我。" $webmentionurl) -}}
+  {{- else -}}
+    {{- $tipHTML = i18n "webmentionTip" -}}
+  {{- end }}
+  {{- /* 「手动提交」跟着说明走，句尾带一个指向下方表单的箭头；没有表单地址就不显示。 */ -}}
+  <p class="wm-tip">{{ $tipHTML | safeHTML }}{{ with $formAction }}<span class="wm-send-hint">{{ i18n "webmentionForm" | default "手动提交" }}<span class="wm-arrow" aria-hidden="true">↓</span></span>{{ end }}</p>
   {{- with $formAction }}
   <div class="wm-send">
-    <span>{{ i18n "webmentionForm" | default "手动提交" }}</span>
     <form class="wm-send-form" action="{{ . }}" method="post">
       <input type="hidden" name="target" value="{{ $.Permalink }}">
-      <label for="wm-source">{{ i18n "webmentionSource" | default "你那篇回应文章的地址" }}</label>
-      <input id="wm-source" name="source" type="url" required autocomplete="off" spellcheck="false" placeholder="https://">
+      {{- /* 原来单占一行的 <label>「回应文章的地址」并进 placeholder；
+             标签没了，用 aria-label 补无障碍名。下面原来还有一行
+             「回应对象：<本文地址>」，2026-10-17 按老大要求去掉。 */ -}}
+      {{- $sourceHint := i18n "webmentionSource" | default "回应文章的地址" -}}
+      <input id="wm-source" name="source" type="url" required autocomplete="off" spellcheck="false" aria-label="{{ $sourceHint }}" placeholder="{{ $sourceHint }}">
       <button type="submit">{{ i18n "webmentionSubmit" | default "发送 Webmention" }}</button>
-      <p class="wm-send-target">{{ i18n "webmentionTargetHint" | default "回应对象" }}：<a href="{{ $.Permalink }}">{{ $.Permalink }}</a></p>
     </form>
   </div>
   {{- end }}

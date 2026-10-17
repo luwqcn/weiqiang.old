@@ -507,6 +507,7 @@ uglyURLs = false
     domain = "weiqiang.org"
     title = "网络提及"        # 评论区里那个标签上的文案
     # 没有提及时给一句说明；关掉的话，没提及就整块不显示
+    source_url = "https://indieweb.org/Webmention"
     intro = true
 
     # webmention.io 的 API token。默认留空 —— 公开提及不带 token 也能读到，
@@ -546,6 +547,49 @@ uglyURLs = false
       { href = "mailto:lu@weiqiang.org", authn = true },
       { href = "https://github.com/shujiaccn" },
     ]
+
+  # -------------------------------------------------------------------------
+  # IndieWeb：作者 h-card（微格式）
+  #
+  # webmention.io 收到一条提及请求时，抓的是 source 页面 —— 也就是「谁在哪儿
+  # 提到了对方」那一页，然后按 microformat 解析：
+  #   h-entry → 标题 p-name / 链接 u-url / 发布时间 dt-published / 正文 e-content
+  #   h-card  → 作者名 p-name / 头像 u-photo / 主页 u-url
+  # 对方站点上显示的「谁回应了我」以及头像，就来自这两块。文章页现在都带上了。
+  #
+  # 这里只作覆盖：name 留空 → [params].author，再空 → 站点标题；
+  # url 留空 → 站点首页；photo 留空 → 不输出 u-photo（对方只显示名字）。
+  # -------------------------------------------------------------------------
+  [params.hcard]
+    name = ""
+    url = ""
+    photo = "images/logo.png"
+    note = ""
+
+  # -------------------------------------------------------------------------
+  # 文章末尾的版权栏（显示在标签栏之上，内容与排布参考 dallas.lu）
+  #
+  # 页面自己把可核对的线索摆出来：标题、原文地址、作者、发布 / 更新时间，
+  # 外加下面这个许可协议。文章 front matter 里若写了
+  #     syndication = ["https://x.com/you/status/123"]      # 一稿多发的帖子
+  #     archive     = ["https://web.archive.org/web/2026/…"] # 网页存档快照
+  # 就各多出一格把地址列出来（页面上直接给出这些链接，读者和平台才能独立核对
+  # 「这段内容何时、由谁发布」——比页脚一行「版权保留」有用）。
+  #
+  # 关掉：全站 enabled = false；单篇 front matter 写 showLicense = false。
+  # 站点根目录下的独立页面（关于 / 收藏 / SiteLog）跟标签一样不显示。
+  # -------------------------------------------------------------------------
+  [params.license]
+    enabled = true
+    # 许可协议名与地址，例如
+    #     name = "CC BY-NC-SA 4.0"
+    #     url  = "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    # 两个都留空 → 显示 i18n 的 licenseReserved（「版权所有，未经许可请勿转载」）；
+    # 只填 name 不填 url → 显示名字、不带链接。
+    name = ""
+    url = ""
+    # 版权栏最下面那行小字，留空则不显示
+    note = ""
 
   # -------------------------------------------------------------------------
   # 其它

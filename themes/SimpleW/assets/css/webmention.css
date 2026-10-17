@@ -22,7 +22,7 @@
    所以这里也用 `#comment` 起头，只改上下边距 —— 宽度、点线样式沿用那条，
    不重复写。 */
 #comment .comments-divider {
-    margin: 5em auto 2.5em;
+    margin: 5em auto 4em;
 }
 
 #webmentions {
@@ -42,9 +42,21 @@
     color: var(--link-color);
 }
 
+/* 「手动提交」跟在说明句尾，后面那个 ↓ 指向下面的表单。
+   整块不换行（wm-send-hint），窄屏也只在它前面断。 */
+#webmentions .wm-send-hint {
+    margin-left: 0.8em;
+    white-space: nowrap;
+}
+
+#webmentions .wm-arrow {
+    margin-left: 0.35em;
+    color: var(--link-color);
+}
+
 /* ---- 提交表单：默认折起，点「用表单提交」才展开 ----
-   target 由模板藏成 hidden，面板里只露 Source 一栏，所以排版就是
-   「标签 → 输入框 + 按钮 → 回应对象」三行。 */
+   target 由模板藏成 hidden，「回应文章的地址」这句话并进了 input 的
+   placeholder，所以排版就是「输入框 + 按钮」一行。 */
 #webmentions .wm-send {
     margin: 0 0 2rem;
 }
@@ -93,25 +105,21 @@
     background: var(--card-bg);
 }
 
-#webmentions .wm-send-form label {
-    flex: 1 1 100%;
-    margin: 0;
-    color: var(--desc-color);
-    font-size: 1.45rem;
-    line-height: 1.6;
-}
-
 #webmentions .wm-send-form input[type="url"] {
     flex: 1 1 20rem;
     min-width: 0;
     padding: 0.7rem 1rem;
-    border: 1px solid var(--rule-strong);
+    /* 常态不描边（透明边框只为占住 1px，聚焦时才画 accent），
+       改用一层极淡的暖底把输入区标出来——跟标签栏那套 color-mix 同源，
+       否则底色跟页面一样、边框又去掉，整块就看不见了。 */
+    border: 1px solid transparent;
     border-radius: var(--radius-sm);
-    background: var(--bg-color);
+    background: color-mix(in srgb, var(--rule-color) 25%, var(--bg-color));
     color: var(--main-color);
     font-family: inherit;
     font-size: 1.5rem;
     line-height: 1.5;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 #webmentions .wm-send-form input[type="url"]:focus {
@@ -138,20 +146,6 @@
     color: var(--link-color-hover);
     border-color: var(--accent);
     background: var(--card-bg-hover);
-}
-
-/* 回应对象那行：本文地址本身可能很长，窄屏要能自己折 */
-#webmentions .wm-send-target {
-    flex: 1 1 100%;
-    margin: 0;
-    color: var(--desc-color);
-    font-size: 1.35rem;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
-}
-
-#webmentions .wm-send-target a {
-    color: var(--link-color);
 }
 
 /* ---- 赞 / 转发 / 收藏：排成一行头像 ---- */

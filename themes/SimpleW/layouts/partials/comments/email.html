@@ -20,7 +20,7 @@
   <p class="cm-email-row">
     <a class="cm-email-btn" href="mailto:{{ . }}?subject={{ urlquery $subject }}" rel="nofollow">
       <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>{{ i18n "emailWriteTo" | default "写信给" }} <span class="cm-email-addr">{{ . }}</span></span>
+      <span>{{ i18n "emailWriteToComments" | default "写信留言" }}</span>
     </a>
   </p>
 </div>
