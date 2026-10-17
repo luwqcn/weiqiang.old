@@ -193,10 +193,18 @@
   注意别在这里用 <p>：本块在 <main id="content"> 里，layout.css 的
   `#content p`（(1,0,1)，1.9rem 大字号）会盖掉单类选择器的字号。
 */ -}}
+{{- /* 注意：这里不能把 "enabled" 塞进 keys 再交给 flag.html 去读
+      [params.license]——那个段里的 enabled 是「全站总开关」，一读就把
+      默认值（只有文章才显示）顶成 true，关于/收藏/SiteLog 这些独立页面
+      也跟着冒出整块版权栏。总开关单独取，默认值先算好再交给 flag.html。 */ -}}
+{{- $licCfg := site.Params.license | default dict -}}
+{{- $licOn := true -}}
+{{- if isset $licCfg "enabled" }}{{ $licOn = index $licCfg "enabled" }}{{ end -}}
+{{- if eq (printf "%v" $licOn) "false" }}{{ $licOn = false }}{{ end -}}
 {{- $showLicense := partial "func/flag.html" (dict
       "page" .
-      "keys" (slice "showLicense" "showlicense" "enabled")
-      "default" $isPost
+      "keys" (slice "showLicense" "showlicense")
+      "default" (and $isPost $licOn)
       "group" "license") -}}
 {{- if $showLicense -}}
   {{- $lic := site.Params.license | default dict -}}
