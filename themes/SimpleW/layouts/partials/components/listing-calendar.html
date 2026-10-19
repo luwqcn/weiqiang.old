@@ -56,6 +56,9 @@
 {{- $weekStart := $cfg.weekStart | default "monday" -}}
 {{- $mondayFirst := eq $weekStart "monday" -}}
 {{- $unit := i18n "postsUnit" | default "篇" -}}
+{{- /* 每一行都是一条 h-entry（微格式），作者取法与文章页的 h-card 同源 */ -}}
+{{- $hc := site.Params.hcard | default dict -}}
+{{- $author := $hc.name | default (site.Params.author | default site.Title) -}}
 
 {{- $months := split (i18n "monthShort" | default "1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月") "," -}}
 {{- with $cfg.months }}{{ $months = . }}{{ end -}}
@@ -119,9 +122,10 @@
 
       <div class="rows">
         {{- range $rowPages }}
-        <div class="row">
-          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $dateFormat }}</time>
-          <a href="{{ .RelPermalink }}"{{ with .Description }} title="{{ . }}"{{ end }}>{{ .Title }}</a>
+        <div class="row h-entry">
+          <time class="dt-published" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $dateFormat }}</time>
+          <a class="u-url p-name" href="{{ .RelPermalink }}"{{ with .Description }} title="{{ . }}"{{ end }}>{{ .Title }}</a>
+          <span class="p-author h-card visually-hidden" aria-hidden="true">{{ $author }}</span>
         </div>
         {{- end }}
       </div>

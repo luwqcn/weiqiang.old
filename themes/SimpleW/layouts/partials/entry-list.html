@@ -16,6 +16,9 @@
 */ -}}
 {{- $pages := .pages -}}
 {{- $style := .style | default "grouped" -}}
+{{- /* 条目也是 h-entry，作者取法与文章页 h-card 同源 */ -}}
+{{- $hc := site.Params.hcard | default dict -}}
+{{- $author := $hc.name | default (site.Params.author | default site.Title) -}}
 {{- $showDesc := true -}}
 {{- if isset . "showdesc" }}{{ $showDesc = .showDesc }}{{ end -}}
 {{- $group := true -}}
@@ -35,31 +38,33 @@
 
 {{- else if eq $style "cards" -}}
   {{- range $pages }}
-  <article class="post-entry">
-    <h2 class="article-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+  <article class="post-entry h-entry">
+    <h2 class="article-title"><a class="u-url" href="{{ .RelPermalink }}"><span class="p-name">{{ .Title }}</span></a></h2>
     <div class="card-meta">
-      <span class="pubdate">{{ .Date.Format (site.Params.dateFormat | default "2006-01-02") }}</span>
+      <span class="pubdate dt-published">{{ .Date.Format (site.Params.dateFormat | default "2006-01-02") }}</span>
       {{- with .Params.tags }}<span class="sep">·</span>
-        {{- range $t := . }} <a href="{{ printf "%s%s/" ("tags/" | relURL) ($t | urlize) }}">{{ $t }}</a>{{ end -}}
+        {{- range $t := . }} <a class="p-category" href="{{ printf "%s%s/" ("tags/" | relURL) ($t | urlize) }}">{{ $t }}</a>{{ end -}}
       {{- end }}
     </div>
     {{- with .Description }}
-    <p class="card-summary">{{ . }}</p>
+    <p class="card-summary p-summary">{{ . }}</p>
     {{- else }}
       {{- with .Summary }}
-      <p class="card-summary">{{ . | plainify | truncate 120 }}</p>
+      <p class="card-summary p-summary">{{ . | plainify | truncate 120 }}</p>
       {{- end }}
     {{- end }}
+    <span class="p-author h-card visually-hidden" aria-hidden="true">{{ $author }}</span>
   </article>
   {{- end }}
 
 {{- else if eq $style "plain" -}}
   <ul class="link-list">
     {{- range $pages }}
-    <li>
-      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    <li class="h-entry">
+      <a class="u-url p-name" href="{{ .RelPermalink }}">{{ .Title }}</a>
       {{- with .Params.label }}<span class="ll-label">{{ . }}</span>{{ end }}
-      <time class="timestamp" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format (site.Params.dateFormat | default "2006-01-02") }}</time>
+      <time class="timestamp dt-published" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format (site.Params.dateFormat | default "2006-01-02") }}</time>
+      <span class="p-author h-card visually-hidden" aria-hidden="true">{{ $author }}</span>
     </li>
     {{- end }}
   </ul>

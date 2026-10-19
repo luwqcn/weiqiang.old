@@ -15,6 +15,9 @@
 */ -}}
 {{- $pages := .pages -}}
 {{- $df := site.Params.dateFormat | default "2006-01-02" -}}
+{{- /* 每张卡是一条 h-entry，作者取法与文章页 h-card 同源 */ -}}
+{{- $hc := site.Params.hcard | default dict -}}
+{{- $author := $hc.name | default (site.Params.author | default site.Title) -}}
 
 {{- /* 本栏目在注册表里的条目：拿默认底图和栏目名（占位字用） */ -}}
 {{- $secKey := "" -}}
@@ -39,8 +42,8 @@
   {{- if and (not $img) $secCover }}{{ $img = $secCover }}{{ end -}}
   {{- $glyph := $secGlyph -}}
   {{- if not $glyph }}{{ $glyph = slicestr $p.Title 0 1 }}{{ end -}}
-  <article class="cover-card">
-    <a class="cc-link" href="{{ $p.RelPermalink }}"{{ with $p.Description }} title="{{ . }}"{{ end }}>
+  <article class="cover-card h-entry">
+    <a class="cc-link u-url" href="{{ $p.RelPermalink }}"{{ with $p.Description }} title="{{ . }}"{{ end }}>
       <div class="cc-media{{ if not $img }} cc-media-ph{{ end }}">
         {{- if $img }}
         <img class="cc-img" src="{{ $img | relURL }}" alt="" loading="lazy" decoding="async">
@@ -52,8 +55,8 @@
         */ -}}
         <div class="cc-scrim" aria-hidden="true"></div>
         <div class="cc-body">
-          <time class="cc-date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format $df }}</time>
-          <h3 class="cc-title">{{ if $p.Params.pinned }}<span class="entry-pin" aria-hidden="true">●</span>{{ end }}{{ $p.Title }}</h3>
+          <time class="cc-date dt-published" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format $df }}</time>
+          <h3 class="cc-title">{{ if $p.Params.pinned }}<span class="entry-pin" aria-hidden="true">●</span>{{ end }}<span class="p-name">{{ $p.Title }}</span></h3>
           {{- $desc := $p.Description -}}
           {{- if not $desc }}{{ $desc = $p.Summary }}{{ end -}}
           {{- $desc = $desc | plainify | strings.TrimSpace -}}
@@ -63,6 +66,7 @@
         </div>
       </div>
     </a>
+    <span class="p-author h-card visually-hidden" aria-hidden="true">{{ $author }}</span>
   </article>
 {{- end }}
 </div>
