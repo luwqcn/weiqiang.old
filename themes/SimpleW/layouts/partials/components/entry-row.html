@@ -1,13 +1,24 @@
 {{- /*
   partials/components/entry-row.html — one "title ······ date" row.
   Call with (dict "page" $p "showDesc" true)
+
+  这一行同时是一条 h-entry（IndieWeb 微格式）：读者在首页/栏目页看到的
+  就是「一篇帖子的摘要卡片」，所以 url / name / published / author 都得带上。
+  外面那层 div 只是微格式的容器，样式全在 a.entry 上，不影响版面。
+  u-url 必须落在 a 上（h-entry 根元素自己的 u-url 不算属性），
+  p-name 落在标题的内层 span 上，免得把「● 置顶点」和日期一起吞进标题。
 */ -}}
 {{- $p := .page -}}
 {{- $showDesc := true -}}
 {{- if isset . "showdesc" }}{{ $showDesc = .showDesc }}{{ end -}}
 {{- $df := site.Params.dateFormat | default "2006-01-02" -}}
-<a class="entry" href="{{ $p.RelPermalink }}"{{ if and $showDesc $p.Description }} title="{{ $p.Description }}"{{ end }}>
-  <span class="entry-title">{{ if $p.Params.pinned }}<span class="entry-pin" aria-hidden="true">●</span>{{ end }}{{ $p.Title }}</span>
-  <span class="entry-dashed" aria-hidden="true"></span>
-  <time class="date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format $df }}</time>
-</a>
+{{- $hc := site.Params.hcard | default dict -}}
+{{- $author := $hc.name | default (site.Params.author | default site.Title) -}}
+<div class="h-entry">
+  <a class="entry u-url" href="{{ $p.RelPermalink }}"{{ if and $showDesc $p.Description }} title="{{ $p.Description }}"{{ end }}>
+    <span class="entry-title">{{ if $p.Params.pinned }}<span class="entry-pin" aria-hidden="true">●</span>{{ end }}<span class="p-name">{{ $p.Title }}</span></span>
+    <span class="entry-dashed" aria-hidden="true"></span>
+    <time class="date dt-published" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format $df }}</time>
+    <span class="p-author h-card visually-hidden" aria-hidden="true">{{ $author }}</span>
+  </a>
+</div>
