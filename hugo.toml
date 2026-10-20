@@ -402,7 +402,7 @@ uglyURLs = false
   # -------------------------------------------------------------------------
   [params.comments]
     enabled = true
-    provider = "twikoo"        # artalk | giscus | disqus | waline | twikoo | utterances | custom | none
+    provider = "artalk"        # artalk | giscus | disqus | waline | twikoo | utterances | custom | none
     # 评论区是一个标签页组：网络提及 / 评论 / 邮件（结构见 partials/comments.html）。
     # 三个标签各由自己的开关决定出不出现 —— 提及看 [params.webmention]，
     # 评论看 provider，邮件看下面 email 填没填。三个都不可用时回落成一句
@@ -442,7 +442,7 @@ uglyURLs = false
       server = "https://art.weiqiang.org"
       site = "危墙"
       locale = "zh-CN"
-      cdn = "https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1"
+      cdn = "https://cdnjs.cloudflare.com/ajax/libs/artalk/2.10.0"
       pageKey = ""        # 留空 = 用页面路径；填 "legacy" = 交给 Artalk 自己判断
       # 评论按 key 存，旧站的 key 是当时的路径 /zh/xxx.html。漂亮 URL 之后页面
       # 路径变成 /zh/xxx/，直接用新路径会查出 0 条评论。开着 legacyKeys，先按
