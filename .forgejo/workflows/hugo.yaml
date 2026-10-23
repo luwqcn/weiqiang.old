@@ -128,7 +128,7 @@ jobs:
         uses: actions/git-pages@v2
         with:
           site: ${{ env.HUGO_BASEURL }}
-	  server: codeberg.page
+          server: codeberg.page
           token: ${{ forgejo.token }}
           source: public/
 
