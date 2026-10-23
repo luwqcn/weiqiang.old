@@ -3,7 +3,7 @@ title = "关于"
 author = ["陆伟强"]
 description = "耕读传家久，诗书继世长。采菊桑林下。"
 date = 2008-11-18T00:00:00+08:00
-lastmod = 2026-10-11T18:06:30+08:00
+lastmod = 2026-10-23T22:07:25+08:00
 draft = false
 keywords = "危墙, 村野闲居, 桑下居, 行止齋, 中医, 传统文化, 手作, 行止斋, 围墙里"
 +++
@@ -19,7 +19,7 @@ keywords = "危墙, 村野闲居, 桑下居, 行止齋, 中医, 传统文化, �
 
 子曰：君子不立危墙之下。此站名之由来，以此警示自己时刻战战兢兢，如履薄冰。
 
-本站乃互联网宇宙一蜉蝣，域名寄存于赛博菩萨 [Cloudflare](https://www.cloudflare.com) 并使用 DNS ~~和 Tunnel~~ 服务，使用 ~~[Emacs](https://www.gnu.org/software/emacs/) 和 [Org Mode](https://orgmode.org)~~ [Hugo](https://gohugo.io) 构建，通过 ~~[Gitee](https://gitee.com) 和 [EdgeOne Pages](https://console.cloud.tencent.com/edgeone/)~~ Cloudflare Pages 部署，评论功能通过部署 ~~[Artalk](https://artalk.js.org)~~ Twikoo 实现，一并感谢。
+本站乃互联网宇宙一蜉蝣，域名寄存于赛博菩萨 [Cloudflare](https://www.cloudflare.com) 并使用 DNS ~~和 Tunnel~~ 服务，使用 ~~[Emacs](https://www.gnu.org/software/emacs/) 和 [Org Mode](https://orgmode.org)~~ [Hugo](https://gohugo.io) 构建，通过 ~~Cloudflare Pages~~ [Codeberg Pages](https://codeberg.page) 部署，评论功能通过部署 [Artalk](https://artalk.js.org) 实现，一并感谢。
 
 
 ## <span class="section-num">3</span> 版权 {#版权}
