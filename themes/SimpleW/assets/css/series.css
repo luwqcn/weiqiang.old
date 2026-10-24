@@ -5,12 +5,13 @@
      2. /series/ 索引页与主页的卡片阵列
      3. 状态徽章
      4. 结集页头卡（series-hero）
-     5. 编号卷次列表（series-entries）
+     5. 编号卷次列表（series-entries，日期 → 标题 → 摘要，大序号当右上角水印）
      6. 结集间跳转（series-more）
    根字号 62.5%，下面所有 rem 按 1rem = 10px 读。
 
-   结集 = 一册书，所以卡片和头卡左侧那道竖条按「书脊」处理：归档的用赭红，
-   还在写的用绿。（早先那套「封面字印章」已废弃，front matter 的 glyph 也删了。）
+   结集 = 一册书，卡片左侧那道竖条按「书脊」处理：归档的用赭红，还在写的用绿。
+   结集页头卡（series-hero）2026-10-24 起去掉左侧竖条，只留一圈细边。
+   （早先那套「封面字印章」已废弃，front matter 的 glyph 也删了。）
 
    注意：正文列有 `#content p { font-size:1.9rem; margin:20px 0 }`（优先级带
    id），凡是 <p> 的自定义字号都要用 `#content .xxx` 级别才能盖回来。
@@ -191,7 +192,7 @@
    -------------------------------------------------------------------------- */
 .series-crumb {
     margin-bottom: 1rem;
-    font-size: 1.4rem;
+    font-size: 1.7rem;
     color: var(--time-color);
 }
 
@@ -204,7 +205,6 @@
     margin: 0 0 1.6rem;
     padding: 1.8rem 2rem;
     border: 1px solid var(--rule-color);
-    border-left: 5px solid var(--spine);
     border-radius: var(--radius-md);
     background: var(--card-bg);
     box-shadow: var(--shadow-sm);
@@ -236,33 +236,25 @@
 }
 
 .series-stats .ss-item {
-    font-family: var(--mono-fonts);
     font-size: 1.4rem;
+    font-variant-numeric: tabular-nums;
     color: var(--time-color);
 }
 
-#content .series-hint {
-    margin: 1.8rem 0 0.2rem;
-    font-size: 1.4rem;
-    color: var(--desc-color);
-}
-
 /* --------------------------------------------------------------------------
-   5. 编号卷次列表
+   5. 编号卷次列表 —— 日期 → 标题 → 摘要，大序号浮在右上角当水印
    -------------------------------------------------------------------------- */
 .series-entries {
     list-style: none;
-    margin: 0.8rem 0 0;
+    margin: 2.4rem 0 0;
     padding: 0;
     border-top: 1px solid var(--rule-color);
 }
 
 .series-entry {
-    display: grid;
-    grid-template-columns: 4.6rem minmax(0, 1fr) auto;
-    gap: 0 1.2rem;
-    align-items: baseline;
-    padding: 1rem 0.6rem;
+    /* 不为水印留白：正文（标题 / 描述）跟页面同宽，序号只是压在底下的纹样 */
+    position: relative;
+    padding: 1.5rem 0;
     border-bottom: 1px solid var(--rule-color);
     transition: background var(--dur) linear;
 }
@@ -271,21 +263,52 @@
     background: rgba(var(--accent-rgb), 0.04);
 }
 
+/* 序号：不进栏位，absolutely 定位在右上角；字够大、色够淡，
+   读起来像背景纹样而不是内容。装饰性质，不可选、不响应鼠标。
+   字体跟正文/文章页一致（不套等宽），只有数字用等宽数位保证对齐。 */
 .series-entry .se-no {
-    font-family: var(--mono-fonts);
-    font-size: 1.5rem;
-    color: var(--accent);
+    position: absolute;
+    top: 0.4rem;
+    right: 0.2rem;
+    z-index: 0;
+    font-size: 5.4rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
-    text-align: left;
+    color: rgba(var(--accent-rgb), 0.13);
+    user-select: none;
+    pointer-events: none;
+}
+
+/* 深色底色暗，同样的 alpha 吸不住，得提一档才看得见 */
+:root[data-theme="dark"] .series-entry .se-no {
+    color: rgba(var(--accent-rgb), 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .series-entry .se-no {
+        color: rgba(var(--accent-rgb), 0.2);
+    }
 }
 
 .series-entry .se-main {
+    position: relative;
+    z-index: 1;
     min-width: 0;
+}
+
+.series-entry .se-date {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 1.8rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--time-color);
 }
 
 .series-entry .se-title {
     margin: 0;
-    font-size: 1.9rem;
+    font-size: 2.4rem;
     font-weight: 500;
     line-height: 1.5;
 }
@@ -299,17 +322,10 @@
 }
 
 #content .series-entry .se-sum {
-    margin: 0.2rem 0 0;
-    font-size: 1.5rem;
-    line-height: 1.6;
+    margin: 0.5rem 0 0;
+    font-size: 1.7rem;
+    line-height: 1.7;
     color: var(--desc-color);
-}
-
-.series-entry .se-date {
-    font-family: var(--mono-fonts);
-    font-size: 1.4rem;
-    color: var(--time-color);
-    white-space: nowrap;
 }
 
 /* --------------------------------------------------------------------------
@@ -321,8 +337,6 @@
     align-items: center;
     gap: 0.8rem;
     margin-top: 2.4rem;
-    padding-top: 1.4rem;
-    border-top: 1px solid var(--rule-color);
 }
 
 .series-more .timestamp {
@@ -346,13 +360,15 @@
     }
 
     .series-entry {
-        grid-template-columns: 3.6rem minmax(0, 1fr);
-        gap: 0 1rem;
+        padding: 1.2rem 0;
     }
 
-    /* 日期落到第二行，与标题同一列，序号那一列空着 */
-    .series-entry .se-date {
-        grid-column: 2;
-        margin-top: 0.2rem;
+    .series-entry .se-no {
+        top: 0.3rem;
+        font-size: 3.4rem;
+    }
+
+    .series-entry .se-title {
+        font-size: 2.1rem;
     }
 }

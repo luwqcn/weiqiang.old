@@ -2,7 +2,9 @@
   components/listing-series.html — 结集页的文章列表：编号卷次。
 
   按时间先后编排，序号从 01 起（reverse = true 时倒序，最新一篇排在最前）。
-  每行三栏：序号 | 标题 + 摘要 | 日期。
+  每条自上而下：日期 → 标题 → 摘要；序号不进栏位、也不占宽度，浮在右上角
+  当水印（纯装饰，aria-hidden，select 不到也点不到）。正文与页面同宽，靠
+  z-index 压在序号上面，所以三位数（ws 有 204 篇）也不会挤掉字。
 
   用法：
       {{ partial "components/listing-series.html" (dict
@@ -22,12 +24,12 @@
   <li class="series-entry">
     <span class="se-no" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
     <div class="se-main">
+      <time class="se-date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format $df }}</time>
       <h2 class="se-title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h2>
       {{- $sum := "" -}}
       {{- with $p.Description }}{{ $sum = . }}{{ else }}{{ with $p.Summary }}{{ $sum = . | plainify | truncate 90 }}{{ end }}{{ end -}}
       {{- with $sum }}<p class="se-sum">{{ $sum }}</p>{{ end -}}
     </div>
-    <time class="se-date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format $df }}</time>
   </li>
   {{- end }}
 </ol>

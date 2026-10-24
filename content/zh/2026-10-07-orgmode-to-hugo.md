@@ -3,7 +3,7 @@ title = "网站从 orgmode 导出迁移至 hugo 驱动"
 author = ["LOWEJAN"]
 description = "利用国庆假期把 orgmode 站点迁移至 hugo 驱动，简单记录。"
 date = 2026-10-07
-lastmod = 2026-10-11T18:33:08+08:00
+lastmod = 2026-10-24T15:53:23+08:00
 slug = "orgmode-to-hugo"
 tags = ["hugo", "orgmode"]
 categories = ["站务"]
@@ -47,3 +47,10 @@ draft = false
 另外的问题就是 Pages 的浏览速度了，不过这个也关系不大。
 
 其他再慢慢看吧。现在有 workbuddy 在，有问题只需要提几个需求即可，完全不用懂技术，真真是这个时代的技术福利。
+
+
+## <span class="section-num">4</span> 更新 {#更新}
+
+10.18：评论模块增加了 webmention ，全是让 workbuddy 做的，不懂怎么测试，不知是不是有效；Twikoo 部署在 Netlify 上，速度实在感人，所以还是用回了 artalk ，速度也一般吧。
+
+10.24：调整部署到 Codeberg Pages 上了，速度较之 Cloudflare 稍好，部署参照 [hugo wiki](https://gohugo.io/host-and-deploy/deploy-to-codeberg-pages/) ，比较顺利，就自定义域名这一步要注意，参照 [Codeberg Docs](https://docs.codeberg.org/codeberg-pages/using-custom-domain/) 设置域名 CNAME 和 TXT 值。

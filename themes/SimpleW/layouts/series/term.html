@@ -37,7 +37,6 @@
   {{- with .Content }}<div class="section-content">{{ . }}</div>{{ end -}}
 
   {{- if $pages }}
-  <p class="series-hint">{{ if $reverse }}按时间倒序排列，最新一篇在最前面。{{ else }}按时间先后编排，序号 01 为最早一篇。{{ end }}</p>
   {{- if eq $m.style "series" -}}
     {{- partial "components/listing-series.html" (dict "pages" $pages "reverse" $reverse) -}}
   {{- else -}}
