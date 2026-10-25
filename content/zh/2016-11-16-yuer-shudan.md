@@ -3,7 +3,6 @@ title = "关于孩子成长，推荐给年轻父母们看的书"
 author = ["落为匠"]
 description = "书单推荐：育儿过程中个人以为给自己带来较大影响的与育儿相关的书籍。"
 date = 2016-11-16T00:00:00+08:00
-lastmod = 2026-10-11T18:07:04+08:00
 slug = "yuer-shudan"
 tags = ["书单"]
 draft = false

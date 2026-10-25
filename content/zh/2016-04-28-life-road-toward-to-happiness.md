@@ -3,7 +3,6 @@ title = "通往人生的幸福之路"
 author = ["落为匠"]
 description = "这是一本启发我们重新发现自我的书，你可以拿起来，读一读作者的感悟，参考一下那八十多位半农半X者的生活经历，重新审视一下目前的生活。"
 date = 2016-04-28T00:00:00+08:00
-lastmod = 2026-10-11T18:07:03+08:00
 slug = "life-road-toward-to-happiness"
 tags = ["半农半X的幸福生活", "读书笔记"]
 draft = false

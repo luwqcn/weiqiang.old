@@ -3,7 +3,6 @@ title = "简单生活"
 author = ["落为匠"]
 description = "生活本身是不复杂的，是可以简单的。"
 date = 2011-12-13T00:00:00+08:00
-lastmod = 2026-10-11T18:06:58+08:00
 slug = "simple-living"
 tags = ["生活"]
 draft = false

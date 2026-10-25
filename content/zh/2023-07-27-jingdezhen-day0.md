@@ -3,7 +3,6 @@ title = "景德镇游学第一天"
 author = ["落为匠"]
 description = "景德镇游学开启，入镇篇。"
 date = 2023-07-27T00:00:00+08:00
-lastmod = 2026-10-11T18:07:10+08:00
 slug = "jingdezhen-day0"
 tags = ["游学"]
 draft = false

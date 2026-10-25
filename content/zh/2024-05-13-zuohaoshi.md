@@ -3,7 +3,6 @@ title = "做点好事心情好"
 author = ["陆伟强"]
 description = "莫问前路，但行好事。"
 date = 2024-05-13T00:00:00+08:00
-lastmod = 2026-10-11T18:07:15+08:00
 slug = "zuohaoshi"
 tags = ["积善"]
 draft = false

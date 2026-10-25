@@ -3,7 +3,6 @@ title = "春蚕上山了"
 author = ["陆伟强"]
 description = "春蚕上山，意味着又一次有收入了。"
 date = 2024-05-23T00:00:00+08:00
-lastmod = 2026-10-11T18:07:17+08:00
 slug = "chuncan-shangshan"
 tags = ["养蚕"]
 draft = false

@@ -3,7 +3,6 @@ title = "换个角度观世界"
 author = ["落为匠"]
 description = "三十年河东，三十年河西。这个多变的世界，如何从形形色色的流行中去把握变迁，顺应潮流，这是需要好好思考的。换个角度，也许能看到更多。"
 date = 2016-06-01T00:00:00+08:00
-lastmod = 2026-10-11T18:07:03+08:00
 slug = "different-point-of-view-to-the-world"
 tags = ["引爆点", "如何引发流行", "读书笔记"]
 draft = false

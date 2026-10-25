@@ -2,7 +2,6 @@
 title = "在路上"
 author = ["落为匠"]
 date = 2010-03-31T00:00:00+08:00
-lastmod = 2026-10-11T18:06:41+08:00
 slug = "zailushang"
 tags = ["路上", "生活"]
 draft = false

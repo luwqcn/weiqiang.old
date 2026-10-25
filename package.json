@@ -8,6 +8,9 @@
     "node": ">=20"
   },
   "scripts": {
+    "lastmod": "python3 scripts/gen-lastmod.py",
+    "prebuild": "npm run lastmod || true",
+    "prebuild:preview": "npm run lastmod || true",
     "build": "node scripts/comments-prerender.mjs && hugo --gc --minify",
     "build:preview": "node scripts/comments-prerender.mjs && hugo --gc --minify --baseURL \"${PUBLIC_URL:-http://127.0.0.1:8788/}\"",
     "dev": "node cf/dev-server.mjs",

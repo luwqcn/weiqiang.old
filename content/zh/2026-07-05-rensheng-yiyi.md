@@ -3,7 +3,6 @@ title = "人生无意义"
 author = ["陆伟强"]
 description = "当意识到人生无意义，接下来该怎么选择，怎么处世"
 date = 2026-07-05T00:00:00+08:00
-lastmod = 2026-10-11T18:07:20+08:00
 slug = "rensheng-yiyi"
 tags = ["生活"]
 draft = false

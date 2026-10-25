@@ -3,7 +3,6 @@ title = "寻找自由生活的可能路径"
 author = ["落为匠"]
 description = "而我的路径，又通向何方？那可供践履，而融于生命的，又是何种？"
 date = 2009-09-16T00:00:00+08:00
-lastmod = 2026-10-11T18:06:37+08:00
 slug = "ziyoushenghuo"
 tags = ["反思"]
 draft = false

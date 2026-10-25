@@ -3,7 +3,6 @@ title = "生活随记（2017.11-2017.12）"
 author = ["落为匠"]
 description = "生活中的一点小感触。"
 date = 2017-12-10T00:00:00+08:00
-lastmod = 2026-10-11T18:07:05+08:00
 slug = "suiji-life"
 tags = ["生活", "随记", "教育", "传统"]
 draft = false

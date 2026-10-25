@@ -3,7 +3,6 @@ title = "2025年秋假旅行记录"
 author = ["落为匠"]
 description = "2025年秋季开始的小学秋假，记录短途旅行印象。"
 date = 2025-11-16T00:00:00+08:00
-lastmod = 2026-10-11T18:07:18+08:00
 slug = "qiujia-lvxing"
 tags = ["秋假", "旅行"]
 draft = false

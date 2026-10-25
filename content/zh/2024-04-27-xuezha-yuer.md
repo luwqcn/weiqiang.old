@@ -3,7 +3,6 @@ title = "有一个“学渣”儿子是什么体验"
 author = ["陆伟强"]
 description = "但凡一个家长想随性佛系地养娃，都会感到很无力。"
 date = 2024-04-27T00:00:00+08:00
-lastmod = 2026-10-11T18:07:13+08:00
 slug = "xuezha-yuer"
 tags = ["育儿"]
 draft = false

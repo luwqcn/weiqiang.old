@@ -3,7 +3,6 @@ title = "短期培训"
 author = ["落为匠"]
 description = "短期培训的一点感受。"
 date = 2009-11-29T00:00:00+08:00
-lastmod = 2026-10-11T18:06:38+08:00
 slug = "duanqipeixun"
 tags = ["生活"]
 draft = false

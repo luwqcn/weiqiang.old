@@ -2,7 +2,6 @@
 title = "一路的风景"
 author = ["落为匠"]
 date = 2010-05-26T00:00:00+08:00
-lastmod = 2026-10-11T18:06:42+08:00
 slug = "yilu-fengjing"
 tags = ["风景", "生活"]
 draft = false

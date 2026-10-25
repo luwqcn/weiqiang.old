@@ -3,7 +3,6 @@ title = "豹5使用一年来的费用"
 author = ["陆伟强"]
 description = "简单总结使用方程豹豹5一年来的费用情况。"
 date = 2026-01-31T00:00:00+08:00
-lastmod = 2026-10-11T18:07:18+08:00
 slug = "bao5-yinian-feiyong"
 tags = ["豹5", "用车记录"]
 draft = false

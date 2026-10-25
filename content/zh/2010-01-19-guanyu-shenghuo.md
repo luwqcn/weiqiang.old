@@ -2,7 +2,6 @@
 title = "关于生活"
 author = ["落为匠"]
 date = 2010-01-19T00:00:00+08:00
-lastmod = 2026-10-11T18:06:40+08:00
 slug = "guanyu-shenghuo"
 tags = ["随感", "生活"]
 draft = false

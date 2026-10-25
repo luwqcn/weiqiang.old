@@ -3,7 +3,6 @@ title = "国产越来越好了"
 author = ["陆伟强"]
 description = "国产的产品越来越优质，我们这些普通消费者也能体验到更多物美质优的产品。"
 date = 2024-05-10T00:00:00+08:00
-lastmod = 2026-10-11T18:07:15+08:00
 slug = "guochan-shebei"
 tags = ["国产"]
 draft = false

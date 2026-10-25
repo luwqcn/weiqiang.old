@@ -3,7 +3,6 @@ title = "一个中年人的青年节"
 author = ["陆伟强"]
 description = "顺应潮流，做好自己，这是一个中年人的青年节感悟。"
 date = 2024-05-04T00:00:00+08:00
-lastmod = 2026-10-11T18:07:14+08:00
 slug = "zhongnian-wusi"
 tags = ["五四"]
 draft = false

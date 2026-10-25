@@ -3,7 +3,6 @@ title = "三十多岁裸辞后的自白"
 author = ["落为匠"]
 description = "谨以以上文字，纪念这段裸辞的日子。"
 date = 2016-12-25T00:00:00+08:00
-lastmod = 2026-10-11T18:07:04+08:00
 slug = "luocizibai"
 tags = ["思考"]
 draft = false

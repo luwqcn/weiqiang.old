@@ -3,7 +3,6 @@ title = "整九月记"
 author = ["落为匠"]
 description = "看到有米在校内上的《流年》，发现原来自己离开学校已经整整九个月了。没有有米的文采，聊作记录。"
 date = 2009-04-18T00:00:00+08:00
-lastmod = 2026-10-11T18:06:34+08:00
 slug = "nine-months"
 tags = ["生活"]
 draft = false

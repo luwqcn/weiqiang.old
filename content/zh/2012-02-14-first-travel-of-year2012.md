@@ -3,7 +3,6 @@ title = "壬辰年第一行"
 author = ["落为匠"]
 description = "壬辰年初，雁荡山之行，烟雨之中，美景入心。"
 date = 2012-02-14T00:00:00+08:00
-lastmod = 2026-10-11T18:06:59+08:00
 slug = "first-travel-of-year2012"
 tags = ["雁荡山", "旅行"]
 draft = false

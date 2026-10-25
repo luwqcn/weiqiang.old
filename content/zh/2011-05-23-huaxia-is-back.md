@@ -3,7 +3,6 @@ title = "归夏"
 author = ["落为匠"]
 description = "对于此世的一点点文化观感，或曰志向。"
 date = 2011-05-23T00:00:00+08:00
-lastmod = 2026-10-11T18:06:55+08:00
 slug = "huaxia-is-back"
 tags = ["生活"]
 draft = false

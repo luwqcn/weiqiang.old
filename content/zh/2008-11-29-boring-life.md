@@ -3,7 +3,6 @@ title = "灵性匮乏的生活"
 author = ["落为匠"]
 description = "看忙碌的人群，感生活之乏味"
 date = 2008-11-29T00:00:00+08:00
-lastmod = 2026-10-11T18:06:31+08:00
 slug = "boring-life"
 tags = ["生活"]
 draft = false

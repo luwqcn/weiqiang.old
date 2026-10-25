@@ -2,7 +2,6 @@
 title = "行动起来才能有所得"
 author = ["落为匠"]
 date = 2011-03-12T00:00:00+08:00
-lastmod = 2026-10-11T18:06:52+08:00
 slug = "xingdong-youde"
 tags = ["行动", "生活"]
 draft = false

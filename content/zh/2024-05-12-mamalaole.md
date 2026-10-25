@@ -3,7 +3,6 @@ title = "我妈老了，我还没能回乡"
 author = ["陆伟强"]
 description = "我妈老了，而我还没能回乡。这是我最近几年最大的执念。"
 date = 2024-05-12T00:00:00+08:00
-lastmod = 2026-10-11T18:07:15+08:00
 slug = "mamalaole"
 tags = ["返乡"]
 draft = false

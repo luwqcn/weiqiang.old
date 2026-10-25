@@ -3,7 +3,6 @@ title = "同学会"
 author = ["落为匠"]
 description = "己丑年正月初四，高中同窗十多人于避风塘聚会。"
 date = 2009-01-29T00:00:00+08:00
-lastmod = 2026-10-11T18:06:32+08:00
 slug = "classmates"
 tags = ["生活"]
 draft = false

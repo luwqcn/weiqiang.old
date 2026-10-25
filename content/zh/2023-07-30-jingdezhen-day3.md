@@ -3,7 +3,6 @@ title = "景德镇游学第四天"
 author = ["落为匠"]
 description = "景德镇正式游学第三天，上午参观浮梁古县衙，下午参观景德镇陶瓷博物馆。"
 date = 2023-07-30T00:00:00+08:00
-lastmod = 2026-10-11T18:07:10+08:00
 slug = "jingdezhen-day3"
 tags = ["游学"]
 draft = false

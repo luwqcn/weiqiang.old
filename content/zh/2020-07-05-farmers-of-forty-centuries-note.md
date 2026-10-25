@@ -3,7 +3,6 @@ title = "四千年农夫读书笔记"
 author = ["落为匠"]
 description = "晨读《四千年农夫》，记录一点个人感想。"
 date = 2020-07-05T00:00:00+08:00
-lastmod = 2026-10-11T18:07:07+08:00
 slug = "farmers-of-forty-centuries-note"
 tags = ["四千年农夫", "读书笔记"]
 draft = false

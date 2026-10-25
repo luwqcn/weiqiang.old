@@ -3,7 +3,6 @@ title = "倾诉者与倾听者"
 author = ["陆伟强"]
 description = "人有时候就是这样，需要讲一讲话倾诉一番，而另一些人，就正好可以坐下来倾听。"
 date = 2024-05-24T00:00:00+08:00
-lastmod = 2026-10-11T18:07:17+08:00
 slug = "qingting-qingshu"
 tags = ["倾听"]
 draft = false

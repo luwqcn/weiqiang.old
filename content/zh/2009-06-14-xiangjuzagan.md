@@ -3,7 +3,6 @@ title = "乡居杂感"
 author = ["落为匠"]
 description = "周末闲居乡下，随感而发。"
 date = 2009-06-14T00:00:00+08:00
-lastmod = 2026-10-11T18:06:35+08:00
 slug = "xiangjuzagan"
 tags = ["随想"]
 draft = false

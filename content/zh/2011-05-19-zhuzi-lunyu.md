@@ -3,7 +3,6 @@ title = "朱子注论语两段"
 author = ["落为匠"]
 description = "摘录两句朱子的论语注解，正契合现在的状态。"
 date = 2011-05-19T00:00:00+08:00
-lastmod = 2026-10-11T18:06:54+08:00
 slug = "zhuzi-lunyu"
 tags = ["生活"]
 draft = false

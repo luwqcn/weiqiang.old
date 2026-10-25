@@ -3,7 +3,6 @@ title = "使用 Org Mode 写博客"
 author = ["落为匠"]
 description = "记录使用 Org Mode 写博客的几次折腾过程，并不详细。"
 date = 2019-08-03T22:52:00+08:00
-lastmod = 2026-10-11T18:07:06+08:00
 slug = "blogging-with-orgmode"
 tags = ["OrgMode", "博客", "Emacs"]
 draft = false

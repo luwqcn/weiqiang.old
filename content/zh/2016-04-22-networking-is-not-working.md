@@ -3,7 +3,6 @@ title = "社交无用？新时代的社交宝典"
 author = ["落为匠"]
 description = "本书为那些希望高效地寻找理想客户的人而作，核心理念是成为各种资源和专业人士的终极连接人，而目的是为他人提供高质量的价值。"
 date = 2016-04-22T00:00:00+08:00
-lastmod = 2026-10-11T18:07:02+08:00
 slug = "networking-is-not-working"
 tags = ["社交无用", "读书笔记"]
 draft = false

@@ -3,7 +3,6 @@ title = "日全食、暴雨、其他"
 author = ["落为匠"]
 description = "日全食、暴雨、其他生活随记。"
 date = 2009-07-23T00:00:00+08:00
-lastmod = 2026-10-11T18:06:36+08:00
 slug = "riquanshi-baoyu-qita"
 tags = ["生活"]
 draft = false

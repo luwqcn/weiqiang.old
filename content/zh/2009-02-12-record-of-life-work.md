@@ -3,7 +3,6 @@ title = "工作、生活小记"
 author = ["落为匠"]
 description = "新岗位的一点点小小总结。"
 date = 2009-02-12T00:00:00+08:00
-lastmod = 2026-10-11T18:06:33+08:00
 slug = "record-of-life-work"
 tags = ["生活"]
 draft = false

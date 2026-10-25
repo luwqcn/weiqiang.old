@@ -3,7 +3,6 @@ title = "简单生活之二"
 author = ["落为匠"]
 description = "对于想要怎样的生活，经过这些年的上下摇摆之后，已经很笃定了。"
 date = 2012-02-20T00:00:00+08:00
-lastmod = 2026-10-11T18:06:59+08:00
 slug = "simple-life"
 tags = ["生活"]
 draft = false

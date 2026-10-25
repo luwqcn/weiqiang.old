@@ -3,7 +3,6 @@ title = "每天做一点点，三个月后你将对自己刮目相看"
 author = ["落为匠"]
 description = "每天进步一点，一年之后将有质的飞跃，而如果每天退步一点，那么一年之后，你几乎将一无所有。"
 date = 2016-11-09T00:00:00+08:00
-lastmod = 2026-10-11T18:07:04+08:00
 slug = "meitianjinbuyidian"
 tags = ["思考"]
 draft = false

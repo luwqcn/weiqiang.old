@@ -191,8 +191,14 @@ static/_routes.json          只让 /api/* 走函数
 static/avatars/              站内头像
 data/comments.json           ★ 快照，构建时直出用
 data/avatars.json            ★ 头像映射
-data/lastmod.json            ★ 页脚「本页最近更新」的数据源（427 条）
+data/lastmod.json            ★ 页脚「本页最近更新」的数据源（9 条真修改记录）
+scripts/gen-lastmod.py       ★ 生成上面那份表，本地发版前跑
 ```
+
+> **`data/lastmod.json` 为什么必须进仓库：** Cloudflare Pages 构建时是 `depth=1` 的浅克隆，
+> 拿不到 git 历史，脚本在它上面跑不出任何东西。所以这份表必须在**本地**生成后提交。
+> 脚本里已经加了浅克隆保护——检测到历史不全就直接退出，不会用空表覆盖仓库里那份。
+> `npm run build` 的 `prebuild` 会顺手跑一次，Pages 上失败了也不影响构建。
 
 **不要进仓库的**
 
@@ -206,30 +212,39 @@ node_modules/
 
 `.gitignore` 里已经配好了，正常 `git add -A` 不会误收。
 
-**⚠️ 动手前先看一眼 `git status` 里那些 `D`。** 工作区现在有一批被删掉的老脚本：
+**老脚本已经清理完了。** 迁移时删掉了这 8 个（全部由 Node 构建流程取代）：
 
 ```
-D scripts/artalk-migrate.py
-D scripts/build.sh
-D scripts/gen-lastmod.py
-D scripts/gen-slugs.py
-D scripts/normalize-tags.py
-D scripts/optimize-assets.py
-D scripts/org-migrate.py
-D scripts/org-to-md.py
-D scripts/serve.sh
-D static/foreverblog-verify.txt
+scripts/artalk-migrate.py    scripts/build.sh          scripts/gen-slugs.py
+scripts/normalize-tags.py    scripts/optimize-assets.py scripts/org-migrate.py
+scripts/org-to-md.py         scripts/serve.sh
 ```
 
-`git add -A` 会把这些删除一起提交。确认是你有意清理就往下走；如果不是，先把它们捞回来：
+**`scripts/gen-lastmod.py` 不在删除之列** —— 它是活的，页脚「本页最近更新」靠它生成
+`data/lastmod.json`。`scripts/*` 被 gitignore 忽略，所以 `.gitignore` 里给它留了白名单：
+
+```
+!scripts/gen-lastmod.py
+```
+
+以后发版前手动跑一次，或直接 `npm run build`（`prebuild` 会自动跑）：
 
 ```bash
-git restore scripts/ static/foreverblog-verify.txt
+npm run lastmod        # → data/lastmod.json
 ```
 
-> `foreverblog-verify.txt` 如果是博客联盟的验证文件，删了线上验证会掉，值得单独留一下。
+> **⚠️ 别让 ox-hugo / 导出脚本把 `lastmod` 写回 front matter。** 2026-10-11 那次全站
+> `.org → .md` 转换，把 397 篇文章的 `lastmod` 全写成了 `2026-10-11T18:06~18:07`——
+> 两分钟内几百个文件，是文件 mtime 被批量重置的结果，不是真改过。front matter 里的
+> `lastmod` **优先级高于** `data/lastmod.json`，所以那 397 篇的页脚全卡在 2026-10-11。
+> 这批假值已经清掉（页脚改回各篇真实发布日期），保留 5 条真手改的。重新导出时如果
+> 发现页脚日期又变成同一天，先查 front matter：
 
-确认完再提交：
+```bash
+grep -rhE "^lastmod *[:=]" content --include="*.md" | sort | uniq -c | sort -rn | head
+```
+
+再提交：
 
 ```bash
 git add -A

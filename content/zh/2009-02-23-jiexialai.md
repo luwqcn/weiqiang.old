@@ -3,7 +3,6 @@ title = "接下来"
 author = ["落为匠"]
 description = "趋于平静，还是回归常态。"
 date = 2009-02-23T00:00:00+08:00
-lastmod = 2026-10-11T18:06:33+08:00
 slug = "jiexialai"
 tags = ["生活"]
 draft = false

@@ -2,7 +2,6 @@
 title = "蓝天、白云和笑脸"
 author = ["落为匠"]
 date = 2010-07-22T00:00:00+08:00
-lastmod = 2026-10-11T18:06:43+08:00
 slug = "lantian-baiyun-xiaolian"
 tags = ["影像", "支教", "生活"]
 draft = false

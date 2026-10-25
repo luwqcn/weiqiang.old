@@ -3,7 +3,6 @@ title = "读书法"
 author = ["落为匠"]
 description = "收集古今中外名人读书法，借鉴之。"
 date = 2019-08-24T00:00:00+08:00
-lastmod = 2026-10-11T18:07:06+08:00
 slug = "reading-method"
 tags = ["读书法", "名人"]
 draft = false

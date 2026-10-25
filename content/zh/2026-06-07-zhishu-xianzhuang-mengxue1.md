@@ -3,7 +3,6 @@ title = "桑下书集第一次线装书制作记录"
 author = ["陆伟强"]
 description = "第一次制作线装书，《千字文》、《朱子治家格言》合本。"
 date = 2026-06-07T00:00:00+08:00
-lastmod = 2026-10-11T18:07:20+08:00
 slug = "zhishu-xianzhuang-mengxue1"
 tags = ["做书"]
 draft = false

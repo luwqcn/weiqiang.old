@@ -2,7 +2,6 @@
 title = "那时偶记"
 author = ["落为匠"]
 date = 2010-12-10T00:00:00+08:00
-lastmod = 2026-10-11T18:06:48+08:00
 slug = "nashiouji"
 tags = ["支教", "生活"]
 draft = false

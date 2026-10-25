@@ -2,7 +2,6 @@
 title = "只因空想太美"
 author = ["落为匠"]
 date = 2011-08-27T00:00:00+08:00
-lastmod = 2026-10-11T18:06:56+08:00
 slug = "kongxiang"
 draft = false
 series = "ws"

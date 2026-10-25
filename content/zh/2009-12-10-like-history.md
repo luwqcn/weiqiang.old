@@ -3,7 +3,6 @@ title = "喜欢历史"
 author = ["落为匠"]
 description = "喜欢历史，就是热爱生活。我们体会古人的风雅，我们也享受今日的自在。"
 date = 2009-12-10T00:00:00+08:00
-lastmod = 2026-10-11T18:06:38+08:00
 slug = "like-history"
 tags = ["思考"]
 draft = false

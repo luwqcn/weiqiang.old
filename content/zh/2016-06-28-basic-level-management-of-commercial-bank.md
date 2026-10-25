@@ -3,7 +3,6 @@ title = "对商业银行基层管理的一点思考"
 author = ["落为匠"]
 description = "在商业银行基层机构工作七年，对其管理的一点思考。"
 date = 2016-06-28T00:00:00+08:00
-lastmod = 2026-10-11T18:07:03+08:00
 slug = "basic-level-management-of-commercial-bank"
 tags = ["商业银行", "基层管理", "营销"]
 draft = false

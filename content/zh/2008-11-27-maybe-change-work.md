@@ -3,7 +3,6 @@ title = "据说要被调岗了"
 author = ["落为匠"]
 description = "调岗前记录"
 date = 2008-11-27T00:00:00+08:00
-lastmod = 2026-10-11T18:06:31+08:00
 slug = "maybe-change-work"
 tags = ["生活"]
 draft = false

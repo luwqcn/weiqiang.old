@@ -3,7 +3,6 @@ title = "购新车谈价需要注意的点"
 author = ["陆伟强"]
 description = "近期对购车的调查和总结分析。"
 date = 2024-05-25T00:00:00+08:00
-lastmod = 2026-10-11T18:07:17+08:00
 slug = "gouche-tanjia"
 tags = ["购车"]
 draft = false

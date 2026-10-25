@@ -3,7 +3,6 @@ title = "缘起缘灭，重拾博客"
 author = ["落为匠"]
 description = "网络时代，君子幸甚。从08年至今，一路关注却未及深入。而今回头看那些坚持的朋友，多颇有收获。"
 date = 2015-06-06T00:00:00+08:00
-lastmod = 2026-10-11T18:07:02+08:00
 slug = "starting-again-and-why"
 tags = ["生活", "网络", "博客"]
 draft = false

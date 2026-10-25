@@ -3,7 +3,6 @@ title = "台风袭来"
 author = ["落为匠"]
 description = "台风莫拉克来袭。"
 date = 2009-08-08T00:00:00+08:00
-lastmod = 2026-10-11T18:06:36+08:00
 slug = "taifeng-molake"
 tags = ["台风", "生活"]
 draft = false

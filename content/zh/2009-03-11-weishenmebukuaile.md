@@ -3,7 +3,6 @@ title = "为什么不快乐"
 author = ["落为匠"]
 description = "年輕時，感慨多。有想法無作爲。"
 date = 2009-03-11T00:00:00+08:00
-lastmod = 2026-10-11T18:06:33+08:00
 slug = "weishenmebukuaile"
 tags = ["生活"]
 draft = false

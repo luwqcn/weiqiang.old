@@ -3,7 +3,6 @@ title = "早起后是读书还是锻炼"
 author = ["陆伟强"]
 description = "人生的功课只有两个，一个是身体，锻炼以强身，以期活得更久，一个是灵魂，保持终生学习以扩展视野，提升认知。"
 date = 2024-05-01T00:00:00+08:00
-lastmod = 2026-10-11T18:07:14+08:00
 slug = "zaoqi-dushu-duanlian"
 tags = ["早起"]
 draft = false

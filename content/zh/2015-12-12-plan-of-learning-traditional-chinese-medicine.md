@@ -3,7 +3,6 @@ title = "中醫自修計劃"
 author = ["落为匠"]
 description = "學習中醫是一個宿願，此處列個自學計劃，以時時提醒自己，勿忘心中理想，腳踏實地循序漸進。"
 date = 2015-12-12T00:00:00+08:00
-lastmod = 2026-10-11T18:07:02+08:00
 slug = "plan-of-learning-traditional-chinese-medicine"
 tags = ["中醫", "学习", "中医"]
 draft = false

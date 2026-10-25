@@ -2,7 +2,6 @@
 title = "日三省"
 author = ["落为匠"]
 date = 2011-02-16T00:00:00+08:00
-lastmod = 2026-10-11T18:06:51+08:00
 slug = "risanxing"
 tags = ["反省", "生活"]
 draft = false

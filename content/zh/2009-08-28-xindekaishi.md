@@ -3,7 +3,6 @@ title = "新的开始，是否意味着又一次结束"
 author = ["落为匠"]
 description = "其实，我实在是个安于现状而不思进取者。"
 date = 2009-08-28T00:00:00+08:00
-lastmod = 2026-10-11T18:06:36+08:00
 slug = "xindekaishi"
 tags = ["生活"]
 draft = false

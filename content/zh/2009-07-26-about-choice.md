@@ -3,7 +3,6 @@ title = "关于选择"
 author = ["落为匠"]
 description = "在每一个十字路口，我并不缺少通向未来的不同道路，缺少的，只是那一份执着坚持的勇气。"
 date = 2009-07-26T00:00:00+08:00
-lastmod = 2026-10-11T18:06:36+08:00
 slug = "about-choice"
 tags = ["反思"]
 draft = false

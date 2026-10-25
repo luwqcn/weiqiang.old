@@ -3,7 +3,6 @@ title = "九月"
 author = ["落为匠"]
 description = "整理下八月在豆瓣上的日记，算是期待未来的生活。"
 date = 2011-08-31T00:00:00+08:00
-lastmod = 2026-10-11T18:06:56+08:00
 slug = "september"
 tags = ["生活"]
 draft = false

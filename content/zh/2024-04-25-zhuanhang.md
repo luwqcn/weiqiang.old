@@ -3,7 +3,6 @@ title = "记两次转行失败的经历"
 author = ["陆伟强"]
 description = "有过两次打算转行的行动，最终都以失败告终。"
 date = 2024-04-25T00:00:00+08:00
-lastmod = 2026-10-11T18:07:13+08:00
 slug = "zhuanhang"
 tags = ["转行"]
 draft = false

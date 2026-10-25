@@ -3,7 +3,6 @@ title = "周末农夫录2022-02"
 author = ["落为匠"]
 description = "周末农夫纪实：劳动可以改善各种情绪。"
 date = 2022-06-26T00:00:00+08:00
-lastmod = 2026-10-11T18:07:09+08:00
 slug = "zhoumonongfu-02"
 tags = ["周末农夫"]
 draft = false

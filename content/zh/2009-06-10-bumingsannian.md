@@ -3,7 +3,6 @@ title = "不鸣三年"
 author = ["落为匠"]
 description = "给自己一个三年的期限，算是一个学习的机会，重新整理自己对这个世界的理解。"
 date = 2009-06-10T00:00:00+08:00
-lastmod = 2026-10-11T18:06:35+08:00
 slug = "bumingsannian"
 tags = ["反思"]
 draft = false

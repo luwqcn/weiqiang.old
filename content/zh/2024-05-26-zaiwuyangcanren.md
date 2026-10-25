@@ -3,7 +3,6 @@ title = "家乡的桑蚕丝是怎么被搞砸的"
 author = ["陆伟强"]
 description = "在东桑西移的今天，在资本的盛宴下，我父母辈后，此地将无养蚕人。"
 date = 2024-05-26T00:00:00+08:00
-lastmod = 2026-10-11T18:07:17+08:00
 slug = "zaiwuyangcanren"
 tags = ["养蚕"]
 draft = false

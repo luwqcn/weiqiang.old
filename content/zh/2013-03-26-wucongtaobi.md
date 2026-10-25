@@ -3,7 +3,6 @@ title = "无从逃避"
 author = ["落为匠"]
 description = "三十而立。在传统士人的心中，这个是无法逃避的时点。"
 date = 2013-03-26T00:00:00+08:00
-lastmod = 2026-10-11T18:07:01+08:00
 slug = "wucongtaobi"
 tags = ["生活"]
 draft = false

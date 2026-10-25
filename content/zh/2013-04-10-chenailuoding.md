@@ -3,7 +3,6 @@ title = "尘埃落定"
 author = ["落为匠"]
 description = "原本，尘埃落定是最大的欢愉，长舒一口气后的放松。"
 date = 2013-04-10T00:00:00+08:00
-lastmod = 2026-10-11T18:07:01+08:00
 slug = "chenailuoding"
 tags = ["生活"]
 draft = false

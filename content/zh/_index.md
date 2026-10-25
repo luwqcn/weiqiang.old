@@ -3,7 +3,6 @@ title = "手記"
 author = ["陆伟强"]
 description = "记录个人感悟、生活经历等等，拒绝道听途说。"
 date = 2008-11-18T00:00:00+08:00
-lastmod = 2026-10-11T18:06:30+08:00
 draft = false
 keywords = "blog, 博客, 手记, 危墙"
 +++

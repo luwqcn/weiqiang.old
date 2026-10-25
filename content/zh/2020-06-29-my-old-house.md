@@ -3,7 +3,6 @@ title = "老房子的断壁残垣，是我回不去的童年"
 author = ["落为匠"]
 description = "回忆那遥远的旧宅，记忆中的童年生活"
 date = 2020-06-29T00:00:00+08:00
-lastmod = 2026-10-11T18:07:06+08:00
 slug = "my-old-house"
 tags = ["老房", "童年", "生活"]
 draft = false

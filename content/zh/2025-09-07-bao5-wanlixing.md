@@ -3,7 +3,6 @@ title = "豹行万里，豹5一万公里简记"
 author = ["聽風"]
 description = "自从1月底提车豹五以来，已行至1万余公里，作简要记录以备忘。"
 date = 2025-09-07T00:00:00+08:00
-lastmod = 2026-10-11T18:07:18+08:00
 slug = "bao5-wanlixing"
 tags = ["方程豹5", "豹行万里"]
 draft = false

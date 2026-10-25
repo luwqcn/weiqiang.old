@@ -3,7 +3,6 @@ title = "油车与电车该如何选择"
 author = ["陆伟强"]
 description = "油车与电车的选择分析。"
 date = 2024-04-26T00:00:00+08:00
-lastmod = 2026-10-11T18:07:13+08:00
 slug = "youche-dianche"
 tags = ["购车"]
 draft = false

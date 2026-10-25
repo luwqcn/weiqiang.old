@@ -2,7 +2,6 @@
 title = "周末回乡"
 author = ["落为匠"]
 date = 2011-10-23T00:00:00+08:00
-lastmod = 2026-10-11T18:06:57+08:00
 slug = "weekend-huixiang"
 draft = false
 series = "ws"

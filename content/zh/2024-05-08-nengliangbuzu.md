@@ -3,7 +3,6 @@ title = "当一个人的能量不够时"
 author = ["陆伟强"]
 description = "当一个人的能量不够时，表现出来的可能是心理和精神问题。"
 date = 2024-05-08T00:00:00+08:00
-lastmod = 2026-10-11T18:07:15+08:00
 slug = "nengliangbuzu"
 tags = ["健康"]
 draft = false

@@ -3,7 +3,6 @@ title = "我们一起玩游戏"
 author = ["落为匠"]
 description = "听到朱七唱起《童话》，忽然觉得这也是个自己乐于其中的游戏。"
 date = 2010-12-05T20:42:00+08:00
-lastmod = 2026-10-11T18:06:47+08:00
 slug = "play-together"
 tags = ["杂感", "思考"]
 draft = false

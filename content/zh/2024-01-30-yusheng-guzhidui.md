@@ -3,7 +3,6 @@ title = "余生埋首故纸堆"
 author = ["落为匠"]
 description = "寻了一个活计，在古籍的文字中穿梭，前所未有地安宁。余生，便可在这之中安然度过。"
 date = 2024-01-30T20:04:00+08:00
-lastmod = 2026-10-11T18:07:12+08:00
 slug = "yusheng-guzhidui"
 tags = ["古籍", "生活"]
 draft = false

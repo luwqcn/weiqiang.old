@@ -3,7 +3,6 @@ title = "感激这八年来所遇到的人和事"
 author = ["落为匠"]
 description = "感激那些曾经出现在我的生命中的人们，没有他们的帮助与成全，就没有今天的我。"
 date = 2016-07-02T00:00:00+08:00
-lastmod = 2026-10-11T18:07:04+08:00
 slug = "grateful-to-people-i-met"
 tags = ["纪念", "人", "事", "毕业"]
 draft = false

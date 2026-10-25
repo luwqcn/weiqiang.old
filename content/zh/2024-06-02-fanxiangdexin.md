@@ -3,7 +3,6 @@ title = "每个周末回乡下，乡居的心就更迫切"
 author = ["陆伟强"]
 description = "自己的根依然还在乡村里，自己从未走出。"
 date = 2024-06-02T00:00:00+08:00
-lastmod = 2026-10-11T18:07:17+08:00
 slug = "fanxiangdexin"
 tags = ["返乡"]
 draft = false

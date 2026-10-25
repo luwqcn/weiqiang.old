@@ -3,7 +3,6 @@ title = "接受普通的自己，也接受不完美的亲人"
 author = ["陆伟强"]
 description = "我可以接受普通的自己，当然也接受不完美的亲人。"
 date = 2024-05-17T00:00:00+08:00
-lastmod = 2026-10-11T18:07:16+08:00
 slug = "jieshou-buwanmei"
 tags = ["认知"]
 draft = false

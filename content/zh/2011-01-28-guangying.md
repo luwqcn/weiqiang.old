@@ -3,7 +3,6 @@ title = "光与影的起点"
 author = ["落为匠"]
 description = "光影兴趣，宾得试拍。"
 date = 2011-01-28T21:10:00+08:00
-lastmod = 2026-10-11T18:06:50+08:00
 slug = "guangying"
 tags = ["兴趣", "生活"]
 draft = false

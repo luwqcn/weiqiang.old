@@ -3,7 +3,6 @@ title = "隔膜"
 author = ["落为匠"]
 description = "人与人之间的隔膜，终究是存在的。"
 date = 2011-09-28T00:00:00+08:00
-lastmod = 2026-10-11T18:06:57+08:00
 slug = "dissepiment"
 tags = ["生活"]
 draft = false

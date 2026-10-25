@@ -3,7 +3,6 @@ title = "两周不到"
 author = ["落为匠"]
 description = "最近不在状态。"
 date = 2009-06-01T00:00:00+08:00
-lastmod = 2026-10-11T18:06:35+08:00
 slug = "less-two-weeks"
 tags = ["生活"]
 draft = false

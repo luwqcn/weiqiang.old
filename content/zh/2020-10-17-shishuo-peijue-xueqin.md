@@ -3,7 +3,6 @@ title = "史上最佳配角，两个问题名留青史"
 author = ["落为匠"]
 description = "世说新语中的配角故事，薛勤凭两个问题青史留名。"
 date = 2020-10-17T00:00:00+08:00
-lastmod = 2026-10-11T18:07:07+08:00
 slug = "shishuo-peijue-xueqin"
 tags = ["世说新语", "读书笔记"]
 draft = false

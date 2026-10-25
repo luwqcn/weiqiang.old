@@ -3,7 +3,6 @@ title = "新时代的学习"
 author = ["陆伟强"]
 description = "这个时代的学习：兴趣与目标。"
 date = 2024-05-15T00:00:00+08:00
-lastmod = 2026-10-11T18:07:16+08:00
 slug = "xinshidai-xuexi"
 tags = ["学习"]
 draft = false

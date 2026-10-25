@@ -3,7 +3,6 @@ title = "生活很难"
 author = ["落为匠"]
 description = "生活是难的，因为一者要为稻粱谋，二者为情所惑所困。"
 date = 2009-03-10T00:00:00+08:00
-lastmod = 2026-10-11T18:06:33+08:00
 slug = "life-is-difficult"
 tags = ["生活"]
 draft = false

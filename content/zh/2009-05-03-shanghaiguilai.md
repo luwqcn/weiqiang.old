@@ -3,7 +3,6 @@ title = "上海归来"
 author = ["落为匠"]
 description = "大上海归来。为稻粱谋。"
 date = 2009-05-03T00:00:00+08:00
-lastmod = 2026-10-11T18:06:34+08:00
 slug = "shanghaiguilai"
 tags = ["上海", "生活"]
 draft = false

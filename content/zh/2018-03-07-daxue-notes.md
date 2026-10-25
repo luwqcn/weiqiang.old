@@ -3,7 +3,6 @@ title = "「大学」学习笔记"
 author = ["落为匠"]
 description = "记录「大学」一书的学习笔记"
 date = 2018-03-07T22:52:00+08:00
-lastmod = 2026-10-11T18:07:05+08:00
 slug = "daxue-notes"
 tags = ["大学", "笔记", "四书"]
 draft = false

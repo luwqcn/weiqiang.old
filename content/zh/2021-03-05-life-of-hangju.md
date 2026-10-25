@@ -3,7 +3,6 @@ title = "「菊坚强」的杭菊往事"
 author = ["落为匠"]
 description = "记忆中的杭菊花，采菊桑林下的源头，心中依然记挂。"
 date = 2021-03-05T00:00:00+08:00
-lastmod = 2026-10-11T18:07:07+08:00
 slug = "life-of-hangju"
 tags = ["生活", "杭白菊"]
 draft = false

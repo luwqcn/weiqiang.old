@@ -3,7 +3,6 @@ title = "做个安静的手艺人"
 author = ["落为匠"]
 description = "「造物有灵且美」读后感"
 date = 2016-12-27T00:00:00+08:00
-lastmod = 2026-10-11T18:07:05+08:00
 slug = "why-and-how-to-be-a-handmaker"
 tags = ["造物有灵且美", "读后感"]
 draft = false

@@ -2,7 +2,6 @@
 title = "时间就这样流逝"
 author = ["落为匠"]
 date = 2011-04-05T00:00:00+08:00
-lastmod = 2026-10-11T18:06:53+08:00
 slug = "shijian-liushi"
 tags = ["春天", "生活"]
 draft = false

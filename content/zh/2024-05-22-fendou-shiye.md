@@ -3,7 +3,6 @@ title = "生命在于奋斗"
 author = ["陆伟强"]
 description = "契合自己生命的奋斗，才值得去坚持，也才能够持续一生。"
 date = 2024-05-22T00:00:00+08:00
-lastmod = 2026-10-11T18:07:17+08:00
 slug = "fendou-shiye"
 tags = ["事业"]
 draft = false

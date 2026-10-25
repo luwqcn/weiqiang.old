@@ -3,7 +3,6 @@ title = "健康的三个面向"
 author = ["陆伟强"]
 description = "这是我阅读李辛先生《精神健康讲记》的笔记、摘录。"
 date = 2024-05-07T00:00:00+08:00
-lastmod = 2026-10-11T18:07:15+08:00
 slug = "jiankang-sanmianxiang"
 tags = ["健康"]
 draft = false

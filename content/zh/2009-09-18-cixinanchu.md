@@ -3,7 +3,6 @@ title = "此心安处是吾乡"
 author = ["落为匠"]
 description = "“试问岭南应不好？却道：此心安处是吾乡。”"
 date = 2009-09-18T00:00:00+08:00
-lastmod = 2026-10-11T18:06:37+08:00
 slug = "cixinanchu"
 tags = ["反思"]
 draft = false

@@ -3,7 +3,6 @@ title = "码字一个月小结"
 author = ["陆伟强"]
 description = "发呆日志一个月总结。"
 date = 2024-05-21T00:00:00+08:00
-lastmod = 2026-10-11T18:07:16+08:00
 slug = "mazhi-zongjie"
 tags = ["码字"]
 draft = false

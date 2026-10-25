@@ -2,7 +2,6 @@
 title = "明日远行"
 author = ["落为匠"]
 date = 2010-07-11T00:00:00+08:00
-lastmod = 2026-10-11T18:06:42+08:00
 slug = "mingri-yuanxing"
 tags = ["远行", "生活", "支教"]
 draft = false

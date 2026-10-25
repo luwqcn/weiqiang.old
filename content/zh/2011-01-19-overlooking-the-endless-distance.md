@@ -3,7 +3,6 @@ title = "望尽天涯路"
 author = ["落为匠"]
 description = "支教回来的一点感想，算是对人生一个小阶段的总结，不深入，仅作留念。"
 date = 2011-01-19T00:00:00+08:00
-lastmod = 2026-10-11T18:06:49+08:00
 slug = "overlooking-the-endless-distance"
 tags = ["生活", "支教"]
 draft = false

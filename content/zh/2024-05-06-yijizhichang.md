@@ -3,7 +3,6 @@ title = "精一技以存身"
 author = ["陆伟强"]
 description = "是技皆可成名天下，惟无技之人最苦；片技即足自立天下，惟多技之人最劳。"
 date = 2024-05-06T00:00:00+08:00
-lastmod = 2026-10-11T18:07:15+08:00
 slug = "yijizhichang"
 tags = ["技艺"]
 draft = false

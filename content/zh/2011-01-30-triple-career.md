@@ -3,7 +3,6 @@ title = "职业生涯的理想式：三位一体"
 author = ["落为匠"]
 description = "对于理想职业生涯的一点思考、感想。"
 date = 2011-01-30T00:00:00+08:00
-lastmod = 2026-10-11T18:06:50+08:00
 slug = "triple-career"
 tags = ["生活"]
 draft = false

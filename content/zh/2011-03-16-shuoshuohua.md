@@ -2,7 +2,6 @@
 title = "只想说说话"
 author = ["落为匠"]
 date = 2011-03-16T00:00:00+08:00
-lastmod = 2026-10-11T18:06:52+08:00
 slug = "shuoshuohua"
 tags = ["心情", "生活"]
 draft = false

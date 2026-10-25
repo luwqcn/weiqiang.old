@@ -2,7 +2,6 @@
 title = "朱生豪故居"
 author = ["落为匠"]
 date = 2011-02-23T00:00:00+08:00
-lastmod = 2026-10-11T18:06:51+08:00
 slug = "zhushenghao"
 tags = ["朱生豪", "生活"]
 draft = false

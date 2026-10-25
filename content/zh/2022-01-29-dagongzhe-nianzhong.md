@@ -3,7 +3,6 @@ title = "打工者的年终"
 author = ["落为匠"]
 description = "打工者的无奈，年终的种种。资本时代，一切逐利，大幕之下，孰能幸免。"
 date = 2022-01-29T00:00:00+08:00
-lastmod = 2026-10-11T18:07:09+08:00
 slug = "dagongzhe-nianzhong"
 tags = ["反思"]
 draft = false

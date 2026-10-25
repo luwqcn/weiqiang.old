@@ -3,7 +3,6 @@ title = "又一次回到原点"
 author = ["落为匠"]
 description = "没有什么特别的，又回到了原点，只是折腾又折腾。"
 date = 2013-03-16T00:00:00+08:00
-lastmod = 2026-10-11T18:07:01+08:00
 slug = "startagain"
 tags = ["生活"]
 draft = false

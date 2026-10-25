@@ -3,7 +3,6 @@ title = "健康地生活着，比什么都重要"
 author = ["落为匠"]
 description = "最近一个月的经历，对生活与健康的思考。"
 date = 2023-10-18T05:27:00+08:00
-lastmod = 2026-10-11T18:07:12+08:00
 slug = "jiankang-shenghuo"
 tags = ["健康", "生活"]
 draft = false

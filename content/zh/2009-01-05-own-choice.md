@@ -3,7 +3,6 @@ title = "恶果自食而已"
 author = ["落为匠"]
 description = "2009，只剩四个字给自己：破釜沉舟。"
 date = 2009-01-05T00:00:00+08:00
-lastmod = 2026-10-11T18:06:32+08:00
 slug = "own-choice"
 tags = ["生活"]
 draft = false

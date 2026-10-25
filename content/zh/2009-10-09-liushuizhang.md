@@ -3,7 +3,6 @@ title = "这些日子的流水账"
 author = ["落为匠"]
 description = "不知道这种状态还要维持多久，趁着清醒，记一些流水账。"
 date = 2009-10-09T00:00:00+08:00
-lastmod = 2026-10-11T18:06:37+08:00
 slug = "liushuizhang"
 tags = ["生活"]
 draft = false

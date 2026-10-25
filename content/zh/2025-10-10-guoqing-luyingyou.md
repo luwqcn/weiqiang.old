@@ -3,7 +3,6 @@ title = "豹行万里之国庆露营游"
 author = ["Lu Weiqiang"]
 description = "记录2025年国庆外出露营兼旅行。"
 date = 2025-10-10T00:00:00+08:00
-lastmod = 2026-10-11T18:07:18+08:00
 slug = "guoqing-luyingyou"
 tags = ["旅行", "豹5"]
 draft = false

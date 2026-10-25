@@ -3,7 +3,6 @@ title = "二十五六年，竟只在眨眼间"
 author = ["陆伟强"]
 description = "翻出老照片、老物件，翻看曾经的文字，人生已过半，只剩感慨。"
 date = 2026-07-07T21:39:00+08:00
-lastmod = 2026-10-11T18:07:20+08:00
 slug = "time-goes-fast"
 tags = ["生活"]
 draft = false

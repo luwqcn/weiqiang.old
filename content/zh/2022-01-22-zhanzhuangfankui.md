@@ -3,7 +3,6 @@ title = "站桩（站睡）反应简单记录"
 author = ["落为匠"]
 description = "简单记录今年来站桩（站睡）的一些身体、情绪反应。"
 date = 2022-01-22T00:00:00+08:00
-lastmod = 2026-10-11T18:07:09+08:00
 slug = "zhanzhuangfankui"
 tags = ["生活"]
 draft = false

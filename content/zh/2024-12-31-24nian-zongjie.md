@@ -3,7 +3,6 @@ title = "2024年简要总结"
 author = ["陆上山"]
 description = "2024年个人简要总结"
 date = 2024-12-31T00:00:00+08:00
-lastmod = 2026-10-11T18:07:17+08:00
 slug = "24nian-zongjie"
 tags = ["总结"]
 draft = false

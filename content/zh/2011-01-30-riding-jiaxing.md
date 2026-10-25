@@ -3,7 +3,6 @@ title = "骑行小记：嘉兴行"
 author = ["落为匠"]
 description = "骑行嘉兴小记，来回80公里。"
 date = 2011-01-30T00:00:00+08:00
-lastmod = 2026-10-11T18:06:50+08:00
 slug = "riding-jiaxing"
 tags = ["生活"]
 draft = false

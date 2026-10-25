@@ -2,7 +2,6 @@
 title = "定个短期目标"
 author = ["落为匠"]
 date = 2010-01-13T00:00:00+08:00
-lastmod = 2026-10-11T18:06:40+08:00
 slug = "duanqi-mubiao"
 tags = ["目标", "生活"]
 draft = false

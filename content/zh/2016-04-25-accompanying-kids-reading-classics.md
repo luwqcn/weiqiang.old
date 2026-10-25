@@ -3,7 +3,6 @@ title = "在家带孩子读经，是一种怎样的体验"
 author = ["落为匠"]
 description = "在家带孩子读经，你会有什么样的感悟和收获。"
 date = 2016-04-25T00:00:00+08:00
-lastmod = 2026-10-11T18:07:03+08:00
 slug = "accompanying-kids-reading-classics"
 tags = ["生活", "读经"]
 draft = false

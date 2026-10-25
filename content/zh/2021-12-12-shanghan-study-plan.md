@@ -3,7 +3,6 @@ title = "伤寒论学习计划"
 author = ["落为匠"]
 description = "再次立个 flag ，学习伤寒论，简单的计划，有框架，没有细节。细节需要实践。自学是条小道，但终究会见大道。"
 date = 2021-12-12T00:00:00+08:00
-lastmod = 2026-10-11T18:07:08+08:00
 slug = "shanghan-study-plan"
 tags = ["伤寒论"]
 draft = false

@@ -3,7 +3,6 @@ title = "奇女子"
 author = ["落为匠"]
 description = "人贵有自知之明。以我的浅薄和落魄，本不该期待能遇上什么奇女子的。"
 date = 2011-04-12T00:00:00+08:00
-lastmod = 2026-10-11T18:06:53+08:00
 slug = "remarkable-woman"
 tags = ["生活"]
 draft = false

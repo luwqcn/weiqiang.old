@@ -3,7 +3,6 @@ title = "书无止境"
 author = ["落为匠"]
 description = "买书的经历。"
 date = 2010-01-09T00:00:00+08:00
-lastmod = 2026-10-11T18:06:39+08:00
 slug = "shuwuzhijing"
 tags = ["书", "生活"]
 draft = false

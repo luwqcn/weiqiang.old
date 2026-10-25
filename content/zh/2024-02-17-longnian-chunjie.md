@@ -3,7 +3,6 @@ title = "龙年春节小记"
 author = ["落为匠"]
 description = "在龙年春节假期的最后一天，简要回忆这个春节的故事。"
 date = 2024-02-17T13:35:00+08:00
-lastmod = 2026-10-11T18:07:12+08:00
 slug = "longnian-chunjie"
 tags = ["春节", "生活"]
 draft = false

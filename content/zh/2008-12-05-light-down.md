@@ -3,7 +3,6 @@ title = "停电当机"
 author = ["落为匠"]
 description = "宿舍停电了"
 date = 2008-12-05T00:00:00+08:00
-lastmod = 2026-10-11T18:06:31+08:00
 slug = "light-down"
 tags = ["生活"]
 draft = false

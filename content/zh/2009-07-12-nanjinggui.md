@@ -3,7 +3,6 @@ title = "南京归"
 author = ["落为匠"]
 description = "南京归来略记。"
 date = 2009-07-12T00:00:00+08:00
-lastmod = 2026-10-11T18:06:36+08:00
 slug = "nanjinggui"
 tags = ["生活"]
 draft = false

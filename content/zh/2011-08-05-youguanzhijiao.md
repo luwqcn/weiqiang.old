@@ -2,7 +2,6 @@
 title = "有关支教"
 author = ["落为匠"]
 date = 2011-08-05T00:00:00+08:00
-lastmod = 2026-10-11T18:06:56+08:00
 slug = "youguanzhijiao"
 draft = false
 series = "ws"

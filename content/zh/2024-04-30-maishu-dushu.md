@@ -3,7 +3,6 @@ title = "买了很多书却不读怎么办"
 author = ["陆伟强"]
 description = "买书是我的兴趣爱好，读书却还不是。"
 date = 2024-04-30T00:00:00+08:00
-lastmod = 2026-10-11T18:07:14+08:00
 slug = "maishu-dushu"
 tags = ["买书"]
 draft = false

@@ -3,7 +3,6 @@ title = "为何写博客"
 author = ["落为匠"]
 description = "为何写博客，一点思考。自我表达，同道交流，记录生活。"
 date = 2010-06-07T00:00:00+08:00
-lastmod = 2026-10-11T18:06:42+08:00
 slug = "why-blogging"
 tags = ["博客"]
 draft = false

@@ -3,7 +3,6 @@ title = "跟着儿子上小学，重新思考什么是教育"
 author = ["落为匠"]
 description = "儿子上一年级了，作为家长辅导的任务有些重，一些浅薄的想法。"
 date = 2020-10-14T00:00:00+08:00
-lastmod = 2026-10-11T18:07:07+08:00
 slug = "thought-of-child-education"
 tags = ["教育", "思考"]
 draft = false

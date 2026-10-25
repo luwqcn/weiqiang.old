@@ -3,7 +3,6 @@ title = "景德镇游学第三天"
 author = ["落为匠"]
 description = "景德镇游学正式开始的第二天，今日行程：上午明清园淘宝，下午齐妙陶学堂玩泥吧。"
 date = 2023-07-29T00:00:00+08:00
-lastmod = 2026-10-11T18:07:10+08:00
 slug = "jingdezhen-day2"
 tags = ["游学"]
 draft = false

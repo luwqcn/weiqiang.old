@@ -2,7 +2,6 @@
 title = "清明夜"
 author = ["落为匠"]
 date = 2011-04-04T00:00:00+08:00
-lastmod = 2026-10-11T18:06:53+08:00
 slug = "qingmingye"
 tags = ["祭祖", "生活"]
 draft = false

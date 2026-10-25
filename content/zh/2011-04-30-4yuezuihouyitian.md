@@ -2,7 +2,6 @@
 title = "四月的最后一天"
 author = ["落为匠"]
 date = 2011-04-30T00:00:00+08:00
-lastmod = 2026-10-11T18:06:54+08:00
 slug = "4yuezuihouyitian"
 draft = false
 series = "ws"

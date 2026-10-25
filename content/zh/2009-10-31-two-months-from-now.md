@@ -3,7 +3,6 @@ title = "从今起两个月"
 author = ["落为匠"]
 description = "坚持，然后两个月后，交一份答卷。"
 date = 2009-10-31T00:00:00+08:00
-lastmod = 2026-10-11T18:06:37+08:00
 slug = "two-months-from-now"
 tags = ["生活"]
 draft = false

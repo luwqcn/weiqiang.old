@@ -3,7 +3,6 @@ title = "通过放松来改善身心问题"
 author = ["陆伟强"]
 description = "面对压力、紧张、焦虑，都会表现出身体、心理的紧绷和封闭，而通过放松，可以来缓解这些身心问题。"
 date = 2024-05-09T00:00:00+08:00
-lastmod = 2026-10-11T18:07:15+08:00
 slug = "fangsong-shenxin"
 tags = ["健康"]
 draft = false

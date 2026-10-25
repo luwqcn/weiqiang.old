@@ -3,7 +3,6 @@ title = "五月第二周"
 author = ["落为匠"]
 description = "这个时候，成了大龄无业青年，被工作一事折腾，不好受。"
 date = 2011-05-13T00:00:00+08:00
-lastmod = 2026-10-11T18:06:54+08:00
 slug = "second-week-in-may"
 tags = ["生活"]
 draft = false

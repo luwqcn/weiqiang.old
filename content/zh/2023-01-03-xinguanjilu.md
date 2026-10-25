@@ -3,7 +3,6 @@ title = "第一次新冠历程简要记录"
 author = ["落为匠"]
 description = "记录一些有关新冠的点滴以备忘。"
 date = 2023-01-03T00:00:00+08:00
-lastmod = 2026-10-11T18:07:09+08:00
 slug = "xinguanjilu"
 tags = ["新冠"]
 draft = false

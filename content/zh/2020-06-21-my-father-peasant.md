@@ -3,7 +3,6 @@ title = "我的父亲是农民"
 author = ["落为匠"]
 description = "2020年父亲节，记录心中的父亲，感恩他给我带来的一切。"
 date = 2020-06-21T00:00:00+08:00
-lastmod = 2026-10-11T18:07:06+08:00
 slug = "my-father-peasant"
 tags = ["父亲", "农民"]
 draft = false

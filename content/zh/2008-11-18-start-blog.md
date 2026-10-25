@@ -3,7 +3,6 @@ title = "单调开篇"
 author = ["落为匠"]
 description = "博客开篇语"
 date = 2008-11-18T08:18:00+08:00
-lastmod = 2026-10-11T18:06:31+08:00
 slug = "start-blog"
 tags = ["博客"]
 draft = false

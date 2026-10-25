@@ -3,7 +3,6 @@ title = "未经雕琢的人生不可靠"
 author = ["落为匠"]
 description = "我一直在思考这一年来的颠簸对自己的意义。"
 date = 2011-06-25T00:00:00+08:00
-lastmod = 2026-10-11T18:06:55+08:00
 slug = "life-is-full-of-trials"
 tags = ["生活"]
 draft = false

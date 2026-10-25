@@ -3,7 +3,6 @@ title = "支教小结"
 author = ["落为匠"]
 description = "对于半年来支教的总结。"
 date = 2011-01-19T00:00:00+08:00
-lastmod = 2026-10-11T18:06:49+08:00
 slug = "summary-of-zhijiao"
 tags = ["生活", "支教"]
 draft = false

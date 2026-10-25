@@ -2,7 +2,6 @@
 title = "消失在各自的时光里"
 author = ["落为匠"]
 date = 2011-03-11T00:00:00+08:00
-lastmod = 2026-10-11T18:06:52+08:00
 slug = "xiaoshi-shiguang"
 tags = ["纪念", "生活"]
 draft = false

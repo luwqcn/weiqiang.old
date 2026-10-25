@@ -3,7 +3,6 @@ title = "结束或开始"
 author = ["落为匠"]
 description = "新生新希望，博客几经周折，起起落落。"
 date = 2013-05-15T00:00:00+08:00
-lastmod = 2026-10-11T18:07:01+08:00
 slug = "beginning"
 tags = ["生活", "博客"]
 draft = false

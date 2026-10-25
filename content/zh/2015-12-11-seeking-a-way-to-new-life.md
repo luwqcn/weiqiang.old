@@ -3,7 +3,6 @@ title = "回归旧俗，寻找新生"
 author = ["落为匠"]
 description = "對傳統、現代，以及當前生活與未來的一點思考，不深入，僅作記錄。"
 date = 2015-12-11T00:00:00+08:00
-lastmod = 2026-10-11T18:07:02+08:00
 slug = "seeking-a-way-to-new-life"
 tags = ["生活", "传统", "时代"]
 draft = false

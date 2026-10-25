@@ -3,7 +3,6 @@ title = "纯粹书写，回归Jekyll！"
 author = ["落为匠"]
 description = "记我的博客之旅，书写才是主题和目的。"
 date = 2017-02-07T00:00:00+08:00
-lastmod = 2026-10-11T18:07:05+08:00
 slug = "back-to-jekyll"
 tags = ["生活", "博客"]
 draft = false

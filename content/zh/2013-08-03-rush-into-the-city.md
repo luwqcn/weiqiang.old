@@ -3,7 +3,6 @@ title = "鲤鱼跳龙门"
 author = ["落为匠"]
 description = "乡下人的进城愿望"
 date = 2013-08-03T00:00:00+08:00
-lastmod = 2026-10-11T18:07:01+08:00
 slug = "rush-into-the-city"
 tags = ["生活", "城乡差别"]
 draft = false

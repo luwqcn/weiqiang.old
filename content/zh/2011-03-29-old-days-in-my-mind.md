@@ -3,7 +3,6 @@ title = "往事涌上心头青春就散场"
 author = ["落为匠"]
 description = "只不过是一场生活，只不过是一场命运，只不过是一场游戏。"
 date = 2011-03-29T00:00:00+08:00
-lastmod = 2026-10-11T18:06:52+08:00
 slug = "old-days-in-my-mind"
 tags = ["生活"]
 draft = false

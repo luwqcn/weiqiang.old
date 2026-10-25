@@ -3,7 +3,6 @@ title = "经济危机下的商场一瞥"
 author = ["落为匠"]
 description = "经济危机影响在小城半未有多大"
 date = 2008-12-21T00:00:00+08:00
-lastmod = 2026-10-11T18:06:31+08:00
 slug = "no-economic-crisis"
 tags = ["生活"]
 draft = false

@@ -3,7 +3,6 @@ title = "毕业八年，从银行转身，为了什么、想做什么"
 author = ["落为匠"]
 description = "三十多岁，从银行离职，为什么，以及我想做什么。"
 date = 2016-06-30T00:00:00+08:00
-lastmod = 2026-10-11T18:07:04+08:00
 slug = "quitting-the-bank-and-why-how"
 tags = ["银行", "生活", "转行", "人生"]
 draft = false

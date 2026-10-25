@@ -3,7 +3,6 @@ title = "2022年1月第二周"
 author = ["落为匠"]
 description = "2022年1月第二周的简单记录。"
 date = 2022-01-14T00:00:00+08:00
-lastmod = 2026-10-11T18:07:08+08:00
 slug = "second-week-of-january"
 tags = ["生活"]
 draft = false

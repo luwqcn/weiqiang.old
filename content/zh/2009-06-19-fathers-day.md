@@ -3,7 +3,6 @@ title = "父亲节"
 author = ["落为匠"]
 description = "父亲节，感念父亲艰难的一生。"
 date = 2009-06-19T00:00:00+08:00
-lastmod = 2026-10-11T18:06:35+08:00
 slug = "fathers-day"
 tags = ["父亲", "人生"]
 draft = false

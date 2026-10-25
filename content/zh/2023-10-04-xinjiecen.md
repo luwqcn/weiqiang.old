@@ -3,7 +3,6 @@ title = "知识经济的阶层划分和新三教九流"
 author = ["落为匠"]
 description = "摘录整理：知识主导的社会阶层划分、新三教九流"
 date = 2023-10-04T21:11:00+08:00
-lastmod = 2026-10-11T18:07:11+08:00
 slug = "xinjiecen"
 tags = ["知识经济", "摘录"]
 draft = false

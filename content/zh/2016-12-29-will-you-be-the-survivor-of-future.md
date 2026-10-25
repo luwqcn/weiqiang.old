@@ -3,7 +3,6 @@ title = "你会是未来的那个幸存者吗？"
 author = ["落为匠"]
 description = "读阮一峰「未来世界的幸存者」，记录一点感想。"
 date = 2016-12-29T00:00:00+08:00
-lastmod = 2026-10-11T18:07:05+08:00
 slug = "will-you-be-the-survivor-of-future"
 tags = ["阮一峰", "未来世界的幸存者", "读后感"]
 draft = false

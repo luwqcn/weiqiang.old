@@ -3,7 +3,6 @@ title = "收藏"
 author = ["陆伟强"]
 description = "本页收藏个人常浏览的网站、博客、工具等内容。"
 date = 2008-11-18T00:00:00+08:00
-lastmod = 2026-10-11T18:06:30+08:00
 draft = false
 keywords = "收藏 友链 资源"
 +++

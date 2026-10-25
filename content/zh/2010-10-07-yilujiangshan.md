@@ -2,7 +2,6 @@
 title = "一路江山"
 author = ["落为匠"]
 date = 2010-10-07T00:00:00+08:00
-lastmod = 2026-10-11T18:06:44+08:00
 slug = "yilujiangshan"
 tags = ["支教"]
 draft = false

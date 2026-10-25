@@ -2,7 +2,6 @@
 title = "待山花烂漫"
 author = ["落为匠"]
 date = 2012-11-17T00:00:00+08:00
-lastmod = 2026-10-11T18:07:00+08:00
 slug = "daishanhualanman"
 draft = false
 series = "ws"

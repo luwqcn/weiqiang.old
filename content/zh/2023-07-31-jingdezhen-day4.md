@@ -3,7 +3,6 @@ title = "景德镇游学第五天"
 author = ["落为匠"]
 description = "五天游学旅程的最后一天，结束景德镇的行程，归途中去往安徽泾县黄田古村一游。"
 date = 2023-07-31T00:00:00+08:00
-lastmod = 2026-10-11T18:07:10+08:00
 slug = "jingdezhen-day4"
 tags = ["游学"]
 draft = false

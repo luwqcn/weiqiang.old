@@ -3,7 +3,6 @@ title = "《社交无用》书摘"
 author = ["落为匠"]
 description = "应拿铁阅读之邀，作《社交无用》精简书摘，字数在全书5%左右，按原文目录摘录书中主要内容，若无时间阅读全书，阅此文可窥全书主旨。"
 date = 2016-05-16T00:00:00+08:00
-lastmod = 2026-10-11T18:07:03+08:00
 slug = "digest-of-networking-is-not-working"
 tags = ["社交无用", "读书笔记"]
 draft = false

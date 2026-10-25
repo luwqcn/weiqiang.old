@@ -3,7 +3,6 @@ title = "父亲用半个世纪的经验告诉我：别回农村"
 author = ["落为匠"]
 description = "做了一辈子农民的父亲的经验之谈，别回农村"
 date = 2020-06-17T00:00:00+08:00
-lastmod = 2026-10-11T18:07:06+08:00
 slug = "fathersays-donot-comeback-rural-area"
 tags = ["农村", "返乡"]
 draft = false

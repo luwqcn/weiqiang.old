@@ -3,7 +3,6 @@ title = "一年之后是否落伍千里"
 author = ["落为匠"]
 description = "最近一直在思考这个问题：如今的我，是否已经落伍千里？"
 date = 2009-08-20T00:00:00+08:00
-lastmod = 2026-10-11T18:06:36+08:00
 slug = "yinianzhihou"
 tags = ["反思"]
 draft = false

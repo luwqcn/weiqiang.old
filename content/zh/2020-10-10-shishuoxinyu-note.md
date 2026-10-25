@@ -3,7 +3,6 @@ title = "世说新语笔记"
 author = ["落为匠"]
 description = "记录跟随郁老师读《世说新语》的一点简单笔记。"
 date = 2020-10-10T00:00:00+08:00
-lastmod = 2026-10-11T18:07:07+08:00
 slug = "shishuoxinyu-note"
 tags = ["世说新语", "读书笔记"]
 draft = false

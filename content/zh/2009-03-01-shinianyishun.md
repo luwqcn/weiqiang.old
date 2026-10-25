@@ -3,7 +3,6 @@ title = "十年一瞬"
 author = ["落为匠"]
 description = "似水流年，十年一瞬，记我曾经的十年。"
 date = 2009-03-01T00:00:00+08:00
-lastmod = 2026-10-11T18:06:33+08:00
 slug = "shinianyishun"
 tags = ["生活"]
 draft = false

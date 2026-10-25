@@ -3,7 +3,6 @@ title = "陈春花《价值共生》笔记"
 author = ["落为匠"]
 description = "五月，读陈春花《价值共生》，摘录及些许思考笔记。没有读完，待续。"
 date = 2021-05-21T00:00:00+08:00
-lastmod = 2026-10-11T18:07:07+08:00
 slug = "value-symbiosis-by-chenchunhua"
 tags = ["价值共生", "读书笔记"]
 draft = false

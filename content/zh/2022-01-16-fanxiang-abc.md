@@ -3,7 +3,6 @@ title = "返乡的几种可能性"
 author = ["落为匠"]
 description = "关于返乡的思考，理想与现实的冲突。"
 date = 2022-01-16T00:00:00+08:00
-lastmod = 2026-10-11T18:07:08+08:00
 slug = "fanxiang-abc"
 tags = ["生活", "思考"]
 draft = false

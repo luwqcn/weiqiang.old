@@ -3,7 +3,6 @@ title = "新室友，新生活"
 author = ["落为匠"]
 description = "来了两个「老人」，开始过新生活。"
 date = 2008-12-29T00:00:00+08:00
-lastmod = 2026-10-11T18:06:32+08:00
 slug = "new-roommate"
 tags = ["生活"]
 draft = false

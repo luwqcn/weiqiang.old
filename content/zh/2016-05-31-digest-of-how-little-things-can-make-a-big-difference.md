@@ -3,7 +3,6 @@ title = "《引爆点：如何引发流行》书摘"
 author = ["落为匠"]
 description = "《引爆点：如何引发流行》精简书摘，字数在全书8%左右，按原文目录摘录书中主要内容，若无时间阅读全书，阅此文可窥全书主旨。"
 date = 2016-05-31T00:00:00+08:00
-lastmod = 2026-10-11T18:07:03+08:00
 slug = "digest-of-how-little-things-can-make-a-big-difference"
 tags = ["引爆点", "读书笔记"]
 draft = false

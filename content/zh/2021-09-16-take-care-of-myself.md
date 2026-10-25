@@ -3,7 +3,6 @@ title = "先管好自己"
 author = ["落为匠"]
 description = "先管好自己，有余力再做其他事。"
 date = 2021-09-16T00:00:00+08:00
-lastmod = 2026-10-11T18:07:08+08:00
 slug = "take-care-of-myself"
 tags = ["生活", "感想"]
 draft = false

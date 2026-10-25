@@ -3,7 +3,6 @@ title = "分享的快乐–网络时代"
 author = ["落为匠"]
 description = "分享是快乐的，无论网络世界的虚拟还是现实世界的真实，这快乐来源于每个人的内心，我们都该珍惜并细细感受。"
 date = 2009-04-12T00:00:00+08:00
-lastmod = 2026-10-11T18:06:34+08:00
 slug = "happy-sharing"
 tags = ["思考"]
 draft = false

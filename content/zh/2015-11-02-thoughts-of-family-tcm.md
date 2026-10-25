@@ -3,7 +3,6 @@ title = "家庭中医课课后感想"
 author = ["落为匠"]
 description = "十月末十一月初參加蘇州樂謙學堂組織的，由行唐傅路江老師主講的“家庭中醫初級課程”，課後一點感想，略記一二。"
 date = 2015-11-02T00:00:00+08:00
-lastmod = 2026-10-11T18:07:02+08:00
 slug = "thoughts-of-family-tcm"
 tags = ["中醫", "学习", "家庭中医"]
 draft = false

@@ -3,7 +3,6 @@ title = "周末流水账"
 author = ["落为匠"]
 description = "周末，简单记录。"
 date = 2009-11-22T00:00:00+08:00
-lastmod = 2026-10-11T18:06:38+08:00
 slug = "zhoumo-liushuizhang"
 tags = ["生活"]
 draft = false

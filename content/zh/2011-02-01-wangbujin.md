@@ -3,7 +3,6 @@ title = "望不尽天涯路"
 author = ["落为匠"]
 description = "一点风吹草动就把自己折腾得心烦意乱。"
 date = 2011-02-01T00:00:00+08:00
-lastmod = 2026-10-11T18:06:50+08:00
 slug = "wangbujin"
 tags = ["杂感", "生活"]
 draft = false

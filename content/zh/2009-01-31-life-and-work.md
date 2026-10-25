@@ -3,7 +3,6 @@ title = "生活与工作"
 author = ["落为匠"]
 description = "虽为执鞭士，不为稻粱谋。"
 date = 2009-01-31T00:00:00+08:00
-lastmod = 2026-10-11T18:06:33+08:00
 slug = "life-and-work"
 tags = ["生活"]
 draft = false

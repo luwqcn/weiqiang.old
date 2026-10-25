@@ -3,7 +3,6 @@ title = "不为稻梁谋"
 author = ["落为匠"]
 description = "稻梁，对于我等平民百姓，从来不是个小事。"
 date = 2011-07-30T00:00:00+08:00
-lastmod = 2026-10-11T18:06:56+08:00
 slug = "just-for-a-meal"
 tags = ["生活"]
 draft = false

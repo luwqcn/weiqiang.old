@@ -3,7 +3,6 @@ title = "新年工作第一天"
 author = ["落为匠"]
 description = "壬辰龙年正式工作的第一天。"
 date = 2012-01-29T00:00:00+08:00
-lastmod = 2026-10-11T18:06:59+08:00
 slug = "first-work-day"
 tags = ["生活"]
 draft = false

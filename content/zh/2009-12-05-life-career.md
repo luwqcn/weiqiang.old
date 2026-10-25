@@ -3,7 +3,6 @@ title = "生涯规划及其他"
 author = ["落为匠"]
 description = "对人生与生活、事业的一点思考"
 date = 2009-12-05T00:00:00+08:00
-lastmod = 2026-10-11T18:06:38+08:00
 slug = "life-career"
 tags = ["生涯规划", "总结"]
 draft = false

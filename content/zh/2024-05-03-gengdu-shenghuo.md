@@ -3,7 +3,6 @@ title = "耕读生活的可能性"
 author = ["陆伟强"]
 description = "耕读的理想还没有丢弃，我依然在矛盾，依然在探索与实践中。"
 date = 2024-05-03T00:00:00+08:00
-lastmod = 2026-10-11T18:07:14+08:00
 slug = "gengdu-shenghuo"
 tags = ["耕读"]
 draft = false

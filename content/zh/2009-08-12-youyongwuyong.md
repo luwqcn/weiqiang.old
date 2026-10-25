@@ -3,7 +3,6 @@ title = "有用与无用"
 author = ["落为匠"]
 description = "现实中，有太多困惑：有没有用？"
 date = 2009-08-12T00:00:00+08:00
-lastmod = 2026-10-11T18:06:36+08:00
 slug = "youyongwuyong"
 tags = ["生活"]
 draft = false

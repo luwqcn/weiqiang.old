@@ -3,7 +3,6 @@ title = "那一年的任性，让父亲憔悴伤心"
 author = ["落为匠"]
 description = "工作后的冲动离职，而后一次间隔支教，让父亲伤心了。"
 date = 2020-06-23T00:00:00+08:00
-lastmod = 2026-10-11T18:07:06+08:00
 slug = "fathers-sadness-causeme"
 tags = ["父亲", "生活"]
 draft = false

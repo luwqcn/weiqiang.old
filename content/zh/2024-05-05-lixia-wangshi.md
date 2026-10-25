@@ -3,7 +3,6 @@ title = "立夏往事"
 author = ["陆伟强"]
 description = "童年的经历，往往影响一个人的一生。"
 date = 2024-05-05T00:00:00+08:00
-lastmod = 2026-10-11T18:07:14+08:00
 slug = "lixia-wangshi"
 tags = ["立夏"]
 draft = false

@@ -3,7 +3,6 @@ title = "SiteLog"
 author = ["陆伟强"]
 description = "记录危墙的建站历程，SiteLog。"
 date = 2008-11-18T00:00:00+08:00
-lastmod = 2026-10-11T18:06:30+08:00
 draft = false
 keywords = "站点记录, 博客"
 +++

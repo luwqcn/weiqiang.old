@@ -3,7 +3,6 @@ title = "使用 Emacs 和 Org Mode 生成的网站"
 author = ["落为匠"]
 description = "收集使用 Emacs 和 Org Mode 生成的网站。"
 date = 2019-08-14T00:00:00+08:00
-lastmod = 2026-10-11T18:07:06+08:00
 slug = "sites-with-orgmode"
 tags = ["orgmode", "emacs", "blog"]
 draft = false

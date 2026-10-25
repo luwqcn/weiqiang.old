@@ -3,7 +3,6 @@ title = "对某些事，不再执着"
 author = ["落为匠"]
 description = "最新的一些生活感悟：不再执着于某事某物，放宽心，认真、优雅地生活。"
 date = 2016-07-31T00:00:00+08:00
-lastmod = 2026-10-11T18:07:04+08:00
 slug = "dont-be-stubborn-anymore"
 tags = ["执着", "生活", "工作"]
 draft = false

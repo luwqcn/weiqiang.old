@@ -3,7 +3,6 @@ title = "乱章0428"
 author = ["落为匠"]
 description = "最近老觉得做得辛苦却有异常郁闷，虽四处寻找，苦于无路可行。"
 date = 2009-04-28T00:00:00+08:00
-lastmod = 2026-10-11T18:06:34+08:00
 slug = "luanzhang"
 tags = ["乱章", "随感"]
 draft = false

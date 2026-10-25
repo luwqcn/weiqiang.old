@@ -3,7 +3,6 @@ title = "琐事几则"
 author = ["落为匠"]
 description = "有些小忙，略记一二琐事。"
 date = 2012-01-09T00:00:00+08:00
-lastmod = 2026-10-11T18:06:59+08:00
 slug = "something"
 tags = ["生活"]
 draft = false

@@ -3,7 +3,6 @@ title = "自古华山一条道"
 author = ["落为匠"]
 description = "酒后，夜醒，一点感言。"
 date = 2011-07-21T00:00:00+08:00
-lastmod = 2026-10-11T18:06:56+08:00
 slug = "theres-only-one-road-to-huashan"
 tags = ["生活"]
 draft = false

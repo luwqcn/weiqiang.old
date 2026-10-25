@@ -3,7 +3,6 @@ title = "坚持"
 author = ["落为匠"]
 description = "在这条路上走下去，明珠会交到我手中。"
 date = 2011-12-31T00:00:00+08:00
-lastmod = 2026-10-11T18:06:58+08:00
 slug = "persistence"
 tags = ["生活"]
 draft = false

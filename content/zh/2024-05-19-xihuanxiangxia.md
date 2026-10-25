@@ -3,7 +3,6 @@ title = "还是喜欢乡下"
 author = ["陆伟强"]
 description = "这便是在村里，在乡下，有家的温情在。"
 date = 2024-05-19T00:00:00+08:00
-lastmod = 2026-10-11T18:07:16+08:00
 slug = "xihuanxiangxia"
 tags = ["返乡"]
 draft = false

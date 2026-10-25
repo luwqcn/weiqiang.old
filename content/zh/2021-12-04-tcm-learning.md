@@ -3,7 +3,6 @@ title = "学习中医的困惑与入门方法"
 author = ["落为匠"]
 description = "记录业余学习中医的一些困惑和思考，寻求入门方法。"
 date = 2021-12-04T00:00:00+08:00
-lastmod = 2026-10-11T18:07:08+08:00
 slug = "tcm-learning"
 tags = ["中医"]
 draft = false

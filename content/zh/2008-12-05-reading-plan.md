@@ -3,7 +3,6 @@ title = "读书计划"
 author = ["落为匠"]
 description = "闲时读书计划"
 date = 2008-12-05T00:00:00+08:00
-lastmod = 2026-10-11T18:06:31+08:00
 slug = "reading-plan"
 tags = ["生活"]
 draft = false

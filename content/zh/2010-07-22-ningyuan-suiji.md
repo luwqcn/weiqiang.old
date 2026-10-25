@@ -3,7 +3,6 @@ title = "宁远碎记"
 author = ["落为匠"]
 description = "湖南永州宁远县支教点一周随记。"
 date = 2010-07-22T00:00:00+08:00
-lastmod = 2026-10-11T18:06:43+08:00
 slug = "ningyuan-suiji"
 tags = ["生活", "支教"]
 draft = false

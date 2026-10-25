@@ -3,7 +3,6 @@ title = "昆山蓁谦学堂行纪"
 author = ["落为匠"]
 description = "对读经教育的探访，昆山程老师。"
 date = 2015-06-21T00:00:00+08:00
-lastmod = 2026-10-11T18:07:02+08:00
 slug = "visit-to-zhenqian-classic-school"
 tags = ["生活", "读经"]
 draft = false

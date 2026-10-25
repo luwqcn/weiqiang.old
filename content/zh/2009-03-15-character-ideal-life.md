@@ -3,7 +3,6 @@ title = "拆字与理想生活"
 author = ["落为匠"]
 description = "赢、海、人字拆解与乡窝宁的理想生活。"
 date = 2009-03-15T00:00:00+08:00
-lastmod = 2026-10-11T18:06:33+08:00
 slug = "character-ideal-life"
 tags = ["生活"]
 draft = false

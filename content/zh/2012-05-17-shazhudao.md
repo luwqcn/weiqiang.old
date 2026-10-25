@@ -3,7 +3,6 @@ title = "杀猪刀"
 author = ["落为匠"]
 description = "岁月催人老，心态也会渐渐沧桑。但无论如何，我还是欣赏人生的悲壮美，即便，这一把杀猪刀干净利落地刺过来。"
 date = 2012-05-17T00:00:00+08:00
-lastmod = 2026-10-11T18:07:00+08:00
 slug = "shazhudao"
 tags = ["生活"]
 draft = false

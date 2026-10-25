@@ -3,7 +3,6 @@ title = "时代与人生"
 author = ["落为匠"]
 description = "希望能无负于这个时代，自己的人生。"
 date = 2009-10-25T00:00:00+08:00
-lastmod = 2026-10-11T18:06:37+08:00
 slug = "shidai-rensheng"
 tags = ["反思"]
 draft = false

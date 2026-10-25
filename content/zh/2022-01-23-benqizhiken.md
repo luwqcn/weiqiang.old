@@ -3,7 +3,6 @@ title = "我的本气之坑"
 author = ["落为匠"]
 description = "人生复盘之：本气之坑。为健康多思考，多实践。"
 date = 2022-01-23T00:00:00+08:00
-lastmod = 2026-10-11T18:07:09+08:00
 slug = "benqizhiken"
 tags = ["健康"]
 draft = false

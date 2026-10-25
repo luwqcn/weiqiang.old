@@ -3,7 +3,6 @@ title = "简单的藏书梦"
 author = ["陆伟强"]
 description = "我总觉得，书是财富，可以传家，所以常常回答，给儿子留的，可能给不了房子，留点书总是有能力的。"
 date = 2024-04-21T00:00:00+08:00
-lastmod = 2026-10-11T18:07:13+08:00
 slug = "cangshumeng"
 tags = ["藏书"]
 draft = false

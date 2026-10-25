@@ -3,7 +3,6 @@ title = "五一劳动记：种菊花"
 author = ["陆伟强"]
 description = "这是今年周末农夫种菊生活的第一篇。"
 date = 2024-05-02T00:00:00+08:00
-lastmod = 2026-10-11T18:07:14+08:00
 slug = "wuyi-zhongju"
 tags = ["种菊"]
 draft = false

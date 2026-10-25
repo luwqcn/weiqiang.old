@@ -3,7 +3,6 @@ title = "技能焦虑和健康焦虑"
 author = ["落为匠"]
 description = "回顾曾经为自己的技能焦虑和健康焦虑买过的单。"
 date = 2023-10-10T20:45:00+08:00
-lastmod = 2026-10-11T18:07:11+08:00
 slug = "jineng-jiankang"
 tags = ["技能", "健康", "焦虑", "回顾"]
 draft = false

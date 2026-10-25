@@ -3,7 +3,6 @@ title = "有用无用——从 Org mode 使用说起"
 author = ["落为匠"]
 description = "从 org mode 使用，想到有用与无用。"
 date = 2023-09-18T00:00:00+08:00
-lastmod = 2026-10-11T18:07:11+08:00
 slug = "youyong-wuyong"
 tags = ["思考"]
 draft = false

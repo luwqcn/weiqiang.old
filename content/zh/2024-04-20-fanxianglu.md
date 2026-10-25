@@ -3,7 +3,6 @@ title = "在城市与农村之间，艰难的返乡路"
 author = ["陆伟强"]
 description = "返乡，一直在路上，是我艰难而缓慢的人生路。"
 date = 2024-04-20T00:00:00+08:00
-lastmod = 2026-10-11T18:07:13+08:00
 slug = "fanxianglu"
 tags = ["返乡"]
 draft = false

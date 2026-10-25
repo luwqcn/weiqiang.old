@@ -3,7 +3,6 @@ title = "壬辰年"
 author = ["落为匠"]
 description = "壬辰年，愿有一人能听且诉，彼此相扶，从此即便孤独亦能温暖。"
 date = 2012-01-22T00:00:00+08:00
-lastmod = 2026-10-11T18:06:59+08:00
 slug = "renchennian"
 draft = false
 series = "ws"

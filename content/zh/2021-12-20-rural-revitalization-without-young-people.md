@@ -3,7 +3,6 @@ title = "没有年轻人的美丽乡村"
 author = ["落为匠"]
 description = "美丽乡村建设如火如荼，村里的环境越发美了，村里的年轻人却不见了。年轻人缺席下的乡村振兴，是否可长可久。"
 date = 2021-12-20T00:00:00+08:00
-lastmod = 2026-10-11T18:07:08+08:00
 slug = "rural-revitalization-without-young-people"
 tags = ["乡村"]
 draft = false

@@ -3,7 +3,6 @@ title = "换岗"
 author = ["落为匠"]
 description = "新的环境有新的开始。"
 date = 2009-02-03T00:00:00+08:00
-lastmod = 2026-10-11T18:06:33+08:00
 slug = "change-work"
 tags = ["生活"]
 draft = false

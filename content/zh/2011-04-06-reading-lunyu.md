@@ -3,7 +3,6 @@ title = "读论语"
 author = ["落为匠"]
 description = "很相信这句话：网媒时代，君子之幸。"
 date = 2011-04-06T00:00:00+08:00
-lastmod = 2026-10-11T18:06:53+08:00
 slug = "reading-lunyu"
 tags = ["生活"]
 draft = false

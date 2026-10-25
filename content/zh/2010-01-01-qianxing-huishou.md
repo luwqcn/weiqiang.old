@@ -3,7 +3,6 @@ title = "前行亦回首"
 author = ["落为匠"]
 description = "2010，一串数字，新的开始。在这个普通的年份，开始新的前行，留下一份期待，来年再回首。"
 date = 2010-01-01T00:00:00+08:00
-lastmod = 2026-10-11T18:06:39+08:00
 slug = "qianxing-huishou"
 tags = ["随感", "生活"]
 draft = false

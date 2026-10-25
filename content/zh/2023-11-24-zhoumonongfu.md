@@ -3,7 +3,6 @@ title = "2023年周末农夫总结"
 author = ["落为匠"]
 description = "2023年实践周末农夫，简单作一个总结。"
 date = 2023-11-24T19:42:00+08:00
-lastmod = 2026-10-11T18:07:12+08:00
 slug = "zhoumonongfu"
 tags = ["周末农夫", "生活"]
 draft = false

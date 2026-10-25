@@ -3,7 +3,6 @@ title = "五一散记"
 author = ["陆伟强"]
 description = "2026年五一假期，随记以作备忘。"
 date = 2026-05-05T00:00:00+08:00
-lastmod = 2026-10-11T18:07:20+08:00
 slug = "wuyi-sanji"
 tags = ["五一"]
 draft = false

@@ -3,7 +3,6 @@ title = "小城冬日"
 author = ["落为匠"]
 description = "小城冬日一景。"
 date = 2009-12-05T00:00:00+08:00
-lastmod = 2026-10-11T18:06:38+08:00
 slug = "xiaochengdongri"
 tags = ["生活"]
 draft = false

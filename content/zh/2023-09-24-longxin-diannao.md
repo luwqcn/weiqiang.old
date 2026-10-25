@@ -3,7 +3,6 @@ title = "记录第一台龙芯电脑"
 author = ["落为匠"]
 description = "记录我的第一台龙芯电脑，CPU为龙芯3A5000。"
 date = 2023-09-24T20:30:00+08:00
-lastmod = 2026-10-11T18:07:11+08:00
 slug = "longxin-diannao"
 tags = ["龙芯", "3A5000", "日常"]
 draft = false

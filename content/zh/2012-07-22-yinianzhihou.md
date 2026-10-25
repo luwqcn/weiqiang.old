@@ -3,7 +3,6 @@ title = "一年之后"
 author = ["落为匠"]
 description = "翻看自己曾经的日志是件沮丧的事。"
 date = 2012-07-22T00:00:00+08:00
-lastmod = 2026-10-11T18:07:00+08:00
 slug = "yinianzhihou"
 tags = ["生活"]
 draft = false

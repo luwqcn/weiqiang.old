@@ -3,7 +3,6 @@ title = "《阅读与写作讲义》笔记"
 author = ["落为匠"]
 description = "吴军先生的《阅读与写作讲义》几段摘录并思考，亦是一本未完待续的书。对于阅读和写作，这部书可以作为实用的参考。"
 date = 2021-05-06T00:00:00+08:00
-lastmod = 2026-10-11T18:07:07+08:00
 slug = "lectures-on-reading-and-writing-wujun"
 tags = ["阅读与写作讲义", "读书笔记"]
 draft = false

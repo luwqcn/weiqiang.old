@@ -3,7 +3,6 @@ title = "生活碎片之植物园"
 author = ["落为匠"]
 description = "周末植物园小跑活动。"
 date = 2009-12-19T00:00:00+08:00
-lastmod = 2026-10-11T18:06:39+08:00
 slug = "zhiwuyuan"
 tags = ["随拍", "生活"]
 draft = false

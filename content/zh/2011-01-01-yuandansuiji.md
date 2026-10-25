@@ -2,7 +2,6 @@
 title = "元旦随记"
 author = ["落为匠"]
 date = 2011-01-01T00:00:00+08:00
-lastmod = 2026-10-11T18:06:49+08:00
 slug = "yuandansuiji"
 tags = ["支教", "杂感"]
 draft = false
