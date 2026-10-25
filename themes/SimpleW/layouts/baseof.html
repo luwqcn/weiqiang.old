@@ -1,6 +1,6 @@
 {{- /* baseof.html — the document shell every template inherits. */ -}}
 <!DOCTYPE html>
-<html lang="{{ site.Language.Locale | default "zh-CN" }}">
+<html lang="{{ site.Params.langCode | default "zh-CN" }}">
 <head>
 {{ partial "head.html" . }}
 </head>

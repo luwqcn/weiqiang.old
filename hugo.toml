@@ -142,6 +142,10 @@ uglyURLs = false
 [params]
   author = "LOWEJAN"
   since = 2008
+  # 站点的 BCP 47 语言标签，<html lang> / og:locale / JSON-LD inLanguage 都读它。
+  # 不用 site.Language.Locale：那个方法 Hugo v0.158.0 才有，Cloudflare Pages
+  # 默认的 Hugo 更老，一跑就是 can't evaluate field Locale。
+  langCode = "zh-CN"
   description = "耕读传家久，诗书继世长。采菊桑林下，江南半農夫。"
   keywords = ["危墙之下", "村野闲居", "桑下居", "行止齋", "中医", "传统文化", "手作", "围墙里"]
   dateFormat = "2006-01-02"

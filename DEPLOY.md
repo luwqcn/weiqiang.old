@@ -277,6 +277,19 @@ Dashboard → **Workers & Pages** → **Create application** → **Pages** → *
 | `NODE_VERSION` | `20` |
 | `TZ` | `Asia/Shanghai` |
 
+> **`HUGO_VERSION` 不是可选项，漏了就构建失败。** 构建镜像自带的 Hugo 是 0.147.7，
+> 而主题用了两个新特性：`site.Language.Locale`（0.158 起）和 `{{ return 值 }}`（0.148 起，
+> 主题里有 12 处）。版本不够时的报错长这样：
+>
+> ```
+> can't evaluate field Locale in type *langs.Language
+> wrong number of args for return: want 0 got 1
+> ```
+>
+> 看到这两句就是版本没生效，不是代码写错了。设完变量**必须重新部署一次**
+> （Deployments → ⋯ → Retry deployment），改变量本身不会重跑构建。
+> **Preview 环境要单独再设一遍**，不然 PR 预览构建照样挂。
+
 `TZ` 不是可有可无：构建时生成评论日期用的是构建机时区，不设的话东八区的评论会显示成前一天。
 
 点 **Save and Deploy**，等第一次构建。日志里应该能看到：
@@ -538,6 +551,9 @@ npx wrangler d1 delete weiqiang-comments
 | `Cannot allocate Wasm memory for new instance` | 同上，WASM 申请不到地址 | 同上 |
 | `workerd` 报 `Received signal #6: Aborted` | 同上，跑本地 D1/`pages dev` 时遇到 | 绕不过去就用 `npm run dev`（node:sqlite 版，行为一致） |
 | `Uploading... (0/839)` 之后 `std::bad_alloc` | 产物太大（841 文件 / 48MB）+ 地址空间不足 | 改走 Git 集成；或压图（源图里有多张 1MB 以上） |
+| 构建报 `can't evaluate field Locale in type *langs.Language` | Hugo 版本低于 0.158 | 设 `HUGO_VERSION=0.168.0`，然后 Retry deployment |
+| 构建报 `wrong number of args for return: want 0 got 1` | Hugo 版本低于 0.148（主题里 12 处 `{{ return 值 }}`） | 同上 |
+| 构建日志里 `hugo v0.147.7` | 环境变量没设、只设在 Preview、或设完没重新部署 | 三种都查一遍：Production 与 Preview 各设一遍，再 Retry |
 | `git push` 提示 repository moved | 仓库改名或转移了 | `git remote set-url github <新地址>` |
 | 项目建好了却找不到「连 Git」的入口 | Direct Upload 类型不能转 Git | 删项目，从 Dashboard 的 Connect to Git 重建 |
 | `/api/health` 返回 503，带 `hint` | 表没建，或没绑 D1 | 回第 3 步建表；检查绑定名是不是 `DB` |

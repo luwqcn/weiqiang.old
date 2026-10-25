@@ -42,7 +42,7 @@
     <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
     <link>{{ .Permalink }}</link>
     <description>{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description | default site.Title }}{{ end }}</description>
-    <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
+    <language>{{ site.Params.langCode | default "zh-CN" }}</language>
     {{- with site.Params.author }}<managingEditor>{{ . }}</managingEditor>{{ end }}
     <generator>Hugo {{ hugo.Version }}</generator>
     {{- with site.Params.since }}<copyright>{{ . }} {{ site.Params.author | default site.Title }}</copyright>{{ end }}
