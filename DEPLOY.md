@@ -39,7 +39,7 @@
 | 项目 | 要求 | 现在的情况 |
 | --- | --- | --- |
 | Cloudflare 账号 | 免费版即可 | 需要注册 |
-| GitHub 仓库 | Pages 的 Git 集成只认 GitHub / GitLab | 已有 `git@github.com:shujiaccn/weborg.git` |
+| GitHub 仓库 | Pages 的 Git 集成只认 GitHub / GitLab | `git@github.com:wejanz/weiqiang.org.git`（旧名 `shujiaccn/weborg` 已重定向） |
 | 域名 | 可选；用 `*.pages.dev` 也能跑 | `weiqiang.org` |
 | Node | 本地跑 wrangler 要 **≥ 22**；Cloudflare 构建机设 20 就够 | 系统是 v26（跑不动 wrangler），另备 v22 |
 | Hugo | 0.168.0（主题不用 SCSS，标准版就够） | 本地已是 0.168.0 |
@@ -132,9 +132,9 @@ npx wrangler d1 create weiqiang-comments --location apac --update-config
 | 参数 | 为什么 |
 | --- | --- |
 | `--location apac` | 主库放亚太。默认是 `wnam`（美西），国内读者每查一次评论要多跨一次太平洋。可选值：`apac` / `weur` / `eeur` / `enam` / `wnam` / `oc` |
-| `--update-config` | 自动把 `database_id` 写回 `wrangler.toml`，不用手抄 |
+| `--update-config` | 想把 `database_id` 自动写回 `wrangler.toml` 就加。**实测不靠谱**：它只把建议片段打印出来，文件没动 —— 还是得手动填 |
 
-跑完**打开 `wrangler.toml` 看一眼** `[[d1_databases]]`：`binding` 必须还是 `DB`，`database_id` 已经变成真 id。`--update-config` 偶尔会追加一段新的而不是改旧的，出现两份就把多余的那段删掉。
+跑完**打开 `wrangler.toml` 看一眼** `[[d1_databases]]`：`binding` 必须还是 `DB`，`database_id` 换成真 id。注意 wrangler 输出里建议的 binding 是从库名推导的 `weiqiang_comments`（下划线），**跟代码里的 `env.DB` 对不上，别照抄**。
 
 不用 `--update-config` 的话，输出里会给你这段，手动替换掉占位的那串 0：
 
@@ -191,6 +191,7 @@ static/_routes.json          只让 /api/* 走函数
 static/avatars/              站内头像
 data/comments.json           ★ 快照，构建时直出用
 data/avatars.json            ★ 头像映射
+data/lastmod.json            ★ 页脚「本页最近更新」的数据源（427 条）
 ```
 
 **不要进仓库的**
@@ -242,11 +243,15 @@ git push github main
 
 ## 5. 建 Pages 项目
 
-两条路线，看你习惯。**路线 A 更省事**（push 就自动部署，符合博客的节奏）；**路线 B 不用把代码放 GitHub**，但每次发版要手动敲一条命令。
+**先记住一条，能省掉一次拆了重建**：Pages 项目分两种类型 —— Direct Upload（`wrangler pages project create` 建的）和 Git 集成（Dashboard 建的）。官方明确写了：
 
-### 路线 A：连 Git 自动构建（推荐）
+> You cannot switch to Git integration later. If you choose Direct Upload, you cannot switch to Git integration later. You will have to create a new project with Git integration.
 
-Dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
+也就是说**先跑了 CLI 那条路，以后就再也连不上 Git**，只能删项目重建。想自动部署就别碰 `project create`，直接从 Dashboard 走。
+
+### 路线 A：连 Git 自动构建（推荐，本机唯一可行）
+
+Dashboard → **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**
 
 第一次用会让你授权 GitHub，选「只授权这一个仓库」就行，别给全账号权限。
 
@@ -254,8 +259,8 @@ Dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to 
 
 | 项 | 值 | 说明 |
 | --- | --- | --- |
-| 选仓库 | `shujiaccn/weborg` | 就是刚推的那个 |
-| Project name | `weiqiang-org` | ★ 必须和 `wrangler.toml` 的 `name` 一致，否则后面 `wrangler pages ... --project-name` 找不到项目 |
+| 选仓库 | `wejanz/weiqiang.org` | 就是刚推的那个（旧名 `shujiaccn/weborg` 已重定向过来） |
+| Project name | `weiqiang-org` | ★ 必须和 `wrangler.toml` 的 `name` 一致，否则 `wrangler pages ... --project-name` 找不到项目 |
 | Production branch | `main` | |
 | Framework preset | `None` | 别选 Hugo，它自带的命令不合我们的需要 |
 | Build command | `npm run build` | 先直出评论再跑 hugo |
@@ -280,7 +285,7 @@ Total in 3xxx ms
 Success: Your site was deployed!
 ```
 
-### 路线 B：本地构建 + 命令行直传
+### 路线 B：本地构建 + 命令行直传（这台机器跑不通）
 
 ```bash
 npm run build
@@ -290,7 +295,13 @@ npx wrangler pages deploy public --project-name weiqiang-org
 
 `wrangler.toml` 里的 `[[d1_databases]]` 会被自动带上（`pages_build_output_dir = "public"` 也是给这条命令用的）。**但构建命令不会** —— Cloudflare 的 Pages 配置只认 `name` / `pages_build_output_dir` / `compatibility_date` / 各类绑定，`[build]` 段 Pages 根本不读，写进去也是白写。
 
-以后每次发版就是这三步（`npm run build` → `deploy`）。构建次数不占 Cloudflare 的 500 次/月额度，但每次都要本地等一遍 Hugo。
+⚠️ **两个实测结论，别在这上面浪费时间**：
+
+1. **建了 Direct Upload 项目就再也连不了 Git**。删项目重建是唯一出路，D1 库和密钥不跟着项目走（密钥要重设）。
+2. 本站构建产物 841 个文件 / 48MB，在这台机器（`ulimit -v` 4GB）上传到 `Uploading... (0/839)` 就会 `terminate called after throwing an instance of 'std::bad_alloc'`。只有 1 个文件的目录能传成功 —— 说明卡在文件数量和体积，不是配置错。
+   机器地址空间正常的话这条路线没问题，也可以用来做「只传一个小页面验证接口」的临时部署。
+
+以后每次发版就是三步（`npm run build` → `deploy`）。CLI 直传不占 Cloudflare 的 500 次/月构建额度，但每次都要本地等一遍 Hugo。
 
 ---
 
@@ -524,6 +535,9 @@ npx wrangler d1 delete weiqiang-comments
 | `Fatal process out of memory: Failed to reserve virtual memory` | 机器地址空间被限死（`ulimit -v` 小） | `export NODE_OPTIONS="--disable-wasm-trap-handler"`，仍不行就换 Node 22 |
 | `Cannot allocate Wasm memory for new instance` | 同上，WASM 申请不到地址 | 同上 |
 | `workerd` 报 `Received signal #6: Aborted` | 同上，跑本地 D1/`pages dev` 时遇到 | 绕不过去就用 `npm run dev`（node:sqlite 版，行为一致） |
+| `Uploading... (0/839)` 之后 `std::bad_alloc` | 产物太大（841 文件 / 48MB）+ 地址空间不足 | 改走 Git 集成；或压图（源图里有多张 1MB 以上） |
+| `git push` 提示 repository moved | 仓库改名或转移了 | `git remote set-url github <新地址>` |
+| 项目建好了却找不到「连 Git」的入口 | Direct Upload 类型不能转 Git | 删项目，从 Dashboard 的 Connect to Git 重建 |
 | `/api/health` 返回 503，带 `hint` | 表没建，或没绑 D1 | 回第 3 步建表；检查绑定名是不是 `DB` |
 | `admin: false` | 令牌没设，或设了没重新部署 | 第 7 步，然后 Retry deployment |
 | 页面能看，发评论 500 | 函数没拿到 `env.DB` | Settings → Bindings 确认 `DB` → 重新部署 |
