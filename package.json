@@ -8,8 +8,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "node scripts/comments-prerender.mjs && hugo --gc --minify",
-    "build:preview": "node scripts/comments-prerender.mjs && hugo --gc --minify --baseURL \"${PUBLIC_URL:-http://127.0.0.1:8788/}\"",
+    "build": "node scripts/build.mjs",
+    "build:preview": "node scripts/build.mjs --baseURL \"${PUBLIC_URL:-http://127.0.0.1:8788/}\"",
+    "build:hugo": "node scripts/build.mjs",
     "dev": "node cf/dev-server.mjs",
     "test": "node cf/test/run.mjs",
     "db:init": "wrangler d1 execute weiqiang-comments --remote --file=cf/schema.sql",

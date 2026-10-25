@@ -179,6 +179,7 @@ git status --short
 ```
 cf/                          接口、schema、本地服务、测试
 functions/api/               三个接口入口
+scripts/build.mjs                构建入口：自己管 Hugo 版本 + 时区
 scripts/comments-prerender.mjs   构建时直出（构建机要跑）
 scripts/comments-sync.mjs        同步脚本
 wrangler.toml                Pages + D1 绑定
@@ -269,32 +270,35 @@ Dashboard → **Workers & Pages** → **Create application** → **Pages** → *
 | Build output directory | `public` | |
 | Root directory | 留空 | 仓库根就是站点根 |
 
-**环境变量**（Advanced → Environment variables，Production 和 Preview 都加上）：
+**环境变量：一个都不用设。**
 
-| 变量 | 值 |
-| --- | --- |
-| `HUGO_VERSION` | `0.168.0` |
-| `NODE_VERSION` | `20` |
-| `TZ` | `Asia/Shanghai` |
+Hugo 版本和时区都由 `scripts/build.mjs` 自己搞定，不依赖控制台设置：
 
-> **`HUGO_VERSION` 不是可选项，漏了就构建失败。** 构建镜像自带的 Hugo 是 0.147.7，
-> 而主题用了两个新特性：`site.Language.Locale`（0.158 起）和 `{{ return 值 }}`（0.148 起，
-> 主题里有 12 处）。版本不够时的报错长这样：
->
-> ```
-> can't evaluate field Locale in type *langs.Language
-> wrong number of args for return: want 0 got 1
-> ```
->
-> 看到这两句就是版本没生效，不是代码写错了。设完变量**必须重新部署一次**
-> （Deployments → ⋯ → Retry deployment），改变量本身不会重跑构建。
-> **Preview 环境要单独再设一遍**，不然 PR 预览构建照样挂。
+- 先看系统 `hugo` 版本，够新（≥ 0.158）就直接用；
+- 不够就下载 `HUGO_VERSION` 指定的版本（默认 0.168.0，省心点就下载 extended 版）到 `.hugo/`，再跑；
+- 把 `TZ` 钉成 `Asia/Shanghai`，评论日期不会因为构建机是 UTC 而差一天。
 
-`TZ` 不是可有可无：构建时生成评论日期用的是构建机时区，不设的话东八区的评论会显示成前一天。
+这么做的原因：Cloudflare 构建镜像自带的是 Hugo **0.147.7**，而主题用了
+`{{ return 值 }}`（0.148 起，主题里 12 处）和 `site.Language.Locale`（0.158 起）。
+官方文档说设 `HUGO_VERSION` 环境变量就能换版本，但**本项目实测设了不生效**——构建日志里
+一直是 `hugo v0.147.7`，还带着一行 `Build environment variables: (none found)`。
+与其跟控制台较劲，不如让构建自带。
+
+版本不够时的报错长这样，看到就知道是版本问题、不是代码写错：
+
+```
+can't evaluate field Locale in type *langs.Language
+wrong number of args for return: want 0 got 1
+```
+
+> 想换版本就设 `HUGO_VERSION`（Pages 环境变量，或本地 `HUGO_VERSION=0.170.0 npm run build`），
+> 脚本会照它下载。**最低 0.158.0**，低了脚本会直接报错退出，不会拿着旧版本硬编。
 
 点 **Save and Deploy**，等第一次构建。日志里应该能看到：
 
 ```
+下载 hugo_extended_0.168.0_linux-amd64.tar.gz      ← 系统版本够新时没有这行
+Hugo 0.168.0（刚下载）
 评论预渲染：N 个页面 / M 条评论 → data/commenttrees.json
 Total in 3xxx ms
 Success: Your site was deployed!
@@ -551,7 +555,7 @@ npx wrangler d1 delete weiqiang-comments
 | `Cannot allocate Wasm memory for new instance` | 同上，WASM 申请不到地址 | 同上 |
 | `workerd` 报 `Received signal #6: Aborted` | 同上，跑本地 D1/`pages dev` 时遇到 | 绕不过去就用 `npm run dev`（node:sqlite 版，行为一致） |
 | `Uploading... (0/839)` 之后 `std::bad_alloc` | 产物太大（841 文件 / 48MB）+ 地址空间不足 | 改走 Git 集成；或压图（源图里有多张 1MB 以上） |
-| 构建报 `can't evaluate field Locale in type *langs.Language` | Hugo 版本低于 0.158 | 设 `HUGO_VERSION=0.168.0`，然后 Retry deployment |
+| 构建报 `can't evaluate field Locale in type *langs.Language` | Hugo 版本低于 0.158（模板用了新版语法） | 正常不会出现——`scripts/build.mjs` 会自己换成够新的版本。仍报错说明 build 脚本没被用上，检查 Build command 是不是 `npm run build` |
 | 构建报 `wrong number of args for return: want 0 got 1` | Hugo 版本低于 0.148（主题里 12 处 `{{ return 值 }}`） | 同上 |
 | 构建日志里 `hugo v0.147.7` | 环境变量没设、只设在 Preview、或设完没重新部署 | 三种都查一遍：Production 与 Preview 各设一遍，再 Retry |
 | `git push` 提示 repository moved | 仓库改名或转移了 | `git remote set-url github <新地址>` |
@@ -559,8 +563,9 @@ npx wrangler d1 delete weiqiang-comments
 | `/api/health` 返回 503，带 `hint` | 表没建，或没绑 D1 | 回第 3 步建表；检查绑定名是不是 `DB` |
 | `admin: false` | 令牌没设，或设了没重新部署 | 第 7 步，然后 Retry deployment |
 | 页面能看，发评论 500 | 函数没拿到 `env.DB` | Settings → Bindings 确认 `DB` → 重新部署 |
-| 构建日志 `hugo: command not found` | 构建镜像没装 Hugo | 加环境变量 `HUGO_VERSION=0.168.0` |
-| 构建日志说版本不存在 / 安装失败 | 指定的 Hugo 版本镜像拉不到 | 换成镜像里有的版本；实在不行去掉 `HUGO_VERSION` 用默认版本 |
+| 构建日志 `hugo: command not found` | 走了旧构建命令，没经过 `scripts/build.mjs` | Build command 改成 `npm run build` |
+| 构建日志 `Hugo 0.xxx 下载失败` | 构建机连不上 GitHub Releases | 重试一次；反复失败就在 Pages 环境变量里设 `HUGO_VERSION`，或把 `.hugo/hugo` 换成内网镜像源 |
+| 构建日志 `系统 hugo 0.147.7 低于要求的 0.158.0` 之后卡住 | 正在下载（约 60MB，十几秒） | 正常，等它下完 |
 | 部署报 `database_id ... not found` | `wrangler.toml` 还是占位符 | 第 3 步，换成真 id |
 | `wrangler pages ...` 说找不到项目 | 项目名和 `wrangler.toml` 的 `name` 不一致 | 统一成 `weiqiang-org` |
 | 首屏没评论，转圈一下才出来 | 快照是空的 / 没提交 `data/comments.json` | 第 11 步 pull 一次并提交 |
