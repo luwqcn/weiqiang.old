@@ -7,16 +7,12 @@ public/
 .o
 .log
 screenshots/
-# data/lastmod.json 要进仓库：页脚「本页最近更新」读它，Cloudflare 构建时
-# 仓库里没有这份就只有退回到发布日期。
 .cache/
 resources/
 scripts/*
 # 评论相关脚本要跟着仓库走（Cloudflare Pages 构建时要用）
 !scripts/comments-sync.mjs
 !scripts/comments-prerender.mjs
-# lastmod 生成器：本地发版前要跑，脚本本身得进仓库
-!scripts/gen-lastmod.py
 
 # 评论服务的本地测试数据（COMMENTS_DATA 指到这里时用），别提交
 .preview/

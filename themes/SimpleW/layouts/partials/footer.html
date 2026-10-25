@@ -29,11 +29,8 @@
     · 首页 / 栏目页 / 独立页 —— Hugo 给的 .Lastmod 不是「本页」的，实测
       全站每页都显示 2008-11-18（最早那篇的日期）。改成显示全站最新一篇
       内容的日期，读起来是「这个站更新到哪天了」，才有意义。
-    · 文章页 —— 没在 front matter 写 lastmod、又没开 gitInfo 时，Hugo 会
-      把 .Lastmod 回退成 .Date。这时优先用 git 表里的日期
-      （data/lastmod.json，由 scripts/gen-lastmod.py 生成），再不行才回退
-      发布日期，文案始终是「本页最近更新」。
-      优先级：#+LASTMOD > git 表的实质修改日期 > 发布日期。
+    · 文章页 —— 直接取 front matter：写了 lastmod 就用它，没写就是 date。
+      优先级：lastmod > date，别的一概不看。
 */ -}}
 {{- $isPage := .IsPage -}}
 {{- $siteLast := false -}}
@@ -42,18 +39,10 @@
 {{- end -}}
 
 {{- /*
-  git 里查到的「真改过」的日期，来自 scripts/gen-lastmod.py 生成的
-  data/lastmod.json：键是 content/ 下的相对路径，值是最后一次实质修改的
-  日期。只有确实动过正文的提交才记（补 slug 那种批量刷的不算），所以这里
-  可以放心地当成「最近更新」用。
+  只认 front matter：写了 lastmod 就用 lastmod，没写就用 date。
+  不去翻 git 历史、不读 data/ 里的表 —— 想让某篇显示「更新过」，
+  就在它的 front matter 里写一行 lastmod，别指望别的机制猜。
 */ -}}
-{{- $gitLast := false -}}
-{{- with .File -}}
-  {{- with hugo.Data.lastmod -}}
-    {{- with index . $.File.Path -}}{{- $gitLast = time.AsTime . -}}{{- end -}}
-  {{- end -}}
-{{- end -}}
-
 {{- $hasRealLastmod := false -}}
 {{- if and $isPage .Date -}}
   {{- if .Lastmod.After .Date }}{{ $hasRealLastmod = true }}{{ end -}}
@@ -66,7 +55,6 @@
 {{- if $isPage -}}
   {{- $shown = .Date -}}
   {{- if $hasRealLastmod }}{{ $shown = .Lastmod }}{{ end -}}
-  {{- if $gitLast }}{{ if $gitLast.After $shown }}{{ $shown = $gitLast }}{{ end }}{{ end -}}
 {{- else if $siteLast -}}
   {{- $shown = $siteLast -}}
 {{- end -}}
@@ -105,7 +93,7 @@
 
 <div id="footer-info">
 {{- if $showLastmod }}
-  {{- if and $isPage (or $validDate $gitLast) }}
+  {{- if and $isPage $validDate }}
 {{ replace (i18n "lastUpdated" | default "本页最近更新：{lastmod}") "{lastmod}" ($shown.Format "2006-01-02") }}<br>
   {{- else if $siteLast -}}
 {{ replace (i18n "siteLastUpdated" | default "本站最后更新: {lastmod}.") "{lastmod}" ($siteLast.Format "2006-01-02") }}<br>

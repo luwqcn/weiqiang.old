@@ -191,14 +191,10 @@ static/_routes.json          只让 /api/* 走函数
 static/avatars/              站内头像
 data/comments.json           ★ 快照，构建时直出用
 data/avatars.json            ★ 头像映射
-data/lastmod.json            ★ 页脚「本页最近更新」的数据源（9 条真修改记录）
-scripts/gen-lastmod.py       ★ 生成上面那份表，本地发版前跑
 ```
 
-> **`data/lastmod.json` 为什么必须进仓库：** Cloudflare Pages 构建时是 `depth=1` 的浅克隆，
-> 拿不到 git 历史，脚本在它上面跑不出任何东西。所以这份表必须在**本地**生成后提交。
-> 脚本里已经加了浅克隆保护——检测到历史不全就直接退出，不会用空表覆盖仓库里那份。
-> `npm run build` 的 `prebuild` 会顺手跑一次，Pages 上失败了也不影响构建。
+页脚那个「本页最近更新」不读任何数据文件 —— **直接取文章 front matter 的 `lastmod`**，
+没写就是 `date`。想改某篇的更新时间，编辑它的文件头即可，不用跑脚本、不用重新生成表。
 
 **不要进仓库的**
 
@@ -212,33 +208,24 @@ node_modules/
 
 `.gitignore` 里已经配好了，正常 `git add -A` 不会误收。
 
-**老脚本已经清理完了。** 迁移时删掉了这 8 个（全部由 Node 构建流程取代）：
+**老脚本已经清理完了。** 迁移时删掉了这 9 个（全部由 Node 构建流程取代）：
 
 ```
 scripts/artalk-migrate.py    scripts/build.sh          scripts/gen-slugs.py
 scripts/normalize-tags.py    scripts/optimize-assets.py scripts/org-migrate.py
-scripts/org-to-md.py         scripts/serve.sh
+scripts/org-to-md.py         scripts/serve.sh          scripts/gen-lastmod.py
 ```
 
-**`scripts/gen-lastmod.py` 不在删除之列** —— 它是活的，页脚「本页最近更新」靠它生成
-`data/lastmod.json`。`scripts/*` 被 gitignore 忽略，所以 `.gitignore` 里给它留了白名单：
+最后一个 `gen-lastmod.py` 曾经用来从 git 历史倒推「本页最近更新」并写进
+`data/lastmod.json`，现在整套机制已经去掉 —— 页脚直接看 front matter，一层表都不需要。
 
-```
-!scripts/gen-lastmod.py
-```
-
-以后发版前手动跑一次，或直接 `npm run build`（`prebuild` 会自动跑）：
-
-```bash
-npm run lastmod        # → data/lastmod.json
-```
-
-> **⚠️ 别让 ox-hugo / 导出脚本把 `lastmod` 写回 front matter。** 2026-10-11 那次全站
-> `.org → .md` 转换，把 397 篇文章的 `lastmod` 全写成了 `2026-10-11T18:06~18:07`——
-> 两分钟内几百个文件，是文件 mtime 被批量重置的结果，不是真改过。front matter 里的
-> `lastmod` **优先级高于** `data/lastmod.json`，所以那 397 篇的页脚全卡在 2026-10-11。
-> 这批假值已经清掉（页脚改回各篇真实发布日期），保留 5 条真手改的。重新导出时如果
-> 发现页脚日期又变成同一天，先查 front matter：
+> **⚠️ 页脚日期的唯一来源是 front matter 的 `lastmod`。** 2026-10-11 那次全站
+> `.org → .md` 转换，导出脚本按文件 mtime 给 397 篇的 front matter 都写了
+> `lastmod = 2026-10-11T18:06~18:07` —— 两分钟内几百个文件，明显是机器刷的。
+> 这批假值已经清掉，页脚回到各篇真实发布日期，只保留 5 条真手改的。
+>
+> **以后重新导出（ox-hugo 等）会再把 lastmod 全量写一遍**，页脚会立刻复发「全站同一天」。
+> 导出后先查一眼：
 
 ```bash
 grep -rhE "^lastmod *[:=]" content --include="*.md" | sort | uniq -c | sort -rn | head
