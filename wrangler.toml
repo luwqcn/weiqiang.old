@@ -1,0 +1,27 @@
+# Cloudflare Pages 全托管配置：静态站 + 评论接口，同一个域名。
+#
+# 站点、接口同源，没有跨域，没有自己的服务器：
+#   页面 → public/（Hugo 产物）
+#   接口 → functions/api/*.js（Pages Functions）
+#   数据 → D1（绑定名 DB）
+#
+# 注意：Pages 项目的 wrangler 配置只认下面这几个键。
+# [build] / [build.environment] 这类 Workers 的字段 Pages 不读，
+# 所以构建命令和环境变量（HUGO_VERSION、NODE_VERSION、TZ）一律在
+# Dashboard → Settings → Build 里配，写在这里不会生效。
+
+name = "weiqiang-org"
+pages_build_output_dir = "public"
+compatibility_date = "2026-10-01"
+
+# D1：库已建好（APAC 区域）
+#   npx wrangler d1 create weiqiang-comments --location apac
+# 注意 binding 必须是 DB —— 代码里读的是 env.DB，wrangler 默认建议的
+# weiqiang_comments（下划线）对不上，别照抄它的输出。
+[[d1_databases]]
+  binding = "DB"
+  database_name = "weiqiang-comments"
+  database_id = "3d33975d-313e-420d-a120-cda4be8e2a68"
+
+# 本地开发不走 wrangler：用 npm run dev（cf/dev-server.mjs + node:sqlite），
+# 监听 127.0.0.1:8788，端口可用 PORT 覆盖。

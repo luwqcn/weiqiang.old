@@ -1,0 +1,21 @@
+{
+  "name": "weiqiang-org",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "weiqiang.org —— Hugo 静态站 + Cloudflare Pages Functions 评论后端",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/comments-prerender.mjs && hugo --gc --minify",
+    "build:preview": "node scripts/comments-prerender.mjs && hugo --gc --minify --baseURL \"${PUBLIC_URL:-http://127.0.0.1:8788/}\"",
+    "dev": "node cf/dev-server.mjs",
+    "test": "node cf/test/run.mjs",
+    "db:init": "wrangler d1 execute weiqiang-comments --remote --file=cf/schema.sql",
+    "db:init:local": "wrangler d1 execute weiqiang-comments --local --file=cf/schema.sql",
+    "comments:pull": "node scripts/comments-sync.mjs pull",
+    "comments:push": "node scripts/comments-sync.mjs push",
+    "comments:push:replace": "node scripts/comments-sync.mjs push --mode=replace"
+  }
+}

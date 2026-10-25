@@ -397,12 +397,24 @@ uglyURLs = false
   # -------------------------------------------------------------------------
   # 评论 —— provider 换成任意一个即可；也可用 template 指向自己的模板
   #
-  # 当前启用 Twikoo。换引擎只改 provider 一行，下面各家的配置块都留着，
-  # 填好值随时能切回去。
+  # 当前启用「自建 JSON」，全站托管在 Cloudflare：
+  #   页面 → Cloudflare Pages（public/）
+  #   接口 → Pages Functions（functions/api/comments.js）
+  #   数据 → D1（SQLite），按页面建索引，发一条就是一条 INSERT
+  #   快照 → data/comments.json，用 npm run comments:pull / push 双向同步，
+  #          构建时按它把评论直出进 HTML，读者不用等接口
+  #
+  # 换引擎只改 provider 一行，下面各家的配置块都留着，填好值随时能切回去。
+  #
+  #   provider = "json"     这套自建方案（Cloudflare Pages + D1）
+  #   provider = "artalk"   回到之前那台自建 Artalk（旧评论都在那边）
+  #   provider = "none"     整块关掉
+  #
+  # 部署步骤见根目录 DEPLOY.md；额度、速度、设计取舍见 cf/README.md。
   # -------------------------------------------------------------------------
   [params.comments]
     enabled = true
-    provider = "artalk"        # artalk | giscus | disqus | waline | twikoo | utterances | custom | none
+    provider = "json"          # json | artalk | giscus | disqus | waline | twikoo | utterances | custom | none
     # 评论区是一个标签页组：网络提及 / 评论 / 邮件（结构见 partials/comments.html）。
     # 三个标签各由自己的开关决定出不出现 —— 提及看 [params.webmention]，
     # 评论看 provider，邮件看下面 email 填没填。三个都不可用时回落成一句
@@ -411,13 +423,34 @@ uglyURLs = false
     showDivider = true         # 正文与标签组之间那条点线，false 可关
     # 页面打开时停在哪个标签：webmention | comments | email。
     # 填的那个如果没渲染出来（比如提及没开），自动退到第一个可用的。
-    defaultTab = "webmention"
+    # 自建评论上线后改成停在「评论」—— 提及那栏多数文章是空的，
+    # 一进来先对着空块不如直接给留言框。想改回去写 webmention 即可。
+    defaultTab = "comments"
     # 「邮件」标签的收件地址。填了才出现这个标签，留空则整块不渲染。
     # 按钮会自动拼成 mailto:…?subject=回复：<文章标题>，省得对方自己起标题。
     # 单篇想换地址，在 front matter 写 comments.email。
     email = "lu@weiqiang.org"
     # template = "comments/my-provider.html"   # 自定义评论模板：写成 partial 路径
     # customRaw = """<div id="mine"></div><script>…</script>"""
+
+    # -------------------------------------------------------------------
+    # 自建 JSON（当前启用，跑在 Cloudflare 上）
+    #
+    # 站点和接口同源，一个 Pages 项目全包了，不需要自己的服务器、不需要跨域：
+    #   页面   → Cloudflare Pages 静态托管（public/）
+    #   接口   → functions/api/comments.js（Pages Functions）
+    #   数据   → D1，表结构见 cf/schema.sql
+    #   快照   → data/comments.json，npm run comments:pull / push 双向同步；
+    #            npm run build 会先把它直出进 HTML，首屏不用等接口
+    #
+    #   endpoint   接口地址。同源部署写相对路径就行。
+    #   limit      单页最多拉多少条（取最近的 N 条，按时间正序显示）。
+    #   maxLength  正文上限，和服务端 LIMITS.contentMax 保持一致，两边都拦。
+    # -------------------------------------------------------------------
+    [params.comments.json]
+      endpoint = "/api/comments"
+      limit = 200
+      maxLength = 3000
 
     # -------------------------------------------------------------------
     # Twikoo（当前启用）

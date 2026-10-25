@@ -1,0 +1,38 @@
+{{- /*
+  partials/comments/item.html —— 构建期直出的单条评论
+
+  参数：c（评论节点，kids 里是它的回复）、base（站点路径前缀）、depth（层级，从 0 起）
+
+  结构要和 assets/js/comments-json.js 里的 itemNode() 一模一样，
+  否则接口回来之后整体替换的那一下会看到明显跳动。
+  时间这里用绝对日期（2026-10-25），相对时间交给 JS 算 ——
+  构建时算出的「刚刚」过两天就成了谎话。
+*/ -}}
+{{- $c := .c -}}
+{{- $base := .base | default "/" -}}
+{{- $depth := .depth | default 0 -}}
+<article class="cm-item" data-cm-id="{{ $c.id }}">
+  {{- partial "comments/avatar.html" (dict "c" $c "base" $base) }}
+  <div class="cm-body">
+    <div class="cm-meta">
+      {{- if $c.website -}}
+      <a class="cm-name" href="{{ $c.website }}" rel="nofollow ugc noopener noreferrer" target="_blank">{{ $c.name }}</a>
+      {{- else -}}
+      <span class="cm-name">{{ $c.name }}</span>
+      {{- end }}
+      <time class="cm-time" datetime="{{ $c.created }}" title="{{ $c.date }}">{{ $c.date }}</time>
+      {{- with $c.replyTo }}
+      <span class="cm-reply-to">回复 <b>{{ . }}</b></span>
+      {{- end }}
+      <button type="button" class="cm-reply" data-cm-reply="{{ $c.id }}">回复</button>
+    </div>
+    <div class="cm-text">{{ $c.content }}</div>
+    {{- with $c.kids }}
+    <div class="cm-replies">
+      {{- range . }}
+        {{- partial "comments/item.html" (dict "c" . "base" $base "depth" (add $depth 1)) }}
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+</article>

@@ -1,0 +1,158 @@
+{{- /*
+  partials/comments/json.html — 自建评论：数据在自己的库里，站点全托管在 Cloudflare
+  ---------------------------------------------------------------------------
+  一条链路：
+
+      浏览器 ──fetch──> /api/comments ──> Pages Functions ──> D1
+        ▲                                     (functions/api/comments.js)
+        └───────── 正文仍是 Pages 上的静态文件 ─────────┘
+
+  站点和接口同一个域名，所以没有 CORS，也不用自己运维服务器。
+
+  速度这块做了两件事：
+    1. 构建时把 data/comments.json 里的评论直出成 HTML（下面 $tree 那段），
+       读者打开页面立刻能看见字，不用等 JS 再等接口；
+    2. JS 起来后拉一次接口，用最新的替换掉 —— 内容一样时替换是无声的。
+
+  配置项（都可不写，括号里是默认值）：
+      [params.comments.json]
+        endpoint  = "/api/comments"   # 接口地址，同源时写相对路径
+        limit     = 200               # 单页最多拉多少条（取最近的）
+        maxLength = 3000              # 正文上限，后端也有一份同样的限制
+        stripBasePath = false         # 子路径发布时削掉前缀，对齐老评论
+
+  样式与脚本放在站点级 assets/ 下（assets/css/comments-json.css、
+  assets/js/comments-json.js），主题升级不会覆盖；CSS 内联进页面避免样式闪动，
+  JS 走 Hugo 的指纹管道，改完自动换 URL、不会被浏览器缓存坑。
+*/ -}}
+{{- $all := site.Params.comments | default dict -}}
+{{- $c := dict -}}
+{{- with index $all "json" -}}{{- $c = . -}}{{- end -}}
+{{- $endpoint := $c.endpoint | default "/api/comments" -}}
+{{- $limit := $c.limit | default 200 -}}
+{{- $max := $c.maxLength | default 3000 -}}
+
+{{- /* 评论按 page 归堆。站点若发布在子路径下（Codeberg Pages 的
+       https://<用户名>.codeberg.page/<仓库>/ 就是这种），RelPermalink 会带上
+       /<仓库>/ 前缀，跟以前在根目录留下的评论对不上号。
+       打开 stripBasePath 就把这段前缀削掉，老评论原地接上。
+       根目录部署（baseURL 路径是 /）时这个开关什么也不做。 */ -}}
+{{- /* 站点的路径前缀：根目录部署是 /，子路径部署是 /<仓库>/。
+       头像这类站内地址要靠它拼对，否则子路径下会指到域名根。 */ -}}
+{{- $basePath := (urls.Parse site.BaseURL).Path | default "/" -}}
+{{- $pageKey := .RelPermalink -}}
+{{- if $c.stripBasePath -}}
+  {{- if and (ne $basePath "/") (hasPrefix $pageKey $basePath) -}}
+    {{- $pageKey = printf "/%s" (strings.TrimPrefix $basePath $pageKey) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with resources.Get "css/comments-json.css" }}
+{{- $css := . | minify }}
+<style>{{ $css.Content | safeCSS }}</style>
+{{- end }}
+
+{{- /* 构建期直出的评论树（scripts/comments-prerender.mjs 生成）。
+       没有这个文件、或者这一页还没人评论，就退回「正在读取评论…」。 */ -}}
+{{- $pages := dict -}}
+{{- with hugo.Data.commenttrees -}}{{- with .pages -}}{{- $pages = . -}}{{- end -}}{{- end -}}
+{{- $tree := index $pages $pageKey -}}
+{{- $shown := 0 -}}
+{{- range $tree -}}
+  {{- $shown = add $shown 1 -}}
+  {{- range .kids -}}{{- $shown = add $shown 1 -}}{{- end -}}
+{{- end -}}
+
+{{- $avatars := hugo.Data.avatars | default dict -}}
+<script type="application/json" id="cm-avatars">{{ $avatars | jsonify | safeJS }}</script>
+
+<div id="cm-root" class="cm"
+     data-endpoint="{{ $endpoint }}"
+     data-page="{{ $pageKey }}"
+     data-base="{{ $basePath }}"
+     data-limit="{{ $limit }}"
+     data-max="{{ $max }}">
+
+  <div class="cm-head">
+    <h2 class="cm-title">评论<span class="cm-total" data-cm-count{{ if not $tree }} hidden{{ end }}>{{ $shown }}</span></h2>
+    <p class="cm-sub">昵称、邮箱都是必填，邮箱只用来认人，不会显示出来。</p>
+  </div>
+
+  {{- /* 列表：构建时有快照就直出，没有先占个位；脚本拉到数据后整块替换 */}}
+  <div class="cm-list" data-cm-list aria-live="polite"{{ if $tree }} data-cm-static="1"{{ end }}>
+    {{- if $tree }}
+      {{- range $tree }}
+        {{- partial "comments/item.html" (dict "c" . "base" $basePath) }}
+      {{- end }}
+    {{- else }}
+    <p class="cm-state">正在读取评论…</p>
+    {{- end }}
+  </div>
+
+  <form class="cm-form" data-cm-form novalidate>
+    <h3 class="cm-form-title" data-cm-form-title>说两句</h3>
+
+    <div class="cm-grid">
+      <div class="cm-field">
+        <label class="cm-label" for="cm-name">昵称 <em>必填</em></label>
+        <input class="cm-input" id="cm-name" type="text" name="name" required
+               maxlength="40" autocomplete="nickname" placeholder="怎么称呼你"
+               aria-describedby="cm-name-err">
+        <span class="cm-err" id="cm-name-err" data-cm-err="name" hidden></span>
+      </div>
+
+      <div class="cm-field">
+        <label class="cm-label" for="cm-email">邮箱 <em>必填</em></label>
+        <input class="cm-input" id="cm-email" type="email" name="email" required
+               maxlength="120" autocomplete="email" placeholder="不公开，只用来认人"
+               aria-describedby="cm-email-err">
+        <span class="cm-err" id="cm-email-err" data-cm-err="email" hidden></span>
+      </div>
+
+      <div class="cm-field">
+        <label class="cm-label" for="cm-website">网站 <i>选填</i></label>
+        <input class="cm-input" id="cm-website" type="url" name="website"
+               maxlength="200" autocomplete="url" placeholder="有就填，会显示在你的昵称上"
+               aria-describedby="cm-website-err">
+        <span class="cm-err" id="cm-website-err" data-cm-err="website" hidden></span>
+      </div>
+    </div>
+
+    {{- /* 回复谁：点了某条评论下面的「回复」才出现，取消就收起来 */}}
+    <div class="cm-replying" data-cm-replying hidden>
+      <span class="cm-replying-text">正在回复 <b data-cm-replying-name></b></span>
+      <button type="button" class="cm-replying-cancel" data-cm-cancel-reply>取消回复</button>
+    </div>
+
+    <div class="cm-field">
+      <label class="cm-label" for="cm-content">评论内容 <em>必填</em></label>
+      <textarea class="cm-textarea" id="cm-content" name="content" rows="5" required
+                maxlength="{{ $max }}" placeholder="想说什么就写，换行会保留。"
+                aria-describedby="cm-content-err"></textarea>
+      <span class="cm-err" id="cm-content-err" data-cm-err="content" hidden></span>
+    </div>
+
+    <div class="cm-actions">
+      <span class="cm-hint">Ctrl / ⌘ + Enter 也能发</span>
+      <span class="cm-count" data-cm-count-chars>0 / {{ $max }}</span>
+      <button class="cm-submit" type="submit" data-cm-submit>发送</button>
+    </div>
+
+    <p class="cm-status" data-cm-status hidden></p>
+
+    {{- /* 蜜罐：给脚本填的，人看不见也 Tab 不到。填了就在服务端静默丢掉。 */}}
+    <div class="cm-hp" aria-hidden="true">
+      <label for="cm-company">公司</label>
+      <input id="cm-company" type="text" name="company" tabindex="-1" autocomplete="off">
+    </div>
+  </form>
+
+  <noscript>
+    <p class="cm-state">评论要开 JavaScript 才能看和发。想说的话也可以直接写信。</p>
+  </noscript>
+</div>
+
+{{- with resources.Get "js/comments-json.js" }}
+{{- $js := . | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+{{- end }}
