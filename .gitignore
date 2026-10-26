@@ -10,20 +10,11 @@ screenshots/
 .cache/
 resources/
 scripts/*
-# 评论相关脚本要跟着仓库走（Cloudflare Pages 构建时要用）
-!scripts/comments-sync.mjs
-!scripts/comments-prerender.mjs
 # 构建入口：自己管 Hugo 版本，云端构建必须用它
 !scripts/build.mjs
 
 # 构建脚本下载的 Hugo 二进制缓存，不进仓库
 .hugo/
-
-# 评论服务的本地测试数据（COMMENTS_DATA 指到这里时用），别提交
-.preview/
-
-# 构建时生成的评论直出数据（npm run build 会重新生成）
-data/commenttrees.json
 
 # Cloudflare
 .wrangler/

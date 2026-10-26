@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 构建入口：先直出评论到 data/commenttrees.json，再用「确定版本」的 Hugo 出站。
+ * 构建入口：用「确定版本」的 Hugo 出站。
  *
  * 为什么自己管 Hugo 版本
  * ---------------------
@@ -145,17 +145,7 @@ const hugo = await resolveHugo();
 console.log(`Hugo ${fmt(hugo.version)}（${hugo.where}）`);
 console.log(`  ${hugo.raw}`);
 
-// 1. 评论直出：读 data/comments.json 快照 → data/commenttrees.json
-const prerender = spawnSync(process.execPath, ["scripts/comments-prerender.mjs"], {
-  stdio: "inherit",
-  env: process.env,
-});
-if (prerender.status !== 0) {
-  console.error("评论预渲染失败，构建中止。");
-  process.exit(prerender.status ?? 1);
-}
-
-// 2. Hugo 出站
+// Hugo 出站
 const extra = process.argv.slice(2);
 const args = ["--gc", "--minify", ...extra];
 console.log(`\n执行：hugo ${args.join(" ")}\n`);

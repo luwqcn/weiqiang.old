@@ -3,20 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "weiqiang.org —— Hugo 静态站 + Cloudflare Pages Functions 评论后端",
+  "description": "weiqiang.org —— Hugo 静态站，托管在 Cloudflare Pages",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "build:preview": "node scripts/build.mjs --baseURL \"${PUBLIC_URL:-http://127.0.0.1:8788/}\"",
-    "build:hugo": "node scripts/build.mjs",
-    "dev": "node cf/dev-server.mjs",
-    "test": "node cf/test/run.mjs",
-    "db:init": "wrangler d1 execute weiqiang-comments --remote --file=cf/schema.sql",
-    "db:init:local": "wrangler d1 execute weiqiang-comments --local --file=cf/schema.sql",
-    "comments:pull": "node scripts/comments-sync.mjs pull",
-    "comments:push": "node scripts/comments-sync.mjs push",
-    "comments:push:replace": "node scripts/comments-sync.mjs push --mode=replace"
+    "build:preview": "node scripts/build.mjs --baseURL \"${PUBLIC_URL:-http://127.0.0.1:1313/}\"",
+    "dev": "hugo server -p 1313 --disableFastRender"
   }
 }
