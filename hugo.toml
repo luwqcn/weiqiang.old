@@ -442,6 +442,86 @@ uglyURLs = false
     ]
 
   # -------------------------------------------------------------------------
+  # 评论区：一个标签页组，标签是「网络提及 / 评论 / 邮件」
+  #
+  #   网络提及  ← [params.webmention]（上面那段），收别人在自己站点的回应
+  #   评论      ← 这里的 provider，本站访客的留言
+  #   邮件      ← 这里的 email，不想公开留言的读者走信箱
+  #
+  # 三个各由自己的开关决定出不出现，都不可用时回落成一句「评论功能未启用」。
+  # 结构见 themes/SimpleW/layouts/partials/comments.html。
+  # -------------------------------------------------------------------------
+  [params.comments]
+    enabled = true
+    # 评论后端：cwd | artalk | giscus | twikoo | disqus | waline | utterances | custom | none
+    # 换引擎只改这一行，再去下面把对应那组值填上，模板不用动。
+    provider = "cwd"
+    title = "评论"             # 「评论」那个标签上的文案
+    showDivider = true         # 正文与标签组之间那条点线，false 可关
+    # 页面打开时停在哪个标签：webmention | comments | email。
+    # 提及那栏多数文章是空的，一进来先对着空块不如直接给留言框。
+    defaultTab = "comments"
+    # 「邮件」标签的收件地址。留空则整块不渲染。
+    # 按钮自动拼成 mailto:…?subject=回复：<文章标题>，省得对方自己起标题。
+    email = "lu@weiqiang.org"
+
+    # -------------------------------------------------------------------
+    # CWD（当前启用）—— Cloudflare Workers + D1，自建在 cwd.weiqiang.org
+    # 文档：https://cwd.js.org
+    #
+    #   api       API 基础地址，末尾不要带斜杠
+    #   siteId    后台开了「多站点管理」才需要填，写后台里那个站点 ID；
+    #             单站点留空即可（空值走默认站点）
+    #   postSlug  评论归属的键。留空 = 用页面路径（/zh/2026/xxx/），
+    #             也就是说改永久链接会丢评论，改 URL 前先想清楚
+    #   cdn       组件地址，锁版本；升级只改版本号即可
+    #             （文档写的是 dist/cwd.js，npm 包里实际入口是 dist/cwd.umd.js，
+    #              两个路径 CDN 上都取得到，这里锁后者）
+    # -------------------------------------------------------------------
+    [params.comments.cwd]
+      api = "https://cwd.weiqiang.org"
+      siteId = ""
+      lang = "zh-CN"
+      pageSize = 20
+      postSlug = ""
+      cdn = "https://cdn.jsdelivr.net/npm/cwd-widget@0.2.1/dist/cwd.umd.js"
+
+    # -------------------------------------------------------------------
+    # 备选引擎：把上面的 provider 改成对应名字就能切换，值已按原来的填好
+    # -------------------------------------------------------------------
+    [params.comments.twikoo]
+      # envId 必须是「完整地址」。Netlify 部署要带函数路径，只写域名会去请求
+      # 站点首页（404 的 HTML、没有 CORS 头），浏览器报「跨域拦截、status 0」
+      # —— 看着像跨域，其实是地址填短了。
+      envId = "https://cmt.weiqiang.org/.netlify/functions/twikoo"
+      lang = "zh-CN"
+      cdn = "https://cdn.jsdelivr.net/npm/twikoo@2.0.12/dist/twikoo.min.js"
+
+    [params.comments.artalk]
+      server = "https://art.weiqiang.org"
+      site = "危墙"
+      locale = "zh-CN"
+      cdn = "https://cdnjs.cloudflare.com/ajax/libs/artalk/2.10.0"
+      pageKey = ""        # 空 = 用页面路径；填 "legacy" = 交给 Artalk 自己判断
+      # 旧站的 key 是 /zh/xxx.html，切成漂亮 URL 后新路径查不到老评论。
+      # 开着 legacyKeys 先按旧 key 去取，等后端数据真的改完再关。
+      legacyKeys = true
+      darkMode = "auto"
+      showPV = true
+
+    [params.comments.giscus]
+      # 去 https://giscus.app 授权仓库、生成 repoId / categoryId 后填进来，
+      # 不填这两个值时这个 provider 只会在页面上提示「请先配置」。
+      repo = ""
+      repoId = ""
+      category = "Announcements"
+      categoryId = ""
+      mapping = "pathname"
+      lang = "zh-CN"
+      lightTheme = "light"
+      darkTheme = "dark_dimmed"
+
+  # -------------------------------------------------------------------------
   # IndieWeb：作者 h-card（微格式）
   #
   # webmention.io 收到一条提及请求时，抓的是 source 页面 —— 也就是「谁在哪儿
@@ -488,10 +568,9 @@ uglyURLs = false
   # 其它
   # -------------------------------------------------------------------------
   [params.post]
-    # 评论区已在 2026-10-26 整体下线（原 Cloudflare Pages + D1 方案）。
-    # 这份配置留着，是为了告诉主题「全站都不显示评论」——
-    # 不写这一行，主题会按默认值给文章页渲染评论区外壳。
-    comments = false
+    # 评论开关默认就是「文章开、独立页面关」，所以这里不写 comments。
+    # 想全站关掉再加一行 comments = false；单篇用 front matter 的
+    # comments: true/false 覆盖（见 page.html 里 flag.html 那段）。
     # date | lastmod | section | categories | readingTime | wordCount
     # （标签单独显示在正文末尾，见下方「标签」说明）
     # 排出来是这样：2026-10-07 · 往事如烟 · 共 640 字 · 阅读约需 2 分钟

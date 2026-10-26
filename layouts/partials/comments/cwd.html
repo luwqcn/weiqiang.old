@@ -1,0 +1,122 @@
+{{- /*
+  partials/comments/cwd.html — CWD 评论（Cloudflare Workers Discuss）
+
+  文档：https://cwd.js.org  ·  本项目后端：https://cwd.weiqiang.org
+
+  配置写在 [params.comments.cwd]：
+
+    api      = "https://cwd.weiqiang.org"    # 必填，API 基础地址
+    siteId   = ""                            # 多站点隔离用；后台没开多站点就留空
+    lang     = "zh-CN"                       # zh-CN / en-US / zh-TW / ja …
+    pageSize = 20
+    postSlug = ""                            # 留空 = 用页面路径（.RelPermalink）
+    cdn      = "https://cdn.jsdelivr.net/npm/cwd-widget@0.2.1/dist/cwd.umd.js"
+
+  几点实现说明：
+
+  · 组件文档写的是 dist/cwd.js，npm 包里实际入口是 dist/cwd.umd.js（0.2.1）。
+    两个路径 CDN 上都能取到，这里锁后者 —— 它就是 package.json 的 main。
+  · 组件用 Shadow DOM 渲染，样式完全隔离，所以本站 CSS 管不到它的内部，
+    反过来它也不会污染本站样式。想改外观就走 customCssUrl。
+  · 组件本体 393KB，只在「评论」标签被选中时才挂载，默认停在别的标签就
+    一个字节都不下载（script 标签带 defer，但 src 在解析时就请求了，所以
+    这里改成按需插入 script，真正省掉这 393KB）。
+  · 标签上的条数徽标：组件在 Shadow DOM 里，数不到 DOM 节点，改为直接问
+    /api/comments 的 pagination.totalCount（就一个轻请求，跟挂载同时发生）。
+  · 主题跟随本站的 data-theme，切换时用 updateConfig({theme}) 同步。
+*/ -}}
+{{- $c := site.Params.comments.cwd | default dict -}}
+{{- $api := $c.api | default "https://cwd.weiqiang.org" -}}
+{{- $cdn := $c.cdn | default "https://cdn.jsdelivr.net/npm/cwd-widget@0.2.1/dist/cwd.umd.js" -}}
+{{- $lang := $c.lang | default "zh-CN" -}}
+{{- $siteId := $c.siteId | default "" -}}
+{{- $pageSize := $c.pageSize | default 20 -}}
+{{- $slug := $c.postSlug | default .RelPermalink -}}
+<div id="cwd-comments" class="cwd-comments"></div>
+<noscript>
+  <p class="comments-disabled">评论需要开启 JavaScript 才能加载。</p>
+</noscript>
+<script>
+(function () {
+  var root = document.getElementById("cwd-comments");
+  if (!root) { return; }
+
+  var config = {
+    el: root,
+    apiBaseUrl: {{ $api | jsonify | safeJS }},
+    postSlug: {{ $slug | jsonify | safeJS }},
+    lang: {{ $lang | jsonify | safeJS }},
+    pageSize: {{ $pageSize }},
+    theme: "light"
+    {{- with $siteId }},
+    siteId: {{ . | jsonify | safeJS }}
+    {{- end }}
+  };
+  var cdn = {{ $cdn | jsonify | safeJS }};
+
+  /* 标签栏里那颗 radio：只有它被选中时才值得去拉 393KB 的组件。 */
+  var radio = document.getElementById("ct-comments");
+  var badge = document.querySelector("[data-count-comments]");
+  var instance = null;
+  var started = false;
+
+  function isDark() {
+    return document.documentElement.getAttribute("data-theme") === "dark";
+  }
+
+  function showCount() {
+    if (!badge) { return; }
+    var url = config.apiBaseUrl + "/api/comments?limit=1&post_slug=" +
+      encodeURIComponent(config.postSlug);
+    /* 组件查列表时用的是 post_slug + site_id（下划线），这里跟着它，别写成 siteId。 */
+    if (config.siteId) { url += "&site_id=" + encodeURIComponent(config.siteId); }
+    fetch(url, { credentials: "omit" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        var p = d && d.pagination;
+        if (!p) { return; }
+        var n = p.totalCount != null ? p.totalCount : p.total;
+        if (n) { badge.textContent = String(n); badge.hidden = false; }
+      })
+      .catch(function () { /* 拿不到就不显示，别留一个假的 0 */ });
+  }
+
+  function mount() {
+    if (typeof window.CWDComments === "undefined") { return; }
+    config.theme = isDark() ? "dark" : "light";
+    instance = new window.CWDComments(config);
+    instance.mount();
+    showCount();
+  }
+
+  function loadScript() {
+    if (started) { return; }
+    started = true;
+    var s = document.createElement("script");
+    s.src = cdn;
+    s.async = true;
+    s.onload = mount;
+    s.onerror = function () {
+      root.innerHTML = '<p class="comments-disabled">评论脚本加载失败，请检查网络或稍后重试。</p>';
+    };
+    document.head.appendChild(s);
+  }
+
+  function activate() {
+    if (!radio || radio.checked) { loadScript(); }
+  }
+  if (radio) {
+    radio.addEventListener("change", function () { if (radio.checked) { loadScript(); } });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", activate);
+  } else {
+    activate();
+  }
+
+  /* 深浅色跟着站点走：组件在 Shadow DOM 里，只能靠 updateConfig 通知它。 */
+  new MutationObserver(function () {
+    if (instance) { instance.updateConfig({ theme: isDark() ? "dark" : "light" }); }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>

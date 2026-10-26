@@ -3,8 +3,11 @@
 站点是**纯静态**的：Hugo 生成 `public/`，Cloudflare Pages 托管。
 没有 Functions、没有数据库、没有需要维护的服务端。
 
-> 评论系统已于 2026-10-26 整体下线（原方案是 Pages Functions + D1）。
-> 需要恢复的话看文末「历史」。
+评论是外挂的：页面里只放一个前端组件，数据存在 `cwd.weiqiang.org` 那套
+Cloudflare Workers + D1 上，跟这个 Pages 项目互不相干。
+
+> 2026-10-26 曾把一套 Pages Functions + D1 的自建评论整体下线，
+> 现在换成 provider 结构（见第 5 节）。旧方案的状态存档在 git tag 里。
 
 ---
 
@@ -78,7 +81,58 @@ wrangler pages deploy public --project-name weiqiang-org
 > **本机不建议用这条**：841 个文件 / 48MB 上传时会在 C++ 层 `std::bad_alloc`
 > ——这台机器 `ulimit -v` 只有 4GB。走 Git 自动构建没这个问题。
 
-## 5. 排错
+## 5. 评论
+
+文章页底部是一个标签页组：**网络提及 / 评论 / 邮件**。结构在
+`themes/SimpleW/layouts/partials/comments.html`，三个标签各由自己的开关决定
+出不出现，都不可用时回落成一句「评论功能未启用」。
+
+| 标签 | 来源 | 配置 |
+| --- | --- | --- |
+| 网络提及 | webmention.io 的提及 | `[params.webmention]` |
+| 评论 | 下面 `provider` 指定的引擎 | `[params.comments]` + `[params.comments.<名字>]` |
+| 邮件 | `mailto:` 链接 | `[params.comments] email`，留空则不出现 |
+
+换引擎只改一行：
+
+```toml
+[params.comments]
+  provider = "cwd"   # cwd | twikoo | artalk | giscus | disqus | waline | utterances | custom | none
+```
+
+各引擎的配置块在 `hugo.toml` 里都留着（`twikoo` / `artalk` / `giscus` 已填原来的值，
+`giscus` 还差 repoId）。切过去只要填对应那块，模板不用动。
+
+### CWD（当前用的）
+
+API 自建在 `https://cwd.weiqiang.org`（Cloudflare Workers + D1），
+文档在 https://cwd.js.org 。配置：
+
+```toml
+[params.comments.cwd]
+  api = "https://cwd.weiqiang.org"     # API 基础地址，末尾不带斜杠
+  siteId = ""                          # 后台开了「多站点管理」才填站点 ID
+  lang = "zh-CN"
+  pageSize = 20
+  postSlug = ""                        # 空 = 用页面路径（.RelPermalink）
+  cdn = "https://cdn.jsdelivr.net/npm/cwd-widget@0.2.1/dist/cwd.umd.js"
+```
+
+几个容易踩的点：
+
+- **评论按 `postSlug` 存**，默认就是页面路径（`/zh/2026/xxx/`）。改永久链接
+  等于换了把钥匙，老评论查不出来。真要改 URL，先把 `postSlug` 固定成旧值。
+- 组件有 393KB，所以 `layouts/partials/comments/cwd.html` 是**按需加载**：
+  只有「评论」标签被选中时才插 `<script>`，默认停在别的标签就一个字节都不下。
+- 组件用 Shadow DOM，本站 CSS 管不到它内部；要改外观只能用 `customCssUrl`。
+- 标签上的条数徽标来自 `/api/comments` 的 `pagination.totalCount`（组件在
+  Shadow DOM 里，数不到 DOM 节点）。
+- 后端开了 Turnstile（`/api/config/comments` 能读到 siteKey），组件会自己加载
+  人机验证，前端不用额外配。
+- 文档里写的组件路径是 `dist/cwd.js`，npm 包里实际入口是 `dist/cwd.umd.js`；
+  两个 CDN 上都取得到，配置里锁的是后者。
+
+## 6. 排错
 
 | 现象 | 原因 | 处理 |
 | --- | --- | --- |
@@ -89,8 +143,12 @@ wrangler pages deploy public --project-name weiqiang-org
 | 线上 522 | 多半是本机代理的 HTTP/2 问题 | 先加 `--http1.1` 复测 |
 | 改了代码线上没变 | 推到了 Codeberg（origin），没推 GitHub | `git push github main` |
 | 页面日期全是同一天 | front matter 被批量写入了 lastmod | `grep -rhE "^lastmod *[:=]" content --include="*.md" \| sort \| uniq -c \| sort -rn \| head` |
+| 评论区一片空白，控制台报 CORS | API 地址写错，或后端 `allowedDomains` 不含当前域名 | 核对 `[params.comments.cwd] api`；后端「功能设置」里放行域名 |
+| 提示「评论脚本加载失败」 | CDN 取不到组件 | 查 `cdn` 里的版本号是否存在（当前 `0.2.1`），或换 `unpkg.com` 源 |
+| 评论发出去了但页面没有 | 后端开了审核 | 管理后台把状态改成通过 |
+| 换了域名后老评论不见了 | `postSlug` 默认取页面路径 | 用 `postSlug` 固定成旧路径，或迁移后端数据 |
 
-## 6. 额度
+## 7. 额度
 
 免费版：静态请求和带宽不限，500 次构建/月。
 按每天推 2～3 次算，够用。下载 `.hugo/` 不占额度，只占构建时长（每次十几秒）。
@@ -102,9 +160,11 @@ wrangler pages deploy public --project-name weiqiang-org
 2026-10-26 之前，站点挂过一套自建评论（Cloudflare Pages Functions + D1，
 前端 `assets/js/comments-json.js`，构建期直出到 HTML）。
 
-已整体移除：代码、`functions/`、`cf/`、`data/comments.json`、D1 库、两个密钥。
+那套已整体移除：代码、`functions/`、`cf/`、`data/comments.json`、D1 库、两个密钥。
+现在恢复的是「主题原生 provider 结构 + 外部服务」，也就是说静态站这边什么都不用跑
+（见第 5 节）。
 
-需要恢复时：
+要翻旧方案的话：
 
 ```bash
 git tag -l "archive/*"                  # archive/comments-d1 = 下线前的完整状态
