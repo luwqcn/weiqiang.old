@@ -92,6 +92,8 @@
   function loadScript() {
     if (started) { return; }
     started = true;
+    /* 组件已经在了（比如页面里另有一处引它）就别再拉一遍，直接挂。 */
+    if (typeof window.CWDComments !== "undefined") { mount(); return; }
     var s = document.createElement("script");
     s.src = cdn;
     s.async = true;
